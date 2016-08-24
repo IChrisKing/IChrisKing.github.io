@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="hexo," />
+  <meta name="keywords" content="Android开发工程师面试指南,Android," />
 
 
 
@@ -84,34 +84,31 @@
 
 
 
-<meta name="description" content="添加PATH，
-1234sudo vim /etc/profile添加#node.jsexport PATH=$PATH:/path_to_nodejs/bin
+<meta name="description" content="ANR(Application Not Responding)引起ANR的直接原因
+KeyDispatchTimeout(5 seconds) –主要类型按键或触摸事件在特定时间内无响应
 
-备份_config.yml 和 .git 和 .deploy_git/.git
+BroadcastTimeout(10 seconds) –BroadcastReceiver在特定时间内无法处理完成
 
-依次执行
-1234567npm install hexo -gnpm update hexo -ghexo init ~/myblog npm inst">
+ServiceTimeout(20 seconds) –小概率类型 Service在特定">
 <meta property="og:type" content="article">
-<meta property="og:title" content="重装系统后，修复hexo">
-<meta property="og:url" content="http://yoursite.com/2016/08/23/reinstall-hexo-after-reinstall-OS/index.html">
+<meta property="og:title" content="ANR与FC">
+<meta property="og:url" content="http://yoursite.com/2016/08/23/ANR-and-FC/index.html">
 <meta property="og:site_name" content="IChrisKing">
-<meta property="og:description" content="添加PATH，
-1234sudo vim /etc/profile添加#node.jsexport PATH=$PATH:/path_to_nodejs/bin
+<meta property="og:description" content="ANR(Application Not Responding)引起ANR的直接原因
+KeyDispatchTimeout(5 seconds) –主要类型按键或触摸事件在特定时间内无响应
 
-备份_config.yml 和 .git 和 .deploy_git/.git
+BroadcastTimeout(10 seconds) –BroadcastReceiver在特定时间内无法处理完成
 
-依次执行
-1234567npm install hexo -gnpm update hexo -ghexo init ~/myblog npm inst">
-<meta property="og:updated_time" content="2016-08-23T02:43:03.395Z">
+ServiceTimeout(20 seconds) –小概率类型 Service在特定">
+<meta property="og:updated_time" content="2016-08-24T02:29:59.788Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="重装系统后，修复hexo">
-<meta name="twitter:description" content="添加PATH，
-1234sudo vim /etc/profile添加#node.jsexport PATH=$PATH:/path_to_nodejs/bin
+<meta name="twitter:title" content="ANR与FC">
+<meta name="twitter:description" content="ANR(Application Not Responding)引起ANR的直接原因
+KeyDispatchTimeout(5 seconds) –主要类型按键或触摸事件在特定时间内无响应
 
-备份_config.yml 和 .git 和 .deploy_git/.git
+BroadcastTimeout(10 seconds) –BroadcastReceiver在特定时间内无法处理完成
 
-依次执行
-1234567npm install hexo -gnpm update hexo -ghexo init ~/myblog npm inst">
+ServiceTimeout(20 seconds) –小概率类型 Service在特定">
 
 
 
@@ -132,9 +129,9 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2016/08/23/reinstall-hexo-after-reinstall-OS/"/>
+  <link rel="canonical" href="http://yoursite.com/2016/08/23/ANR-and-FC/"/>
 
-  <title> 重装系统后，修复hexo | IChrisKing </title>
+  <title> ANR与FC | IChrisKing </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-tw">
@@ -274,7 +271,7 @@
             
             
               
-                重装系统后，修复hexo
+                ANR与FC
               
             
           </h1>
@@ -286,7 +283,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">發表於</span>
-            <time itemprop="dateCreated" datetime="2016-08-23T10:38:50+08:00" content="2016-08-23">
+            <time itemprop="dateCreated" datetime="2016-08-23T21:42:08+08:00" content="2016-08-23">
               2016-08-23
             </time>
           </span>
@@ -300,8 +297,20 @@
               <span class="post-meta-item-text">分類於</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/hexo/" itemprop="url" rel="index">
-                    <span itemprop="name">hexo</span>
+                  <a href="/categories/《Android开发工程师面试指南》摘要/" itemprop="url" rel="index">
+                    <span itemprop="name">《Android开发工程师面试指南》摘要</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/《Android开发工程师面试指南》摘要/第一部分/" itemprop="url" rel="index">
+                    <span itemprop="name">第一部分</span>
                   </a>
                 </span>
 
@@ -316,8 +325,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/08/23/reinstall-hexo-after-reinstall-OS/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/23/reinstall-hexo-after-reinstall-OS/" itemprop="commentsCount"></span>
+                <a href="/2016/08/23/ANR-and-FC/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/23/ANR-and-FC/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -340,18 +349,37 @@
       
 
       
-        <ol>
-<li><p>添加PATH，</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">sudo vim /etc/profile</div><div class="line">添加</div><div class="line">#node.js</div><div class="line">export PATH=$PATH:/path_to_nodejs/bin</div></pre></td></tr></table></figure>
+        <h2 id="ANR-Application-Not-Responding"><a href="#ANR-Application-Not-Responding" class="headerlink" title="ANR(Application Not Responding)"></a>ANR(Application Not Responding)</h2><h3 id="引起ANR的直接原因"><a href="#引起ANR的直接原因" class="headerlink" title="引起ANR的直接原因"></a>引起ANR的直接原因</h3><ol>
+<li><p>KeyDispatchTimeout(5 seconds) –主要类型按键或触摸事件在特定时间内无响应</p>
 </li>
-<li><p>备份_config.yml 和 .git 和 .deploy_git/.git</p>
+<li><p>BroadcastTimeout(10 seconds) –BroadcastReceiver在特定时间内无法处理完成</p>
 </li>
-<li><p>依次执行</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">npm install hexo -g</div><div class="line">npm update hexo -g</div><div class="line">hexo init ~/myblog</div><div class="line"> </div><div class="line">npm install hexo-deployer-git --save</div><div class="line">npm install hexo-renderer-jade --save</div><div class="line">npm install hexo-renderer-sass --save</div></pre></td></tr></table></figure>
-</li>
-<li><p>还原_config.yml 和 .git 和 .deploy_git/.git</p>
+<li><p>ServiceTimeout(20 seconds) –小概率类型 Service在特定的时间内无法处理完成</p>
 </li>
 </ol>
+<h3 id="引起ANR的根本原因"><a href="#引起ANR的根本原因" class="headerlink" title="引起ANR的根本原因"></a>引起ANR的根本原因</h3><ol>
+<li>UI线程中进行耗时操作，如网络操作，数据库操作，I/O</li>
+<li>BroadcastReceiver中进行耗时操作</li>
+</ol>
+<h3 id="避免ANR的方法"><a href="#避免ANR的方法" class="headerlink" title="避免ANR的方法"></a>避免ANR的方法</h3><ol>
+<li>UI线程不做耗时操作，将它们放到单独的线程中处理，并使用Handler来处理UIThread和耗时Thread之间的交互。耗时操作处理完成之后，通过handler.sendMessage()传递处理结果，在handler的handleMessage()方法中更新UI，或者使用handler.post()方法将消息放到Looper中</li>
+</ol>
+<ol>
+<li>使用AsyncTask，在doInBackground()方法中执行耗时操作，在onPostExecuted()更新UI</li>
+</ol>
+<h3 id="排查ANR的方法"><a href="#排查ANR的方法" class="headerlink" title="排查ANR的方法"></a>排查ANR的方法</h3><ol>
+<li>分析log</li>
+<li>从trace.txt文件查看调用stack，adb pull data/anr/traces.txt ./mytraces.txt</li>
+<li>看代码</li>
+<li>仔细查看ANR的成因(iowait?block?memoryleak?)</li>
+</ol>
+<h2 id="FC（Force-Close）"><a href="#FC（Force-Close）" class="headerlink" title="FC（Force Close）"></a>FC（Force Close）</h2><h3 id="引起FC的原因"><a href="#引起FC的原因" class="headerlink" title="引起FC的原因"></a>引起FC的原因</h3><ol>
+<li>Error</li>
+<li>OOM,内存溢出</li>
+<li>StackOverFlowError</li>
+<li>Runtime,比如NullPointExection，Class Not Found</li>
+</ol>
+<h3 id="避免弹出Force-Close窗口的方法"><a href="#避免弹出Force-Close窗口的方法" class="headerlink" title="避免弹出Force Close窗口的方法"></a>避免弹出Force Close窗口的方法</h3><p>实现Thread.UncaughtExceptionHandler接口的uncaughtException方法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">import java.lang.Thread.UncaughtExceptionHandler;</div><div class="line">import android.app.Application;</div><div class="line">public class MyApplication extends Application implements UncaughtExceptionHandler &#123;</div><div class="line">@Override</div><div class="line">public void onCreate() &#123;</div><div class="line">  // TODO Auto-generated method stub</div><div class="line">  super.onCreate();</div><div class="line">&#125;</div><div class="line"></div><div class="line">@Override</div><div class="line">public void uncaughtException(Thread thread, Throwable ex) &#123;</div><div class="line">  thread.setDefaultUncaughtExceptionHandler( this);  </div><div class="line">&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -374,7 +402,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/hexo/" rel="tag">#hexo</a>
+            <a href="/tags/Android开发工程师面试指南/" rel="tag">#Android开发工程师面试指南</a>
+          
+            <a href="/tags/Android/" rel="tag">#Android</a>
           
         </div>
       
@@ -383,16 +413,16 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/08/18/Android1_1/" rel="next" title="Android基础知识">
-                <i class="fa fa-chevron-left"></i> Android基础知识
+              <a href="/2016/08/23/Android-performance-optimization/" rel="next" title="Android性能优化">
+                <i class="fa fa-chevron-left"></i> Android性能优化
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/08/23/how_to_use_locate_image_file_in_hexo/" rel="prev" title="如何在hexo中使用本地图片">
-                如何在hexo中使用本地图片 <i class="fa fa-chevron-right"></i>
+              <a href="/2016/08/24/Android-TouchEvent/" rel="prev" title="Android事件分发机制">
+                Android事件分发机制 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -442,8 +472,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/08/23/reinstall-hexo-after-reinstall-OS/"
-           data-title="重装系统后，修复hexo" data-url="http://yoursite.com/2016/08/23/reinstall-hexo-after-reinstall-OS/">
+      <div class="ds-thread" data-thread-key="2016/08/23/ANR-and-FC/"
+           data-title="ANR与FC" data-url="http://yoursite.com/2016/08/23/ANR-and-FC/">
       </div>
     
   </div>
@@ -572,7 +602,7 @@
               
             
             
-              <p class="post-toc-empty">此文章未包含目錄</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#ANR-Application-Not-Responding"><span class="nav-number">1.</span> <span class="nav-text">ANR(Application Not Responding)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#引起ANR的直接原因"><span class="nav-number">1.1.</span> <span class="nav-text">引起ANR的直接原因</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#引起ANR的根本原因"><span class="nav-number">1.2.</span> <span class="nav-text">引起ANR的根本原因</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#避免ANR的方法"><span class="nav-number">1.3.</span> <span class="nav-text">避免ANR的方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#排查ANR的方法"><span class="nav-number">1.4.</span> <span class="nav-text">排查ANR的方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FC（Force-Close）"><span class="nav-number">2.</span> <span class="nav-text">FC（Force Close）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#引起FC的原因"><span class="nav-number">2.1.</span> <span class="nav-text">引起FC的原因</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#避免弹出Force-Close窗口的方法"><span class="nav-number">2.2.</span> <span class="nav-text">避免弹出Force Close窗口的方法</span></a></li></ol></li></ol></div>
             
           </div>
         </section>

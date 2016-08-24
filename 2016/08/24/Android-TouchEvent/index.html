@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="hexo," />
+  <meta name="keywords" content="Android开发工程师面试指南,Android," />
 
 
 
@@ -84,34 +84,52 @@
 
 
 
-<meta name="description" content="添加PATH，
-1234sudo vim /etc/profile添加#node.jsexport PATH=$PATH:/path_to_nodejs/bin
+<meta name="description" content="原文链接
+ACTION_DOWN的传递过程ACTION_DOWN的传递图
+这张图中的true，false，super是指函数的返回值。
+传递过程经过三个层次：activity -&amp;gt; viewgroup -&amp;gt; view
+对于每一层的分发函数dispatchTouchEvent和响应函数onTouchEvent来说：
 
-备份_config.yml 和 .git 和 .deploy_git/.git
-
-依次执行
-1234567npm install hexo -gnpm update hexo -ghexo init ~/myblog npm inst">
+返回true：消费掉该事件，不再向下一层传递。
+返回false：开始回">
 <meta property="og:type" content="article">
-<meta property="og:title" content="重装系统后，修复hexo">
-<meta property="og:url" content="http://yoursite.com/2016/08/23/reinstall-hexo-after-reinstall-OS/index.html">
+<meta property="og:title" content="Android事件分发机制">
+<meta property="og:url" content="http://yoursite.com/2016/08/24/Android-TouchEvent/index.html">
 <meta property="og:site_name" content="IChrisKing">
-<meta property="og:description" content="添加PATH，
-1234sudo vim /etc/profile添加#node.jsexport PATH=$PATH:/path_to_nodejs/bin
+<meta property="og:description" content="原文链接
+ACTION_DOWN的传递过程ACTION_DOWN的传递图
+这张图中的true，false，super是指函数的返回值。
+传递过程经过三个层次：activity -&amp;gt; viewgroup -&amp;gt; view
+对于每一层的分发函数dispatchTouchEvent和响应函数onTouchEvent来说：
 
-备份_config.yml 和 .git 和 .deploy_git/.git
-
-依次执行
-1234567npm install hexo -gnpm update hexo -ghexo init ~/myblog npm inst">
-<meta property="og:updated_time" content="2016-08-23T02:43:03.395Z">
+返回true：消费掉该事件，不再向下一层传递。
+返回false：开始回">
+<meta property="og:image" content="http://yoursite.com/assets/img/Android-TouchEvent/touch_event_1.png">
+<meta property="og:image" content="http://yoursite.com/assets/img/Android-TouchEvent/touch_event_super.png">
+<meta property="og:image" content="http://yoursite.com/assets/img/Android-TouchEvent/touch_event_onInterceptTouchEvent.png">
+<meta property="og:image" content="http://yoursite.com/assets/img/Android-TouchEvent/move-up-1.png">
+<meta property="og:image" content="http://yoursite.com/assets/img/Android-TouchEvent/move-up-2.png">
+<meta property="og:image" content="http://yoursite.com/assets/img/Android-TouchEvent/move-up-3.png">
+<meta property="og:image" content="http://yoursite.com/assets/img/Android-TouchEvent/move-up-4.png">
+<meta property="og:image" content="http://yoursite.com/assets/img/Android-TouchEvent/move-up-5.png">
+<meta property="og:image" content="http://yoursite.com/assets/img/Android-TouchEvent/move-up-6.png">
+<meta property="og:image" content="http://yoursite.com/assets/img/Android-TouchEvent/move-up-7.png">
+<meta property="og:image" content="http://yoursite.com/assets/img/Android-TouchEvent/move-up-8.png">
+<meta property="og:image" content="http://yoursite.com/assets/img/Android-TouchEvent/move-up-9.png">
+<meta property="og:image" content="http://yoursite.com/assets/img/Android-TouchEvent/move-up-10.png">
+<meta property="og:image" content="http://yoursite.com/assets/img/Android-TouchEvent/move-up-11.png">
+<meta property="og:updated_time" content="2016-08-24T08:24:40.372Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="重装系统后，修复hexo">
-<meta name="twitter:description" content="添加PATH，
-1234sudo vim /etc/profile添加#node.jsexport PATH=$PATH:/path_to_nodejs/bin
+<meta name="twitter:title" content="Android事件分发机制">
+<meta name="twitter:description" content="原文链接
+ACTION_DOWN的传递过程ACTION_DOWN的传递图
+这张图中的true，false，super是指函数的返回值。
+传递过程经过三个层次：activity -&amp;gt; viewgroup -&amp;gt; view
+对于每一层的分发函数dispatchTouchEvent和响应函数onTouchEvent来说：
 
-备份_config.yml 和 .git 和 .deploy_git/.git
-
-依次执行
-1234567npm install hexo -gnpm update hexo -ghexo init ~/myblog npm inst">
+返回true：消费掉该事件，不再向下一层传递。
+返回false：开始回">
+<meta name="twitter:image" content="http://yoursite.com/assets/img/Android-TouchEvent/touch_event_1.png">
 
 
 
@@ -132,9 +150,9 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2016/08/23/reinstall-hexo-after-reinstall-OS/"/>
+  <link rel="canonical" href="http://yoursite.com/2016/08/24/Android-TouchEvent/"/>
 
-  <title> 重装系统后，修复hexo | IChrisKing </title>
+  <title> Android事件分发机制 | IChrisKing </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-tw">
@@ -274,7 +292,7 @@
             
             
               
-                重装系统后，修复hexo
+                Android事件分发机制
               
             
           </h1>
@@ -286,8 +304,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">發表於</span>
-            <time itemprop="dateCreated" datetime="2016-08-23T10:38:50+08:00" content="2016-08-23">
-              2016-08-23
+            <time itemprop="dateCreated" datetime="2016-08-24T10:31:03+08:00" content="2016-08-24">
+              2016-08-24
             </time>
           </span>
 
@@ -300,8 +318,20 @@
               <span class="post-meta-item-text">分類於</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/hexo/" itemprop="url" rel="index">
-                    <span itemprop="name">hexo</span>
+                  <a href="/categories/《Android开发工程师面试指南》摘要/" itemprop="url" rel="index">
+                    <span itemprop="name">《Android开发工程师面试指南》摘要</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/《Android开发工程师面试指南》摘要/第一部分/" itemprop="url" rel="index">
+                    <span itemprop="name">第一部分</span>
                   </a>
                 </span>
 
@@ -316,8 +346,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/08/23/reinstall-hexo-after-reinstall-OS/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/23/reinstall-hexo-after-reinstall-OS/" itemprop="commentsCount"></span>
+                <a href="/2016/08/24/Android-TouchEvent/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/24/Android-TouchEvent/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -340,18 +370,30 @@
       
 
       
-        <ol>
-<li><p>添加PATH，</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">sudo vim /etc/profile</div><div class="line">添加</div><div class="line">#node.js</div><div class="line">export PATH=$PATH:/path_to_nodejs/bin</div></pre></td></tr></table></figure>
-</li>
-<li><p>备份_config.yml 和 .git 和 .deploy_git/.git</p>
-</li>
-<li><p>依次执行</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">npm install hexo -g</div><div class="line">npm update hexo -g</div><div class="line">hexo init ~/myblog</div><div class="line"> </div><div class="line">npm install hexo-deployer-git --save</div><div class="line">npm install hexo-renderer-jade --save</div><div class="line">npm install hexo-renderer-sass --save</div></pre></td></tr></table></figure>
-</li>
-<li><p>还原_config.yml 和 .git 和 .deploy_git/.git</p>
-</li>
+        <p><a href="http://www.jianshu.com/p/e99b5e8bd67b" target="_blank" rel="external">原文链接</a></p>
+<h2 id="ACTION-DOWN的传递过程"><a href="#ACTION-DOWN的传递过程" class="headerlink" title="ACTION_DOWN的传递过程"></a>ACTION_DOWN的传递过程</h2><h3 id="ACTION-DOWN的传递图"><a href="#ACTION-DOWN的传递图" class="headerlink" title="ACTION_DOWN的传递图"></a>ACTION_DOWN的传递图</h3><p><img src="/assets/img/Android-TouchEvent/touch_event_1.png" alt="image"></p>
+<p>这张图中的true，false，super是指函数的返回值。</p>
+<p>传递过程经过三个层次：activity -&gt; viewgroup -&gt; view</p>
+<p>对于每一层的分发函数dispatchTouchEvent和响应函数onTouchEvent来说：</p>
+<ol>
+<li>返回true：消费掉该事件，不再向下一层传递。</li>
+<li>返回false：开始回溯，把它递交给上一层的onTouchEvent</li>
+<li>返回super：按照默认的流程传递事件</li>
 </ol>
+<p>对于onInterceptTouchEvent来说：</p>
+<p>它本身是一个拦截装置，相当于给viewgroup一个跳过下层viewgroup和view，直接将事件递交给本层onTouchEvent的机会。</p>
+<ol>
+<li>返回true：递交给本层的onTouchEvent</li>
+<li>返回false：不做拦截，按照默认的流程传递事件</li>
+<li>返回super：按照默认的流程传递事件</li>
+</ol>
+<h3 id="默认的传递过程图"><a href="#默认的传递过程图" class="headerlink" title="默认的传递过程图"></a>默认的传递过程图</h3><p><img src="/assets/img/Android-TouchEvent/touch_event_super.png" alt="image"></p>
+<p>所有函数的默认实现就是返回super，也就是按照默认的流程，将事件依次传递给所有相关的函数。这个传递过程是一个U型的方向。</p>
+<h3 id="onInterceptTouchEvent方法"><a href="#onInterceptTouchEvent方法" class="headerlink" title="onInterceptTouchEvent方法"></a>onInterceptTouchEvent方法</h3><p><img src="/assets/img/Android-TouchEvent/touch_event_onInterceptTouchEvent.png" alt="image"><br>这个方法是viewgroup独有的。每个viewgroup进行事件分发的时候，会先调用onInterceptTouchEvent方法，问一问拦截器，是否需要将这个事件拦截下来，递交给本层的onTouchEvent来处理。如果要自己处理那就在onInterceptTouchEvent方法中 return true就会交给本层的onTouchEvent的处理，如果不拦截就是继续往下传。默认是不会去拦截的，因为子View也需要这个事件，所以onInterceptTouchEvent拦截器return super.onInterceptTouchEvent()和return false是一样的，是不会拦截的，事件会继续往子View的dispatchTouchEvent传递。</p>
+<h2 id="ACTION-MOVE和ACTION-UP的传递过程"><a href="#ACTION-MOVE和ACTION-UP的传递过程" class="headerlink" title="ACTION_MOVE和ACTION_UP的传递过程"></a>ACTION_MOVE和ACTION_UP的传递过程</h2><p>ACTION_MOVE和ACTION_UP的传递过程，和ACTION_DOWM事件被消费掉的函数所处的层有关。</p>
+<p>下列图中，红色箭头代表</p>
+<p>红色的箭头代表ACTION_DOWN 事件的流向</p>
+<p>蓝色的箭头代表ACTION_MOVE 和 ACTION_UP 事件的流向<br><img src="/assets/img/Android-TouchEvent/move-up-1.png" alt="image"><br><img src="/assets/img/Android-TouchEvent/move-up-2.png" alt="image"><br><img src="/assets/img/Android-TouchEvent/move-up-3.png" alt="image"><br><img src="/assets/img/Android-TouchEvent/move-up-4.png" alt="image"><br><img src="/assets/img/Android-TouchEvent/move-up-5.png" alt="image"><br><img src="/assets/img/Android-TouchEvent/move-up-6.png" alt="image"><br><img src="/assets/img/Android-TouchEvent/move-up-7.png" alt="image"><br><img src="/assets/img/Android-TouchEvent/move-up-8.png" alt="image"><br><img src="/assets/img/Android-TouchEvent/move-up-9.png" alt="image"><br><img src="/assets/img/Android-TouchEvent/move-up-10.png" alt="image"><br><img src="/assets/img/Android-TouchEvent/move-up-11.png" alt="image"></p>
 
       
     </div>
@@ -374,7 +416,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/hexo/" rel="tag">#hexo</a>
+            <a href="/tags/Android开发工程师面试指南/" rel="tag">#Android开发工程师面试指南</a>
+          
+            <a href="/tags/Android/" rel="tag">#Android</a>
           
         </div>
       
@@ -383,17 +427,13 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/08/18/Android1_1/" rel="next" title="Android基础知识">
-                <i class="fa fa-chevron-left"></i> Android基础知识
+              <a href="/2016/08/23/ANR-and-FC/" rel="next" title="ANR与FC">
+                <i class="fa fa-chevron-left"></i> ANR与FC
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/08/23/how_to_use_locate_image_file_in_hexo/" rel="prev" title="如何在hexo中使用本地图片">
-                如何在hexo中使用本地图片 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -442,8 +482,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/08/23/reinstall-hexo-after-reinstall-OS/"
-           data-title="重装系统后，修复hexo" data-url="http://yoursite.com/2016/08/23/reinstall-hexo-after-reinstall-OS/">
+      <div class="ds-thread" data-thread-key="2016/08/24/Android-TouchEvent/"
+           data-title="Android事件分发机制" data-url="http://yoursite.com/2016/08/24/Android-TouchEvent/">
       </div>
     
   </div>
@@ -572,7 +612,7 @@
               
             
             
-              <p class="post-toc-empty">此文章未包含目錄</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#ACTION-DOWN的传递过程"><span class="nav-number">1.</span> <span class="nav-text">ACTION_DOWN的传递过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ACTION-DOWN的传递图"><span class="nav-number">1.1.</span> <span class="nav-text">ACTION_DOWN的传递图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#默认的传递过程图"><span class="nav-number">1.2.</span> <span class="nav-text">默认的传递过程图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#onInterceptTouchEvent方法"><span class="nav-number">1.3.</span> <span class="nav-text">onInterceptTouchEvent方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ACTION-MOVE和ACTION-UP的传递过程"><span class="nav-number">2.</span> <span class="nav-text">ACTION_MOVE和ACTION_UP的传递过程</span></a></li></ol></div>
             
           </div>
         </section>
