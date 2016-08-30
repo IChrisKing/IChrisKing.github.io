@@ -787,6 +787,12 @@ a {
   -moz-background-size: 80%;
   background-size: 80%;
 }
+#header .header-nav .social .新浪博客 {
+  background: url("/img/新浪博客.png") center no-repeat #ecc260;
+  -webkit-background-size: 80%;
+  -moz-background-size: 80%;
+  background-size: 80%;
+}
 #header .header-nav .social .知乎 {
   background: url("/img/知乎.png") center no-repeat #0078d8;
   -webkit-background-size: 90%;
