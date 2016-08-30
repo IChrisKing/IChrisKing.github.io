@@ -15,26 +15,17 @@
 
 
 
-<meta name="description" content="链接地址
-五种界面布局 FrameLayout 、 LinearLayout 、 AbsoluteLayout 、 RelativeLayout 、 TableLayout
-Activity生命周期Activity launchModestandard|singleInstance|singleTask|singleTop
-使用onSaveInstanceState(Bundle outState">
+<meta name="description" content="零碎的Android基础知识点">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Android基础知识">
 <meta property="og:url" content="http://yoursite.com/2016/08/18/Android1_1/index.html">
 <meta property="og:site_name" content="IChrisKing">
-<meta property="og:description" content="链接地址
-五种界面布局 FrameLayout 、 LinearLayout 、 AbsoluteLayout 、 RelativeLayout 、 TableLayout
-Activity生命周期Activity launchModestandard|singleInstance|singleTask|singleTop
-使用onSaveInstanceState(Bundle outState">
+<meta property="og:description" content="零碎的Android基础知识点">
 <meta property="og:image" content="https://raw.githubusercontent.com/GeniusVJR/LearningNotes/master/Part1/Android/FlowchartDiagram.jpg">
-<meta property="og:updated_time" content="2016-08-18T10:18:56.026Z">
+<meta property="og:updated_time" content="2016-08-30T02:24:00.014Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android基础知识">
-<meta name="twitter:description" content="链接地址
-五种界面布局 FrameLayout 、 LinearLayout 、 AbsoluteLayout 、 RelativeLayout 、 TableLayout
-Activity生命周期Activity launchModestandard|singleInstance|singleTask|singleTop
-使用onSaveInstanceState(Bundle outState">
+<meta name="twitter:description" content="零碎的Android基础知识点">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/GeniusVJR/LearningNotes/master/Part1/Android/FlowchartDiagram.jpg">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
@@ -324,35 +315,32 @@ Activity生命周期Activity launchModestandard|singleInstance|singleTask|single
 <p><img src="https://raw.githubusercontent.com/GeniusVJR/LearningNotes/master/Part1/Android/FlowchartDiagram.jpg" alt=""></p>
 <h3 id="Intent传递数据"><a href="#Intent传递数据" class="headerlink" title="Intent传递数据"></a>Intent传递数据</h3><h3 id="Service两种启动方式"><a href="#Service两种启动方式" class="headerlink" title="Service两种启动方式"></a>Service两种启动方式</h3><p>bindService    startService</p>
 <h3 id="广播的静态注册和动态注册"><a href="#广播的静态注册和动态注册" class="headerlink" title="广播的静态注册和动态注册"></a>广播的静态注册和动态注册</h3><h3 id="ContentProvider使用方法"><a href="#ContentProvider使用方法" class="headerlink" title="ContentProvider使用方法"></a>ContentProvider使用方法</h3><h3 id="Service保活"><a href="#Service保活" class="headerlink" title="Service保活"></a>Service保活</h3><h3 id="Context区别"><a href="#Context区别" class="headerlink" title="Context区别"></a>Context区别</h3><p>Context的数量等于Activity的个数 + Service的个数 + 1，这个1为Application</p>
-<h3 id="IntentService"><a href="#IntentService" class="headerlink" title="IntentService"></a>IntentService</h3>
+<h3 id="IntentService"><a href="#IntentService" class="headerlink" title="IntentService"></a>IntentService</h3><h2 id="新增"><a href="#新增" class="headerlink" title="新增"></a>新增</h2><h3 id="图片三级缓存，优化多图应用"><a href="#图片三级缓存，优化多图应用" class="headerlink" title="图片三级缓存，优化多图应用"></a>图片三级缓存，优化多图应用</h3><p>适用与有大量从网上下载图片在本地展示的应用</p>
+<h4 id="三级缓存"><a href="#三级缓存" class="headerlink" title="三级缓存"></a>三级缓存</h4><ol>
+<li>内存缓存，优先加载，速度最快</li>
+</ol>
+<p>内存缓存需要小心内存溢出，所以要避免使用HashMap<string,bitmap>这种键值对的方式，无论使用强引用，软引用还是弱引用，都容易引起内存溢出。</string,bitmap></p>
+<p>官方推荐使用LruCache<string,bitmap>，内存控制在一定的大小内, 超出最大值时会自动回收, 这个最大值开发者自己定</string,bitmap></p>
+<ol>
+<li>本地缓存，次优先加载，速度较快，图片存在本地存储设备中</li>
+<li>网络获取，最后选择，速度慢，使用流量</li>
+</ol>
+<h4 id="两个例子"><a href="#两个例子" class="headerlink" title="两个例子"></a>两个例子</h4><p><a href="http://blog.csdn.net/xiaanming/article/details/9825113" target="_blank" rel="external">线程池管理下载任务+LruCache缓存+本地缓存+GridView滑动取消下载，静止进行下载</a></p>
+<p><a href="http://blog.csdn.net/guolin_blog/article/details/9526203#comments" target="_blank" rel="external">照片墙</a></p>
+
       
     </div>
     
   </div>
   
     
-    <div class="copyright">
-        <p><span>本文標題:</span><a href="/2016/08/18/Android1_1/">Android基础知识</a></p>
-        <p><span>文章作者:</span><a href="/" title="回到主頁">Chris King</a></p>
-        <p><span>發布時間:</span>2016-08-18, 18:16:31</p>
-        <p><span>最後更新:</span>2016-08-18, 18:18:56</p>
-        <p>
-            <span>原始鏈接:</span><a class="post-url" href="/2016/08/18/Android1_1/" title="Android基础知识">http://yoursite.com/2016/08/18/Android1_1/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2016/08/18/Android1_1/　　作者: Chris King" title="點擊複製文章鏈接"><i class="fa fa-clipboard"></i></span>
-            <script> var clipboard = new Clipboard('.copy-path'); </script>
-        </p>
-        <p>
-            <span>許可協議:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"姓名標示-非商業性-相同方式分享 4.0 國際"</a> 轉載請保留原文鏈接及作者。
-        </p>
-    </div>
-
 
 
     <nav id="article-nav">
         
             <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2016/08/23/reinstall-hexo-after-reinstall-OS/">
-                    重装系统后，修复hexo
+                <a href="/2016/08/22/Android_memory_leak/">
+                    Android内存泄漏
                 </a>
             </div>
         
@@ -371,7 +359,7 @@ Activity生命周期Activity launchModestandard|singleInstance|singleTask|single
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目錄</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#五种界面布局"><span class="toc-number">1.</span> <span class="toc-text">五种界面布局</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Activity生命周期"><span class="toc-number">2.</span> <span class="toc-text">Activity生命周期</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Activity-launchMode"><span class="toc-number">3.</span> <span class="toc-text">Activity launchMode</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用onSaveInstanceState-Bundle-outState-和onRestoreInstanceState-Bundle-outState-缓存activiry"><span class="toc-number">4.</span> <span class="toc-text">使用onSaveInstanceState(Bundle outState)和onRestoreInstanceState (Bundle outState)缓存activiry</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Fragment-Activity生命周期"><span class="toc-number">5.</span> <span class="toc-text">Fragment+Activity生命周期</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Intent传递数据"><span class="toc-number">6.</span> <span class="toc-text">Intent传递数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Service两种启动方式"><span class="toc-number">7.</span> <span class="toc-text">Service两种启动方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#广播的静态注册和动态注册"><span class="toc-number">8.</span> <span class="toc-text">广播的静态注册和动态注册</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ContentProvider使用方法"><span class="toc-number">9.</span> <span class="toc-text">ContentProvider使用方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Service保活"><span class="toc-number">10.</span> <span class="toc-text">Service保活</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Context区别"><span class="toc-number">11.</span> <span class="toc-text">Context区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#IntentService"><span class="toc-number">12.</span> <span class="toc-text">IntentService</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#五种界面布局"><span class="toc-number">1.</span> <span class="toc-text">五种界面布局</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Activity生命周期"><span class="toc-number">2.</span> <span class="toc-text">Activity生命周期</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Activity-launchMode"><span class="toc-number">3.</span> <span class="toc-text">Activity launchMode</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用onSaveInstanceState-Bundle-outState-和onRestoreInstanceState-Bundle-outState-缓存activiry"><span class="toc-number">4.</span> <span class="toc-text">使用onSaveInstanceState(Bundle outState)和onRestoreInstanceState (Bundle outState)缓存activiry</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Fragment-Activity生命周期"><span class="toc-number">5.</span> <span class="toc-text">Fragment+Activity生命周期</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Intent传递数据"><span class="toc-number">6.</span> <span class="toc-text">Intent传递数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Service两种启动方式"><span class="toc-number">7.</span> <span class="toc-text">Service两种启动方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#广播的静态注册和动态注册"><span class="toc-number">8.</span> <span class="toc-text">广播的静态注册和动态注册</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ContentProvider使用方法"><span class="toc-number">9.</span> <span class="toc-text">ContentProvider使用方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Service保活"><span class="toc-number">10.</span> <span class="toc-text">Service保活</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Context区别"><span class="toc-number">11.</span> <span class="toc-text">Context区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#IntentService"><span class="toc-number">12.</span> <span class="toc-text">IntentService</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#新增"><span class="toc-number"></span> <span class="toc-text">新增</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#图片三级缓存，优化多图应用"><span class="toc-number">1.</span> <span class="toc-text">图片三级缓存，优化多图应用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#三级缓存"><span class="toc-number">1.1.</span> <span class="toc-text">三级缓存</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#两个例子"><span class="toc-number">1.2.</span> <span class="toc-text">两个例子</span></a></li></ol></li></ol>
         
     </div>
     <style>
@@ -446,7 +434,7 @@ Activity生命周期Activity launchModestandard|singleInstance|singleTask|single
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2016/08/23/reinstall-hexo-after-reinstall-OS/" title="上一篇: 重装系统后，修复hexo">
+            <a href="/2016/08/22/Android_memory_leak/" title="上一篇: Android内存泄漏">
                 <i class="fa fa-angle-left"></i>
             </a>
         
@@ -460,7 +448,7 @@ Activity生命周期Activity launchModestandard|singleInstance|singleTask|single
         
     </div>
 
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/08/24/Android-TouchEvent/">Android事件分发机制</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/23/ANR-and-FC/">ANR与FC</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/23/Android-performance-optimization/">Android性能优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/23/how_to_use_locate_image_file_in_hexo/">如何在hexo中使用本地图片</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/23/reinstall-hexo-after-reinstall-OS/">重装系统后，修复hexo</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/18/Android1_1/">Android基础知识</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/05/build_shadowsocks/">配置shadowsocks</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/24/change-hexo-theme-to-maupassant/">对我的Blog做了点改动</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/23/AnromOS_deploy/">Anrom日常发布方法</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/21/AnromOS_Web_Build/">AnromOS发布网站的搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/19/make_blog_with_hexo/">使用hexo搭建blog</a></li></ul>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/08/24/Fragment/">Fragment</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/24/Android-TouchEvent/">Android事件分发机制</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/23/ANR-and-FC/">ANR与FC</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/23/Android-performance-optimization/">Android性能优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/23/how_to_use_locate_image_file_in_hexo/">如何在hexo中使用本地图片</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/23/reinstall-hexo-after-reinstall-OS/">重装系统后，修复hexo</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/22/Android_memory_leak/">Android内存泄漏</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/18/Android1_1/">Android基础知识</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/05/build_shadowsocks/">配置shadowsocks</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/24/change-hexo-theme-to-maupassant/">对我的Blog做了点改动</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/23/AnromOS_deploy/">Anrom日常发布方法</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/21/AnromOS_Web_Build/">AnromOS发布网站的搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/19/make_blog_with_hexo/">使用hexo搭建blog</a></li></ul>
 
 
 
