@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Chris King" />
+
+
+
+<meta name="description" content="主要分析了Service Manager成为binder守护进程的过程，简要分析了Server和Client获取Service Manager的过程。分析仅到framework层，kernel层的代码只讲解原理，给出源码位置。同时，提供了一些binder的参考文件">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Binder">
+<meta property="og:url" content="http://yoursite.com/2016/08/31/Binder/index.html">
+<meta property="og:site_name" content="IChrisKing">
+<meta property="og:description" content="主要分析了Service Manager成为binder守护进程的过程，简要分析了Server和Client获取Service Manager的过程。分析仅到framework层，kernel层的代码只讲解原理，给出源码位置。同时，提供了一些binder的参考文件">
+<meta property="og:image" content="http://yoursite.com/assets/img/Binder/binder.png">
+<meta property="og:updated_time" content="2016-08-31T09:40:18.057Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Binder">
+<meta name="twitter:description" content="主要分析了Service Manager成为binder守护进程的过程，简要分析了Server和Client获取Service Manager的过程。分析仅到framework层，kernel层的代码只讲解原理，给出源码位置。同时，提供了一些binder的参考文件">
+<meta name="twitter:image" content="http://yoursite.com/assets/img/Binder/binder.png">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="IChrisKing" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>Binder | IChrisKing</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: undefined
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Chris King</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">#IMNOTCHRISLEE</p>
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜單</li>
+                        <li>標籤</li>
+                        
+                        <li>友情鏈接</li>
+                        
+                        
+                        <li>關於我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主頁</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">標籤雲</a></li>
+                        
+                            <li><a href="/about/">關於我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="https://chrisking310@gmail.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="https://github.com/IChrisKing" title="GitHub"></a>
+                            
+                                <a class="fa 新浪博客" href="http://blog.sina.com.cn/u/1733434252" title="新浪博客"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android开发工程师面试指南/">Android开发工程师面试指南</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/anrom/">anrom</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shadowsocks-vps/">shadowsocks/vps</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://anromos.github.io/">Anrom OS</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://github.com/AnromOS">Team GitHub</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">Android ROM 开发</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Chris King</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Chris King</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">#IMNOTCHRISLEE</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主頁</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">標籤雲</a></li>
+                
+                    <li><a href="/about/">關於我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="https://chrisking310@gmail.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/IChrisKing" title="GitHub"></a>
+                            
+                                <a class="fa 新浪博客" target="_blank" href="http://blog.sina.com.cn/u/1733434252" title="新浪博客"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="標籤" friends="友情鏈接" about="關於我"/>
+</nav>
+      <div class="body-wrap"><article id="post-Binder" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/08/31/Binder/" class="article-date">
+      <time datetime="2016-08-31T09:33:11.000Z" itemprop="datePublished">2016-08-31</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Binder
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/《Android开发工程师面试指南》摘要/">《Android开发工程师面试指南》摘要</a><a class="article-category-link" href="/categories/《Android开发工程师面试指南》摘要/第一部分/">第一部分</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android开发工程师面试指南/">Android开发工程师面试指南</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h2 id="Binder"><a href="#Binder" class="headerlink" title="Binder"></a>Binder</h2><h3 id="框架分析"><a href="#框架分析" class="headerlink" title="框架分析"></a>框架分析</h3><p>Binder是Android进程间通信的方式之一。采用Server，Client通信方式。</p>
+<p><img src="/assets/img/Binder/binder.png" alt="image"><br>Binder的架构，分为四块：</p>
+<ol>
+<li>BinderDriver 位于内核空间，源码在/kernel/drivers/staging/android/目录下，Binder驱动提供设备文件/dev/binder与用户空间交互</li>
+<li>Service Manager 位于用户空间，源码在/frameworks/native/cmds/servicemanager/目录下。Service Manager是一个守护进程，用来管理Server，并向Client提供查询Server接口的功能。</li>
+<li>Server</li>
+<li>Clietn</li>
+</ol>
+<h3 id="Service-Manager成为Binder守护进程"><a href="#Service-Manager成为Binder守护进程" class="headerlink" title="Service Manager成为Binder守护进程"></a>Service Manager成为Binder守护进程</h3><ul>
+<li><p>Service Manager是整个Binder机制的守护进程，负责管理系统中的所有Server，并向Client提供查询Server远程接口的功能。</p>
+</li>
+<li><p>Service Manager与Server和Client通信，也属于进程间通信，也采用的Binder机制。所以说，Service Manager在充当Binder机制的守护进程的同时，也是一个Server。他是一个特殊的Server。</p>
+</li>
+</ul>
+<p>Service Manager的入口位于/frameworks/native/cmds/servicemanager/service_manager.c中的main函数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line">int main(int argc, char **argv)</div><div class="line">&#123;</div><div class="line">    struct binder_state *bs;</div><div class="line"></div><div class="line">//第一步</div><div class="line">    bs = binder_open(128*1024);</div><div class="line">    if (!bs) &#123;</div><div class="line">        ALOGE(&quot;failed to open binder driver\n&quot;);</div><div class="line">        return -1;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">//第二步</div><div class="line">    if (binder_become_context_manager(bs)) &#123;</div><div class="line">        ALOGE(&quot;cannot become context manager (%s)\n&quot;, strerror(errno));</div><div class="line">        return -1;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">//一些selinux相关操作</div><div class="line">    selinux_enabled = is_selinux_enabled();</div><div class="line">    sehandle = selinux_android_service_context_handle();</div><div class="line">    selinux_status_open(true);</div><div class="line"></div><div class="line">    if (selinux_enabled &gt; 0) &#123;</div><div class="line">        if (sehandle == NULL) &#123;</div><div class="line">            ALOGE(&quot;SELinux: Failed to acquire sehandle. Aborting.\n&quot;);</div><div class="line">            abort();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        if (getcon(&amp;service_manager_context) != 0) &#123;</div><div class="line">            ALOGE(&quot;SELinux: Failed to acquire service_manager context. Aborting.\n&quot;);</div><div class="line">            abort();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    union selinux_callback cb;</div><div class="line">    cb.func_audit = audit_callback;</div><div class="line">    selinux_set_callback(SELINUX_CB_AUDIT, cb);</div><div class="line">    cb.func_log = selinux_log_callback;</div><div class="line">    selinux_set_callback(SELINUX_CB_LOG, cb);</div><div class="line"></div><div class="line">//第三步</div><div class="line">    binder_loop(bs, svcmgr_handler);</div><div class="line"></div><div class="line">    return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>main函数主要使用三个函数，完成三个步骤：</p>
+<h4 id="1-打开Binder设备文件"><a href="#1-打开Binder设备文件" class="headerlink" title="1.打开Binder设备文件"></a>1.打开Binder设备文件</h4><p><code>bs = binder_open(128*1024);</code>返回一个binder_state类型的bs<br>binder_open的实现在/frameworks/native/cmds/servicemanager/binder.c中。查看这个函数之前，首先来看一下结构体binder_state，<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">struct binder_state</div><div class="line">&#123;</div><div class="line">    int fd;</div><div class="line">    void *mapped;</div><div class="line">    size_t mapsize;</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<p>fd是文件描述符，即表示打开的/dev/binder设备文件描述符；</p>
+<p>mapped是把设备文件/dev/binder映射到进程空间的起始地址；</p>
+<p>mapsize是上述内存映射空间的大小。</p>
+<p>查看函数的binder_open实现<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line">struct binder_state *binder_open(size_t mapsize)</div><div class="line">&#123;</div><div class="line">    struct binder_state *bs;</div><div class="line">    struct binder_version vers;</div><div class="line"></div><div class="line">    bs = malloc(sizeof(*bs));</div><div class="line">    if (!bs) &#123;</div><div class="line">        errno = ENOMEM;</div><div class="line">        return NULL;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    bs-&gt;fd = open(&quot;/dev/binder&quot;, O_RDWR);</div><div class="line">    if (bs-&gt;fd &lt; 0) &#123;</div><div class="line">        fprintf(stderr,&quot;binder: cannot open device (%s)\n&quot;,</div><div class="line">                strerror(errno));</div><div class="line">        goto fail_open;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    if ((ioctl(bs-&gt;fd, BINDER_VERSION, &amp;vers) == -1) ||</div><div class="line">        (vers.protocol_version != BINDER_CURRENT_PROTOCOL_VERSION)) &#123;</div><div class="line">        fprintf(stderr,</div><div class="line">                &quot;binder: kernel driver version (%d) differs from user space version (%d)\n&quot;,</div><div class="line">                vers.protocol_version, BINDER_CURRENT_PROTOCOL_VERSION);</div><div class="line">        goto fail_open;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    bs-&gt;mapsize = mapsize;</div><div class="line">    bs-&gt;mapped = mmap(NULL, mapsize, PROT_READ, MAP_PRIVATE, bs-&gt;fd, 0);</div><div class="line">    if (bs-&gt;mapped == MAP_FAILED) &#123;</div><div class="line">        fprintf(stderr,&quot;binder: cannot map device (%s)\n&quot;,</div><div class="line">                strerror(errno));</div><div class="line">        goto fail_map;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return bs;</div><div class="line"></div><div class="line">fail_map:</div><div class="line">    close(bs-&gt;fd);</div><div class="line">fail_open:</div><div class="line">    free(bs);</div><div class="line">    return NULL;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这个函数的内容，围绕着给binder_state *bs赋值展开，根据上面binder_state结构体的内容，这个函数的主要操作包括：<br>1.<code>bs-&gt;fd = open(&quot;/dev/binder&quot;, O_RDWR);</code></p>
+<p>这就调用到了kernel层的Binder驱动了，这里暂时不对驱动层的代码作详细分析，仅指出原理和源码位置。具体分析可以参考<a href="http://blog.csdn.net/luoshengyang/article/details/6621566" target="_blank" rel="external">参考文档</a></p>
+<p>源码位置在/kernel/drivers/staging/android/binder.c<br>中的static int binder_open(struct inode <em>nodp, struct file </em>filp)函数。</p>
+<p>这个函数的主要作用是创建一个struct binder_proc数据结构来保存打开设备文件/dev/binder的进程的上下文信息，并且将这个进程上下文信息保存在打开文件结构struct file的私有数据成员变量private_data中，这样，在执行其它文件操作时，就通过打开文件结构struct file来取回这个进程上下文信息了。这个进程上下文信息同时还会保存在一个全局哈希表binder_procs中，驱动程序内部使用。</p>
+<p>2.<code>bs-&gt;mapsize = mapsize;</code><br>设置内存映射空间的大小</p>
+<p>3.<code>bs-&gt;mapped = mmap(NULL, mapsize, PROT_READ, MAP_PRIVATE, bs-&gt;fd, 0);</code></p>
+<p>对打开的设备文件进行内存映射操作mmap，这调用到了/kernel/drivers/staging/android/binder.c<br>中的static int binder_mmap(struct file <em>filp, struct vm_area_struct </em>vma)函数</p>
+<p>这个函数将一个物理地址，同时映射到进程虚拟地址空间和内核虚拟地址空间。这就是Binder进程间通信机制的精髓所在了，同一个物理页面，一方映射到进程虚拟地址空间，一方面映射到内核虚拟地址空间，这样，进程和内核之间就可以减少一次内存拷贝了，提到了进程间通信效率。举个例子如，Client要将一块内存数据传递给Server，一般的做法是，Client将这块数据从它的进程空间拷贝到内核空间中，然后内核再将这个数据从内核空间拷贝到Server的进程空间，这样，Server就可以访问这个数据了。但是在这种方法中，执行了两次内存拷贝操作，而采用我们上面提到的方法，只需要把Client进程空间的数据拷贝一次到内核空间，然后Server与内核共享这个数据就可以了，整个过程只需要执行一次内存拷贝，提高了效率。</p>
+<h4 id="2-向Binder驱动声明自己是Binder上下文管理者，即Binder守护进程"><a href="#2-向Binder驱动声明自己是Binder上下文管理者，即Binder守护进程" class="headerlink" title="2.向Binder驱动声明自己是Binder上下文管理者，即Binder守护进程"></a>2.向Binder驱动声明自己是Binder上下文管理者，即Binder守护进程</h4><p><code>binder_become_context_manager(bs)</code></p>
+<p>查看/frameworks/native/cmds/servicemanager/binder.c，发现这个函数的实现非常简单<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">int binder_become_context_manager(struct binder_state *bs)</div><div class="line">&#123;</div><div class="line">    return ioctl(bs-&gt;fd, BINDER_SET_CONTEXT_MGR, 0);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这里通过调用ioctl文件操作函数来通知Binder驱动程序自己是守护进程，命令号是BINDER_SET_CONTEXT_MGR，没有参数。再次到驱动程序中来查看实现过程，调用到了/kernel/drivers/staging/android/binder.c<br>中的<code>static long binder_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)</code>函数，只需查看switch中的BINDER_SET_CONTEXT_MG代码段即可。<br>这段代码的实现类似一种先到先得的机制，将第一个调用到此的线程设置为Binder机制的守护进程，并为他创建Binder实体。</p>
+<h4 id="3-进入一个无穷循环，充当Server的角色，等待Client请求"><a href="#3-进入一个无穷循环，充当Server的角色，等待Client请求" class="headerlink" title="3. 进入一个无穷循环，充当Server的角色，等待Client请求"></a>3. 进入一个无穷循环，充当Server的角色，等待Client请求</h4><p><code>binder_loop(bs, svcmgr_handler);</code><br>该函数定义在/frameworks/native/cmds/servicemanager/binder.c中<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line">void binder_loop(struct binder_state *bs, binder_handler func)</div><div class="line">&#123;</div><div class="line">    int res;</div><div class="line">    struct binder_write_read bwr;</div><div class="line">    uint32_t readbuf[32];</div><div class="line"></div><div class="line">    bwr.write_size = 0;</div><div class="line">    bwr.write_consumed = 0;</div><div class="line">    bwr.write_buffer = 0;</div><div class="line"></div><div class="line">    readbuf[0] = BC_ENTER_LOOPER;</div><div class="line">    binder_write(bs, readbuf, sizeof(uint32_t));</div><div class="line"></div><div class="line">    for (;;) &#123;</div><div class="line">        bwr.read_size = sizeof(readbuf);</div><div class="line">        bwr.read_consumed = 0;</div><div class="line">        bwr.read_buffer = (uintptr_t) readbuf;</div><div class="line"></div><div class="line">        res = ioctl(bs-&gt;fd, BINDER_WRITE_READ, &amp;bwr);</div><div class="line"></div><div class="line">        if (res &lt; 0) &#123;</div><div class="line">            ALOGE(&quot;binder_loop: ioctl failed (%s)\n&quot;, strerror(errno));</div><div class="line">            break;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        res = binder_parse(bs, 0, (uintptr_t) readbuf, bwr.read_consumed, func);</div><div class="line">        if (res == 0) &#123;</div><div class="line">            ALOGE(&quot;binder_loop: unexpected reply?!\n&quot;);</div><div class="line">            break;</div><div class="line">        &#125;</div><div class="line">        if (res &lt; 0) &#123;</div><div class="line">            ALOGE(&quot;binder_loop: io error %d %s\n&quot;, res, strerror(errno));</div><div class="line">            break;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>首先是通过binder_write函数执行BC_ENTER_LOOPER命令告诉Binder驱动程序， Service Manager要进入循环了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">int binder_write(struct binder_state *bs, void *data, size_t len)</div><div class="line">&#123;</div><div class="line">    struct binder_write_read bwr;</div><div class="line">    int res;</div><div class="line"></div><div class="line">    bwr.write_size = len;</div><div class="line">    bwr.write_consumed = 0;</div><div class="line">    bwr.write_buffer = (uintptr_t) data;</div><div class="line">    bwr.read_size = 0;</div><div class="line">    bwr.read_consumed = 0;</div><div class="line">    bwr.read_buffer = 0;</div><div class="line">    res = ioctl(bs-&gt;fd, BINDER_WRITE_READ, &amp;bwr);</div><div class="line">    if (res &lt; 0) &#123;</div><div class="line">        fprintf(stderr,&quot;binder_write: ioctl failed (%s)\n&quot;,</div><div class="line">                strerror(errno));</div><div class="line">    &#125;</div><div class="line">    return res;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>熟悉的ioctl，又进入kernel层的驱动程序的，这次只看BINDER_WRITE_READ代码块</p>
+<p>随后进入 for (;;)循环，再次调用了ioctl的BINDER_WRITE_READ代码块</p>
+<h3 id="Server和Client获得Service-Manager接口"><a href="#Server和Client获得Service-Manager接口" class="headerlink" title="Server和Client获得Service Manager接口"></a>Server和Client获得Service Manager接口</h3><p>Service Manager在Binder机制中既充当守护进程的角色，同时它也充当着Server角色，然而它又与一般的Server不一样。对于普通的Server来说，Client如果想要获得Server的远程接口，那么必须通过Service Manager远程接口提供的getService接口来获得，这本身就是一个使用Binder机制来进行进程间通信的过程。而对于Service Manager这个Server来说，Client如果想要获得Service Manager远程接口，却不必通过进程间通信机制来获得，因为Service Manager远程接口是一个特殊的Binder引用，它的引用句柄一定是0。</p>
+<p> 获取Service Manager远程接口的函数是defaultServiceManager，这个函数在frameworks/native/libs/binder/IServiceManager.cpp文件中：<br> <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">sp&lt;IServiceManager&gt; defaultServiceManager()</div><div class="line">&#123;</div><div class="line">    if (gDefaultServiceManager != NULL) return gDefaultServiceManager;</div><div class="line">    </div><div class="line">    &#123;</div><div class="line">        AutoMutex _l(gDefaultServiceManagerLock);</div><div class="line">        while (gDefaultServiceManager == NULL) &#123;</div><div class="line">            gDefaultServiceManager = interface_cast&lt;IServiceManager&gt;(</div><div class="line">                ProcessState::self()-&gt;getContextObject(NULL));</div><div class="line">            if (gDefaultServiceManager == NULL)</div><div class="line">                sleep(1);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    return gDefaultServiceManager;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p> gDefaultServiceManagerLock和gDefaultServiceManager是全局变量，定义在frameworks/native/libs/binder/Static.cpp文件中：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Mutex gDefaultServiceManagerLock;</div><div class="line">sp&lt;IServiceManager&gt; gDefaultServiceManager;</div></pre></td></tr></table></figure></p>
+<p>gDefaultServiceManager是单例模式，调用defaultServiceManager函数时，如果gDefaultServiceManager已经创建，则直接返回，否则通过<code>interface_cast&lt;IServiceManager&gt;(ProcessState::self()-&gt;getContextObject(NULL))</code>来创建一个，并保存在gDefaultServiceManager全局变量中。本质上是创建了一个BpServiceManager，包含了一个句柄值为0的Binder引用。<br>具体创建过程分析参照<br><a href="http://blog.csdn.net/luoshengyang/article/details/6627260" target="_blank" rel="external">http://blog.csdn.net/luoshengyang/article/details/6627260</a><br><a href="http://www.cnblogs.com/innost/archive/2011/01/09/1931456.html" target="_blank" rel="external">http://www.cnblogs.com/innost/archive/2011/01/09/1931456.html</a></p>
+<p>这两篇文章详细的分析了创建过程。</p>
+<p>获取到这个Service Manager之后，Server可以调用IServiceManager::addService这个接口来和Binder驱动程序交互了，即调用BpServiceManager::addService 。而BpServiceManager::addService又会调用通过其基类BpRefBase的成员函数remote获得原先创建的BpBinder实例，接着调用BpBinder::transact成员函数。在BpBinder::transact函数中，又会调用IPCThreadState::transact成员函数，这里就是最终与Binder驱动程序交互的地方了。IPCThreadState有一个PorcessState类型的成中变量mProcess，而mProcess有一个成员变量mDriverFD，它是设备文件/dev/binder的打开文件描述符，因此，IPCThreadState就相当于间接在拥有了设备文件/dev/binder的打开文件描述符，于是，便可以与Binder驱动程序交互了。</p>
+<p>Client获得Service Manager之后，调用IServiceManager::getService这个接口来和Binder驱动程序交互了。</p>
+<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p><a href="https://github.com/GeniusVJR/LearningNotes/blob/master/Part1/Android/Binder%E6%9C%BA%E5%88%B6.md" target="_blank" rel="external">Binder机制</a></p>
+<p><a href="http://blog.csdn.net/luoshengyang/article/details/6618363/" target="_blank" rel="external">Android进程间通信（IPC）机制Binder简要介绍和学习计划</a></p>
+<p><a href="http://blog.csdn.net/luoshengyang/article/details/6621566" target="_blank" rel="external">浅谈Service Manager成为Android进程间通信（IPC）机制Binder守护进程之路</a></p>
+<p><a href="http://blog.csdn.net/luoshengyang/article/details/6627260" target="_blank" rel="external">浅谈Android系统进程间通信（IPC）机制Binder中的Server和Client获得Service Manager接口之路</a></p>
+<p><a href="http://blog.csdn.net/luoshengyang/article/details/6629298" target="_blank" rel="external"> Android系统进程间通信（IPC）机制Binder中的Server启动过程源代码分析</a></p>
+<p><a href="http://blog.csdn.net/luoshengyang/article/details/6633311" target="_blank" rel="external">Android系统进程间通信（IPC）机制Binder中的Client获得Server远程接口过程源代码分析</a></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+
+
+    <nav id="article-nav">
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/08/24/Fragment/">
+                    Fragment
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目錄</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Binder"><span class="toc-number">1.</span> <span class="toc-text">Binder</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#框架分析"><span class="toc-number">1.1.</span> <span class="toc-text">框架分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Service-Manager成为Binder守护进程"><span class="toc-number">1.2.</span> <span class="toc-text">Service Manager成为Binder守护进程</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-打开Binder设备文件"><span class="toc-number">1.2.1.</span> <span class="toc-text">1.打开Binder设备文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-向Binder驱动声明自己是Binder上下文管理者，即Binder守护进程"><span class="toc-number">1.2.2.</span> <span class="toc-text">2.向Binder驱动声明自己是Binder上下文管理者，即Binder守护进程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-进入一个无穷循环，充当Server的角色，等待Client请求"><span class="toc-number">1.2.3.</span> <span class="toc-text">3. 进入一个无穷循环，充当Server的角色，等待Client请求</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Server和Client获得Service-Manager接口"><span class="toc-number">1.3.</span> <span class="toc-text">Server和Client获得Service Manager接口</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考文章"><span class="toc-number">2.</span> <span class="toc-text">参考文章</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隱藏目錄"  title="點擊按鈕隱藏或者顯示文章目錄">
+
+    <script>
+        yiliaConfig.toc = ["隱藏目錄", "顯示目錄", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"Binder　| IChrisKing　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <div id="comment-box" ></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2016/08/31/Binder/" data-title="Binder" data-url="http://yoursite.com/2016/08/31/Binder/"></div>
+    <script>
+        var duoshuoQuery = {short_name:"ichrisking"};
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+            s.async = true; s.charset = 'UTF-8';
+            (d.head || d.body).appendChild(s);
+        }
+
+        
+    </script>
+    
+    <script> loadComment(); </script>
+
+</div>
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="回到主頁"><i class="fa fa-home"></i></a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2016/08/24/Fragment/" title="下一篇: Fragment">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/08/31/Binder/">Binder</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/24/Fragment/">Fragment</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/24/Android-TouchEvent/">Android事件分发机制</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/23/ANR-and-FC/">ANR与FC</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/23/Android-performance-optimization/">Android性能优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/23/how_to_use_locate_image_file_in_hexo/">如何在hexo中使用本地图片</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/23/reinstall-hexo-after-reinstall-OS/">重装系统后，修复hexo</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/22/Android_memory_leak/">Android内存泄漏</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/18/Android1_1/">Android基础知识</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/05/build_shadowsocks/">配置shadowsocks</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/24/change-hexo-theme-to-maupassant/">对我的Blog做了点改动</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/23/AnromOS_deploy/">Anrom日常发布方法</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/21/AnromOS_Web_Build/">AnromOS发布网站的搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/19/make_blog_with_hexo/">使用hexo搭建blog</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2016 Chris King
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、簡單且強大的網誌框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="簡而不減 Hexo 雙欄網誌主題  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到訪數"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本頁閱讀量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回頂部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看評論"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="轉到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+             categories: ".article-category a, a.tag-list-link", 
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
