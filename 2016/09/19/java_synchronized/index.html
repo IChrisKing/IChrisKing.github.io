@@ -15,18 +15,16 @@
 
 
 
-<meta name="description" content="在hexo中使用本地图片的步骤，需要安装相关的插件，将图片放在对应的位置，并正确的引用图片">
+<meta name="description" content="Java并发相关的内容。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="如何在hexo中使用本地图片">
-<meta property="og:url" content="http://yoursite.com/2016/08/23/how_to_use_locate_image_file_in_hexo/index.html">
+<meta property="og:title" content="Java并发">
+<meta property="og:url" content="http://yoursite.com/2016/09/19/java_synchronized/index.html">
 <meta property="og:site_name" content="IChrisKing">
-<meta property="og:description" content="在hexo中使用本地图片的步骤，需要安装相关的插件，将图片放在对应的位置，并正确的引用图片">
-<meta property="og:image" content="http://yoursite.com/assets/img/head.png">
-<meta property="og:updated_time" content="2016-08-30T02:57:57.991Z">
+<meta property="og:description" content="Java并发相关的内容。">
+<meta property="og:updated_time" content="2016-09-19T01:46:56.235Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="如何在hexo中使用本地图片">
-<meta name="twitter:description" content="在hexo中使用本地图片的步骤，需要安装相关的插件，将图片放在对应的位置，并正确的引用图片">
-<meta name="twitter:image" content="http://yoursite.com/assets/img/head.png">
+<meta name="twitter:title" content="Java并发">
+<meta name="twitter:description" content="Java并发相关的内容。">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -58,7 +56,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>如何在hexo中使用本地图片 | IChrisKing</title>
+<title>Java并发 | IChrisKing</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -260,11 +258,11 @@
     </div>
     <link class="menu-list" tags="標籤" friends="友情鏈接" about="關於我"/>
 </nav>
-      <div class="body-wrap"><article id="post-how_to_use_locate_image_file_in_hexo" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-java_synchronized" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/08/23/how_to_use_locate_image_file_in_hexo/" class="article-date">
-      <time datetime="2016-08-23T03:03:26.000Z" itemprop="datePublished">2016-08-23</time>
+      <a href="/2016/09/19/java_synchronized/" class="article-date">
+      <time datetime="2016-09-19T01:26:34.000Z" itemprop="datePublished">2016-09-19</time>
 </a>
 
 
@@ -279,7 +277,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      如何在hexo中使用本地图片
+      Java并发
     </h1>
   
 
@@ -288,13 +286,13 @@
       <div class="article-info article-info-post">
         
     <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/hexo/">hexo</a>
+    <a class="article-category-link" href="/categories/《Android开发工程师面试指南》摘要/">《Android开发工程师面试指南》摘要</a><a class="article-category-link" href="/categories/《Android开发工程师面试指南》摘要/第二部分/">第二部分</a>
     </div>
 
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/">hexo</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android开发工程师面试指南/">Android开发工程师面试指南</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -304,12 +302,21 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h3 id="安装相关插件"><a href="#安装相关插件" class="headerlink" title="安装相关插件"></a>安装相关插件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">npm install hexo-renderer-jade --save</div><div class="line">npm install hexo-renderer-sass --save</div></pre></td></tr></table></figure>
-<h3 id="创建相关目录"><a href="#创建相关目录" class="headerlink" title="创建相关目录"></a>创建相关目录</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mkdir /path/to/your/blog/source/assets/img/</div></pre></td></tr></table></figure>
-<h3 id="打开assets支持"><a href="#打开assets支持" class="headerlink" title="打开assets支持"></a>打开assets支持</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">vim _config.yml</div><div class="line">修改这一行</div><div class="line">post_asset_folder: true</div></pre></td></tr></table></figure>
-<h3 id="放置图片文件"><a href="#放置图片文件" class="headerlink" title="放置图片文件"></a>放置图片文件</h3><p>将要使用的图片文件放到/path/to/your/blog/source/assets/img/目录下<br>如head.png</p>
-<h3 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">![image](/assets/img/head.png)</div></pre></td></tr></table></figure>
-<h3 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h3><p><img src="/assets/img/head.png" alt="image"></p>
+        <h2 id="Thread与Runable"><a href="#Thread与Runable" class="headerlink" title="Thread与Runable"></a>Thread与Runable</h2><p>继承Thread类和实现Runable接口都可以实现多线程。两种方式都要通过重写run()方法来定义线程的行为，推荐使用后者，因为Java中的继承是单继承，一个类有一个父类，如果继承了Thread类就无法再继承其他类了，显然使用Runnable接口更为灵活。</p>
+<p>实现Runnable接口相比继承Thread类有如下优势：</p>
+<ol>
+<li>可以避免由于Java的单继承特性而带来的局限</li>
+<li>增强程序的健壮性，代码能够被多个程序共享，代码与数据是独立的</li>
+<li>适合多个相同程序代码的线程区处理同一资源的情况</li>
+</ol>
+<p><a href="https://github.com/GeniusVJR/LearningNotes/blob/master/Part2/JavaConcurrent/Thread%E5%92%8CRunnable%E5%AE%9E%E7%8E%B0%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%8C%BA%E5%88%AB.md" target="_blank" rel="external">Thread和Runnable实现多线程的区别</a></p>
+<h2 id="Callable接口"><a href="#Callable接口" class="headerlink" title="Callable接口"></a>Callable接口</h2><p>Java 5以后创建线程还有第三种方式：实现Callable接口，该接口中的call方法可以在线程执行结束时产生一个返回值，代码如下所示：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line">class MyTask implements Callable&lt;Integer&gt; &#123;  </div><div class="line">    private int upperBounds;  </div><div class="line"></div><div class="line">    public MyTask(int upperBounds) &#123;  </div><div class="line">        this.upperBounds = upperBounds;  </div><div class="line">    &#125;  </div><div class="line"></div><div class="line">    @Override  </div><div class="line">    public Integer call() throws Exception &#123;  </div><div class="line">        int sum = 0;   </div><div class="line">        for(int i = 1; i &lt;= upperBounds; i++) &#123;  </div><div class="line">            sum += i;  </div><div class="line">        &#125;  </div><div class="line">        return sum;  </div><div class="line">    &#125;  </div><div class="line"></div><div class="line">&#125;  </div><div class="line"></div><div class="line">public class Test &#123;  </div><div class="line"></div><div class="line">    public static void main(String[] args) throws Exception &#123;  </div><div class="line">        List&lt;Future&lt;Integer&gt;&gt; list = new ArrayList&lt;&gt;();  </div><div class="line">        ExecutorService service = Executors.newFixedThreadPool(10);  </div><div class="line">        for(int i = 0; i &lt; 10; i++) &#123;  </div><div class="line">            list.add(service.submit(new MyTask((int) (Math.random() * 100))));  </div><div class="line">        &#125;  </div><div class="line"></div><div class="line">        int sum = 0;  </div><div class="line">        for(Future&lt;Integer&gt; future : list) &#123;  </div><div class="line">            while(!future.isDone()) ;  </div><div class="line">            sum += future.get();  </div><div class="line">        &#125;  </div><div class="line"></div><div class="line">        System.out.println(sum);  </div><div class="line">    &#125;  </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="生产者消费者的例子"><a href="#生产者消费者的例子" class="headerlink" title="生产者消费者的例子"></a>生产者消费者的例子</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">public class ProducerConsumerTest &#123;</div><div class="line"></div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        PublicResource resource = new PublicResource();</div><div class="line">        new Thread(new ProducerThread(resource)).start();</div><div class="line">        new Thread(new ConsumerThread(resource)).start();</div><div class="line">        new Thread(new ProducerThread(resource)).start();</div><div class="line">        new Thread(new ConsumerThread(resource)).start();</div><div class="line">        new Thread(new ProducerThread(resource)).start();</div><div class="line">        new Thread(new ConsumerThread(resource)).start();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">package 生产者消费者;</div><div class="line">/**</div><div class="line"> * 生产者线程，负责生产公共资源</div><div class="line"> * @author dream</div><div class="line"> *</div><div class="line"> */</div><div class="line">public class ProducerThread implements Runnable&#123;</div><div class="line"></div><div class="line">    private PublicResource resource;</div><div class="line"></div><div class="line"></div><div class="line">    public ProducerThread(PublicResource resource) &#123;</div><div class="line">        this.resource = resource;</div><div class="line">    &#125;</div><div class="line"></div><div class="line"></div><div class="line">    @Override</div><div class="line">    public void run() &#123;</div><div class="line">        while (true) &#123;</div><div class="line">            try &#123;</div><div class="line">                Thread.sleep((long) (Math.random() * 1000));</div><div class="line">            &#125; catch (InterruptedException e) &#123;</div><div class="line">                e.printStackTrace();</div><div class="line">            &#125;</div><div class="line">            resource.increase();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line"></div><div class="line">&#125;</div><div class="line">package 生产者消费者;</div><div class="line"></div><div class="line">/**</div><div class="line"> * 消费者线程，负责消费公共资源</div><div class="line"> * @author dream</div><div class="line"> *</div><div class="line"> */</div><div class="line">public class ConsumerThread implements Runnable&#123;</div><div class="line"></div><div class="line">    private PublicResource resource;</div><div class="line"></div><div class="line"></div><div class="line">    public ConsumerThread(PublicResource resource) &#123;</div><div class="line">        this.resource = resource;</div><div class="line">    &#125;</div><div class="line"></div><div class="line"></div><div class="line">    @Override</div><div class="line">    public void run() &#123;</div><div class="line">        while (true) &#123;</div><div class="line">            try &#123;</div><div class="line">                Thread.sleep((long) (Math.random() * 1000));</div><div class="line">            &#125; catch (InterruptedException e) &#123;</div><div class="line">                // TODO Auto-generated catch block</div><div class="line">                e.printStackTrace();</div><div class="line">            &#125;</div><div class="line">            resource.decrease();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line"></div><div class="line">&#125;</div><div class="line">package 生产者消费者;</div><div class="line"></div><div class="line">/**</div><div class="line"> * 公共资源类</div><div class="line"> * @author dream</div><div class="line"> *</div><div class="line"> */</div><div class="line">public class PublicResource &#123;</div><div class="line"></div><div class="line">    private int number = 0;</div><div class="line">    private int size = 10;</div><div class="line"></div><div class="line">    /**</div><div class="line">     * 增加公共资源</div><div class="line">     */</div><div class="line">    public synchronized void increase()</div><div class="line">    &#123;</div><div class="line">        while (number &gt;= size) &#123;</div><div class="line">            try &#123;</div><div class="line">                wait();</div><div class="line">            &#125; catch (InterruptedException e) &#123;</div><div class="line">                // TODO Auto-generated catch block</div><div class="line">                e.printStackTrace();</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        number++;</div><div class="line">        System.out.println(&quot;生产了1个，总共有&quot; + number);</div><div class="line">        notifyAll();</div><div class="line">    &#125;</div><div class="line"></div><div class="line"></div><div class="line">    /**</div><div class="line">     * 减少公共资源</div><div class="line">     */</div><div class="line">    public synchronized void decrease()</div><div class="line">    &#123;</div><div class="line">        while (number &lt;= 0) &#123;</div><div class="line">            try &#123;</div><div class="line">                wait();</div><div class="line">            &#125; catch (InterruptedException e) &#123;</div><div class="line">                // TODO Auto-generated catch block</div><div class="line">                e.printStackTrace();</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        number--;</div><div class="line">        System.out.println(&quot;消费了1个，总共有&quot; + number);</div><div class="line">        notifyAll();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="线程中断"><a href="#线程中断" class="headerlink" title="线程中断"></a>线程中断</h2><p><a href="https://github.com/GeniusVJR/LearningNotes/blob/master/Part2/JavaConcurrent/%E7%BA%BF%E7%A8%8B%E4%B8%AD%E6%96%AD.md" target="_blank" rel="external">线程中断</a></p>
+<h2 id="线程同步"><a href="#线程同步" class="headerlink" title="线程同步"></a>线程同步</h2><h3 id="synchronized"><a href="#synchronized" class="headerlink" title="synchronized"></a>synchronized</h3><p><a href="https://github.com/GeniusVJR/LearningNotes/blob/master/Part2/JavaConcurrent/Synchronized.md" target="_blank" rel="external">synchronized</a></p>
+<p><a href="https://github.com/GeniusVJR/LearningNotes/blob/master/Part2/JavaConcurrent/%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%8E%AF%E5%A2%83%E4%B8%AD%E5%AE%89%E5%85%A8%E4%BD%BF%E7%94%A8%E9%9B%86%E5%90%88API.md" target="_blank" rel="external">多线程环境中安全使用集合API</a></p>
+<h3 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h3><p><a href="https://github.com/GeniusVJR/LearningNotes/blob/master/Part2/JavaConcurrent/%E6%AD%BB%E9%94%81.md" target="_blank" rel="external">死锁</a></p>
+<p><a href="https://github.com/GeniusVJR/LearningNotes/blob/master/Part2/JavaConcurrent/%E5%8F%AF%E9%87%8D%E5%85%A5%E5%86%85%E7%BD%AE%E9%94%81.md" target="_blank" rel="external">可重入内置锁</a></p>
 
       
     </div>
@@ -322,15 +329,15 @@
     <nav id="article-nav">
         
             <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2016/08/23/Android-performance-optimization/">
-                    Android性能优化
+                <a href="/2016/09/19/mvp_in_android/">
+                    MVP in Android
                 </a>
             </div>
         
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2016/08/23/reinstall-hexo-after-reinstall-OS/">
-                    重装系统后，修复hexo
+                <a href="/2016/09/18/java_list_hashmap/">
+                    Java集合框架
                 </a>
             </div>
         
@@ -342,7 +349,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目錄</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#安装相关插件"><span class="toc-number">1.</span> <span class="toc-text">安装相关插件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#创建相关目录"><span class="toc-number">2.</span> <span class="toc-text">创建相关目录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#打开assets支持"><span class="toc-number">3.</span> <span class="toc-text">打开assets支持</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#放置图片文件"><span class="toc-number">4.</span> <span class="toc-text">放置图片文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用方法"><span class="toc-number">5.</span> <span class="toc-text">使用方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#效果"><span class="toc-number">6.</span> <span class="toc-text">效果</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Thread与Runable"><span class="toc-number">1.</span> <span class="toc-text">Thread与Runable</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Callable接口"><span class="toc-number">2.</span> <span class="toc-text">Callable接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#生产者消费者的例子"><span class="toc-number">3.</span> <span class="toc-text">生产者消费者的例子</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#线程中断"><span class="toc-number">4.</span> <span class="toc-text">线程中断</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#线程同步"><span class="toc-number">5.</span> <span class="toc-text">线程同步</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#synchronized"><span class="toc-number">5.1.</span> <span class="toc-text">synchronized</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#锁"><span class="toc-number">5.2.</span> <span class="toc-text">锁</span></a></li></ol></li></ol>
         
     </div>
     <style>
@@ -378,7 +385,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"如何在hexo中使用本地图片　| IChrisKing　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"Java并发　| IChrisKing　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -394,7 +401,7 @@
     
       <div class="duoshuo" id="comments">
     <div id="comment-box" ></div>
-    <div class="ds-thread" id="ds-thread" data-thread-key="2016/08/23/how_to_use_locate_image_file_in_hexo/" data-title="如何在hexo中使用本地图片" data-url="http://yoursite.com/2016/08/23/how_to_use_locate_image_file_in_hexo/"></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2016/09/19/java_synchronized/" data-title="Java并发" data-url="http://yoursite.com/2016/09/19/java_synchronized/"></div>
     <script>
         var duoshuoQuery = {short_name:"ichrisking"};
         var loadComment = function(){
@@ -417,7 +424,7 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2016/08/23/Android-performance-optimization/" title="上一篇: Android性能优化">
+            <a href="/2016/09/19/mvp_in_android/" title="上一篇: MVP in Android">
                 <i class="fa fa-angle-left"></i>
             </a>
         
@@ -425,7 +432,7 @@
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2016/08/23/reinstall-hexo-after-reinstall-OS/" title="下一篇: 重装系统后，修复hexo">
+            <a href="/2016/09/18/java_list_hashmap/" title="下一篇: Java集合框架">
                 <i class="fa fa-angle-right"></i>
             </a>
         
