@@ -15,16 +15,16 @@
 
 
 
-<meta name="description" content="Anrom项目的相关网站搭建过程">
+<meta name="description" content="BroadcastReceiver的使用方法，生命周期，及其衍生出的LocalBroadcastManager类">
 <meta property="og:type" content="article">
-<meta property="og:title" content="AnromOS发布网站的搭建">
-<meta property="og:url" content="http://yoursite.com/2016/07/21/AnromOS_Web_Build/index.html">
+<meta property="og:title" content="BroadcastReceiver">
+<meta property="og:url" content="http://yoursite.com/2016/09/22/oneday_BroadcastReceiver/index.html">
 <meta property="og:site_name" content="IChrisKing">
-<meta property="og:description" content="Anrom项目的相关网站搭建过程">
-<meta property="og:updated_time" content="2016-08-30T02:36:35.780Z">
+<meta property="og:description" content="BroadcastReceiver的使用方法，生命周期，及其衍生出的LocalBroadcastManager类">
+<meta property="og:updated_time" content="2016-09-22T02:27:41.157Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="AnromOS发布网站的搭建">
-<meta name="twitter:description" content="Anrom项目的相关网站搭建过程">
+<meta name="twitter:title" content="BroadcastReceiver">
+<meta name="twitter:description" content="BroadcastReceiver的使用方法，生命周期，及其衍生出的LocalBroadcastManager类">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -56,7 +56,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>AnromOS发布网站的搭建 | IChrisKing</title>
+<title>BroadcastReceiver | IChrisKing</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -258,11 +258,11 @@
     </div>
     <link class="menu-list" tags="標籤" friends="友情鏈接" about="關於我"/>
 </nav>
-      <div class="body-wrap"><article id="post-AnromOS_Web_Build" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-oneday_BroadcastReceiver" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/07/21/AnromOS_Web_Build/" class="article-date">
-      <time datetime="2016-07-21T13:42:06.000Z" itemprop="datePublished">2016-07-21</time>
+      <a href="/2016/09/22/oneday_BroadcastReceiver/" class="article-date">
+      <time datetime="2016-09-22T00:43:52.000Z" itemprop="datePublished">2016-09-22</time>
 </a>
 
 
@@ -277,7 +277,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      AnromOS发布网站的搭建
+      BroadcastReceiver
     </h1>
   
 
@@ -286,13 +286,13 @@
       <div class="article-info article-info-post">
         
     <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/hexo/">hexo</a>
+    <a class="article-category-link" href="/categories/Android/">Android</a><a class="article-category-link" href="/categories/Android/Android面试一天一题/">Android面试一天一题</a>
     </div>
 
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/anrom/">anrom</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/">hexo</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android面试一天一题/">Android面试一天一题</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -302,56 +302,60 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h1 id="相关地址"><a href="#相关地址" class="headerlink" title="相关地址"></a>相关地址</h1><p>网站地址：<a href="https://anromos.github.io/" target="_blank" rel="external">https://anromos.github.io/</a></p>
-<p>github项目地址：<a href="https://github.com/AnromOS/AnromOS.github.io" target="_blank" rel="external">https://github.com/AnromOS/AnromOS.github.io</a></p>
-<p>github organization地址：<a href="https://github.com/AnromOS" target="_blank" rel="external">https://github.com/AnromOS</a></p>
-<h1 id="加入项目方法"><a href="#加入项目方法" class="headerlink" title="加入项目方法"></a>加入项目方法</h1><h2 id="构建本地环境"><a href="#构建本地环境" class="headerlink" title="构建本地环境"></a>构建本地环境</h2><h3 id="安装Node-js"><a href="#安装Node-js" class="headerlink" title="安装Node.js"></a>安装Node.js</h3><p>由于node.js官网打不开，使用一个国内的地址替代<br><a href="http://nodejs.cn" target="_blank" rel="external">http://nodejs.cn</a></p>
-<p>Linux(x64)版本node.js下载地址：<a href="https://nodejs.org/dist/v6.2.0/node-v6.2.0-linux-x64.tar.gz" target="_blank" rel="external">https://nodejs.org/dist/v6.2.0/node-v6.2.0-linux-x64.tar.gz</a></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ tar xvf node-v6.2.0-linux-x64.tar.gz)</div><div class="line">$ cd node-v6.2.0-linux-x64.tar.gz</div><div class="line">$ cd bin</div><div class="line">$ ./node -v</div><div class="line">v6.2.0</div></pre></td></tr></table></figure>
-<p>将bin添加到PATH中</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sudo vim /etc/profile</div></pre></td></tr></table></figure>
-<p>添加</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">#node.js</div><div class="line">export PATH=$PATH:/path_to_nodejs/bin</div></pre></td></tr></table></figure>
-<h3 id="安装git"><a href="#安装git" class="headerlink" title="安装git"></a>安装git</h3><h3 id="申请github帐号"><a href="#申请github帐号" class="headerlink" title="申请github帐号"></a>申请github帐号</h3><h3 id="安装-hexo"><a href="#安装-hexo" class="headerlink" title="安装 hexo"></a>安装 hexo</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">npm install hexo -g</div><div class="line">npm update hexo -g</div><div class="line">hexo init &lt;folder&gt;</div></pre></td></tr></table></figure>
-<p>如果指定 folder,便会在目前的资料夹建立一个名为 folder 的新资料夹；否则会在目前资料夹初始化。</p>
-<h3 id="生成网站"><a href="#生成网站" class="headerlink" title="生成网站"></a>生成网站</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo generate</div></pre></td></tr></table></figure>
-<h3 id="打开本地服务器，预览网站效果"><a href="#打开本地服务器，预览网站效果" class="headerlink" title="打开本地服务器，预览网站效果"></a>打开本地服务器，预览网站效果</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo server</div></pre></td></tr></table></figure>
-<p>服务器会跑在 <a href="http://localhost:4000" target="_blank" rel="external">http://localhost:4000</a> (默认4000端口，可在_config.yml中设定)</p>
-<h2 id="关联到github项目"><a href="#关联到github项目" class="headerlink" title="关联到github项目"></a>关联到github项目</h2><h3 id="修改hexo配置"><a href="#修改hexo配置" class="headerlink" title="修改hexo配置"></a>修改hexo配置</h3><p>编辑本地hexo文件夹下的_config.yml文件<br>修改最底下的几行：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">deploy:</div><div class="line">  type: git</div><div class="line">  repository: git@github.com:AnromOS/AnromOS.github.io.git</div><div class="line">  branch: master</div></pre></td></tr></table></figure>
-<h3 id="初始化hexo-deployer"><a href="#初始化hexo-deployer" class="headerlink" title="初始化hexo-deployer"></a>初始化hexo-deployer</h3><p>在hexo init 时指定的folder下</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install hexo-deployer-git --save</div></pre></td></tr></table></figure>
-<h3 id="同步网站代码到本地"><a href="#同步网站代码到本地" class="headerlink" title="同步网站代码到本地"></a>同步网站代码到本地</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">rm -rf source</div><div class="line">git clone git@github.com:AnromOS/web_source.git ./source</div><div class="line">cd source</div><div class="line">git pull</div></pre></td></tr></table></figure>
-<h3 id="生成本地网站，并预览效果"><a href="#生成本地网站，并预览效果" class="headerlink" title="生成本地网站，并预览效果"></a>生成本地网站，并预览效果</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">hexo generate</div><div class="line">hexo server</div></pre></td></tr></table></figure>
-<p>查看<a href="http://localhost:4000" target="_blank" rel="external">http://localhost:4000</a>  对比 <a href="https://anromos.github.io/" target="_blank" rel="external">https://anromos.github.io/</a> 查看异同</p>
-<h2 id="github项目配置"><a href="#github项目配置" class="headerlink" title="github项目配置"></a>github项目配置</h2><h3 id="加入organization"><a href="#加入organization" class="headerlink" title="加入organization"></a>加入organization</h3><p><a href="https://github.com/AnromOS" target="_blank" rel="external">https://github.com/AnromOS</a><br>访问并加入</p>
-<h3 id="加入-anrom-team"><a href="#加入-anrom-team" class="headerlink" title="加入 anrom team"></a>加入 anrom team</h3><p><a href="https://github.com/orgs/AnromOS/teams/anrom" target="_blank" rel="external">https://github.com/orgs/AnromOS/teams/anrom</a><br>访问并加入</p>
-<h3 id="本地生成新的ssh密钥"><a href="#本地生成新的ssh密钥" class="headerlink" title="本地生成新的ssh密钥"></a>本地生成新的ssh密钥</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">cd ~/.ssh</div><div class="line">ssh-keygen -t rsa -C &apos;git@anromos.your_name&apos;</div><div class="line">Generating public/private rsa key pair.</div><div class="line">Enter file in which to save the key (~/.ssh/id_rsa): ~/.ssh/anromos_id_rsa #这里输入一个新的ssh key文件名                           </div><div class="line">Enter passphrase (empty for no passphrase): </div><div class="line">Enter same passphrase again: </div><div class="line">Your identification has been saved in ~/.ssh/anromos_id_rsa.</div><div class="line">Your public key has been saved in ~/.ssh/anromos_id_rsa.pub</div><div class="line">vim ~/.ssh/anromos_id_rsa.pub</div></pre></td></tr></table></figure>
-<h3 id="将ssh密钥递交到github"><a href="#将ssh密钥递交到github" class="headerlink" title="将ssh密钥递交到github"></a>将ssh密钥递交到github</h3><p><a href="https://github.com/AnromOS/web_source/settings/keys" target="_blank" rel="external">https://github.com/AnromOS/web_source/settings/keys</a></p>
-<p>点击左侧 Deploy keys</p>
-<p>点击右侧 Add deploy key</p>
-<p>vim ~/.ssh/anromos_id_rsa.pub</p>
-<p>并将内容复制到Key部分，Title写名字</p>
-<p>勾选Allow write access</p>
-<p>点击Add key</p>
-<h1 id="网站编辑"><a href="#网站编辑" class="headerlink" title="网站编辑"></a>网站编辑</h1><h2 id="同步代码"><a href="#同步代码" class="headerlink" title="同步代码"></a>同步代码</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cd source</div><div class="line">git pull</div></pre></td></tr></table></figure>
-<h2 id="创建新博文"><a href="#创建新博文" class="headerlink" title="创建新博文"></a>创建新博文</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo new &quot;Hey,man&quot;</div></pre></td></tr></table></figure>
-<h2 id="创建新页面"><a href="#创建新页面" class="headerlink" title="创建新页面"></a>创建新页面</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo new page &quot;firstPage&quot;</div></pre></td></tr></table></figure>
-<h2 id="生成网站-1"><a href="#生成网站-1" class="headerlink" title="生成网站"></a>生成网站</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo generate</div></pre></td></tr></table></figure>
-<h2 id="打开本服务器预览"><a href="#打开本服务器预览" class="headerlink" title="打开本服务器预览"></a>打开本服务器预览</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo server</div></pre></td></tr></table></figure>
-<p>访问<a href="http://localhost:4000" target="_blank" rel="external">http://localhost:4000</a> 预览</p>
-<h2 id="递交修改到github"><a href="#递交修改到github" class="headerlink" title="递交修改到github"></a>递交修改到github</h2><p><em>递交修改之前，一定要先到source下git pull</em></p>
-<p><em>递交修改之前，一定要先到source下git pull</em></p>
-<p><em>递交修改之前，一定要先到source下git pull</em></p>
-<p><em>递交修改之前，一定要先本地预览</em></p>
-<p><em>递交修改之前，一定要先本地预览</em></p>
-<p><em>递交修改之前，一定要先本地预览</em><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">cd source</div><div class="line">git pull</div><div class="line">git status</div><div class="line">git add </div><div class="line">git commit</div><div class="line">git push origin master</div><div class="line">hexo deploy</div></pre></td></tr></table></figure></p>
-<h2 id="查看结果"><a href="#查看结果" class="headerlink" title="查看结果"></a>查看结果</h2><p><a href="https://anromos.github.io/" target="_blank" rel="external">https://anromos.github.io/</a></p>
-<h1 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">hexo new &quot;postName&quot; #新建文章</div><div class="line">hexo new page &quot;pageName&quot; #新建页面</div><div class="line">hexo generate #生成静态页面至public目录</div><div class="line">hexo server #开启预览访问端口（默认端口4000，&apos;ctrl + c&apos;关闭server）</div><div class="line">hexo deploy #将.deploy目录部署到GitHub</div><div class="line">hexo help  # 查看帮助</div><div class="line">hexo version  #查看Hexo的版本</div></pre></td></tr></table></figure>
-<h1 id="部分目录说明"><a href="#部分目录说明" class="headerlink" title="部分目录说明"></a>部分目录说明</h1><p>source/ 网站内容的源码，对应github上的web_source项目</p>
-<p>source/_posts/ 目录下放着发布的博文，使用markdown格式，可使用相关编辑器编写内容</p>
-<p>public/ 目录对应着github上的目录结构</p>
-<p>_config.yml 配置文件，可以在其中修改blog名之类的，注意每一项配置的:后面是有空格的。</p>
+        <p><a href="http://www.jianshu.com/p/df7af437e766" target="_blank" rel="external">Android面试一天一题（2 Day）</a></p>
+<p>题目：用广播来更新UI界面好吗？</p>
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>Android四大组件之一。</p>
+<ol>
+<li>广播接收器是一个专注于接收广播通知信息，并做出对应处理的组件。很多广播是源自于系统代码的──比如，通知时区改变、电池电量低、拍摄了一张照片或者用户改变了语言选项。应用程序也可以进行广播──比如说，通知其它应用程序一些数据下载完成并处于可用状态。</li>
+<li>应用程序可以拥有任意数量的广播接收器以对所有它感兴趣的通知信息予以响应。所有的接收器均继承自BroadcastReceiver基类。</li>
+<li>广播接收器没有用户界面。然而，它们可以启动一个activity来响应它们收到的信息，或者用NotificationManager来通知用户。通知可以用很多种方式来吸引用户的注意力──闪动背灯、震动、播放声音等等。一般来说是在状态栏上放一个持久的图标，用户可以打开它并获取消息。</li>
+</ol>
+<p>Android中的广播事件有两种，一种就是系统广播事件，比如：ACTION_BOOT_COMPLETED（系统启动完成后触发），ACTION_TIME_CHANGED（系统时间改变时触发），ACTION_BATTERY_LOW（电量低时触发）等等。另外一种是我们自定义的广播事件。</p>
+<h2 id="源码位置"><a href="#源码位置" class="headerlink" title="源码位置"></a>源码位置</h2><p>frameworks/base/core/java/android/content/BroadcastReceiver.java</p>
+<p>BroadcastReceiver是一个抽象类，继承它的子类，需要实现它的抽象方法：<code>public abstract void onReceive(Context context, Intent intent);</code></p>
+<h2 id="注册广播"><a href="#注册广播" class="headerlink" title="注册广播"></a>注册广播</h2><h3 id="两种方法"><a href="#两种方法" class="headerlink" title="两种方法"></a>两种方法</h3><ul>
+<li>静态注册</li>
+</ul>
+<ol>
+<li><p>创建一个类继承BroadcastReceiver</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">public class MyReceiver extends BroadcastReceiver&#123;</div><div class="line">    private static final String MY_ACTION = &quot;com.testBroadcastReceiver.myaction&quot;;</div><div class="line">    @Override</div><div class="line">    public void onReceive(Context context, Intent intent) &#123;</div><div class="line">        String action = intent.getAction();</div><div class="line">        if(action.equal(MY_ACTION)) &#123;</div><div class="line">            Toast.makeText(context, &quot;静态:&quot;+action, 1000).show();</div><div class="line">        &#125;    </div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>到AndroidManifest.xml 添加receive标签</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;receiver android:name=&quot;MyReceiver&quot;&gt;  </div><div class="line">    &lt;intent-filter&gt;  </div><div class="line">        &lt;action  </div><div class="line">            android:name=&quot;com.testBroadcastReceiver.myaction&quot;/&gt;  </div><div class="line">    &lt;/intent-filter&gt;  </div><div class="line">&lt;/receiver&gt;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<ul>
+<li>动态注册<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">IntentFilter intentFilter  = new IntentFilter();  </div><div class="line">intentFilter .addAction(MY_ACTION); //指定action </div><div class="line">registerReceiver(myReceiver, intentFilter);  //注册监听</div><div class="line">unregisterReceiver(myReceiver); //取消监听</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p><strong>一般在onStart中注册，onStop中取消unregisterReceiver</strong></p>
+<h2 id="发送广播"><a href="#发送广播" class="headerlink" title="发送广播"></a>发送广播</h2><p>发送广播消息，把要发送的信息和用于过滤的信息(如Action、Category)装入一个Intent对象，然后通过调用 Context.sendBroadcast()、sendOrderBroadcast()或sendStickyBroadcast()方法，把 Intent对象以广播方式发送出去。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Intent intent = new Intent(MY_ACTION);</div><div class="line">intent.putExtra(&quot;Name&quot;, &quot;abc&quot;);</div><div class="line">intent.putExtra(&quot;Msg&quot;, &quot;hello&quot;);</div><div class="line">sendBroadcast(intent);//传递过去</div></pre></td></tr></table></figure>
+<h2 id="广播分类"><a href="#广播分类" class="headerlink" title="广播分类"></a>广播分类</h2><h3 id="Normal-broadcasts（普通广播）"><a href="#Normal-broadcasts（普通广播）" class="headerlink" title="Normal broadcasts（普通广播）"></a>Normal broadcasts（普通广播）</h3><p>Normal broadcasts是完全异步的可以同一时间被所有的接收者接收到。消息的传递效率比较高。但缺点是接收者不能将接收的消息的处理信息传递给下一个接收者也不能停止消息的传播。</p>
+<h3 id="Ordered-broadcasts（有序广播）"><a href="#Ordered-broadcasts（有序广播）" class="headerlink" title="Ordered broadcasts（有序广播）"></a>Ordered broadcasts（有序广播）</h3><p>Ordered broadcasts的接收者按照一定的优先级进行消息的接收。如：A,B,C的优先级依次降低，那么消息先传递给A，在传递给B，最后传递给C。优先级别声明在中，取值为[-1000,1000]数值越大优先级别越高。优先级也可通过filter.setPriority(10)方式设置。 另外Ordered broadcasts的接收者可以通过abortBroadcast()的方式取消广播的传播，也可以通过setResultData和setResultExtras方法将处理的结果存入到Broadcast中，传递给下一个接收者。然后，下一个接收者通过getResultData()和getResultExtras(true)接收高优先级的接收者存入的数据。</p>
+<h3 id="StickyBroadcast-（异步广播）"><a href="#StickyBroadcast-（异步广播）" class="headerlink" title="StickyBroadcast （异步广播）"></a>StickyBroadcast （异步广播）</h3><p>当处理完之后的Intent ，依然存在，这时候registerReceiver(BroadcastReceiver, IntentFilter) 还能收到他的值，直到你把它去掉 , 不能将处理结果传给下一个接收者 , 无法终止广播。</p>
+<p>在发送广播时Reciever还没有被注册，但它注册后还是可以收到在它之前发送的那条广播</p>
+<h2 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h2><p>Receiver的生命周期很短，当它的onReceive方法执行完成后，它的生命周期就结束了。这时BroadcastReceiver已经不处于active状态，被系统杀掉的概率极高，也就是说如果你在onReceive去开线程进行异步操作或者打开Dialog都有可能在没达到你要的结果时进程就被系统杀掉。因为这个进程可能只有这个Receiver这个组件在运行，当Receiver也执行完后就是一个empty进程，是最容易被系统杀掉的。替代的方案是用Notificaiton或者Service（这种情况当然不能用bindService，因为bindService启动的service会在启动者被销毁后跟着被销毁）。</p>
+<h2 id="题目解答"><a href="#题目解答" class="headerlink" title="题目解答"></a>题目解答</h2><p>如果界面并不需要频繁更新，那么可以使用广播。但如果时频繁的刷新界面，则不适合使用广播。因为广播的发送和接收是有一定的延迟的，它的传输是通过Binder进程间通信机制来实现的，系统需要为广播的传递做一些进程间通信的准备。</p>
+<p>ActivityManagerService有一个专门的消息队列来接收发送出来的广播，sendBroadcast执行完后就立即返回，但这时发送来的广播只是被放入到队列，并不一定马上被处理。当处理到当前广播时，又会把这个广播分发给注册的广播接收分发器ReceiverDispatcher，ReceiverDispatcher最后又把广播交给接Receiver所在的线程的消息队列去处理（就是你熟悉的UI线程的Message Queue）。</p>
+<p>整个过程从发送–ActivityManagerService–ReceiverDispatcher进行了两次Binder进程间通信，最后还要交到UI的消息队列，如果基中有一个消息的处理阻塞了UI，当然也会延迟你的onReceive的执行。</p>
+<h2 id="LocalBroadcastManager"><a href="#LocalBroadcastManager" class="headerlink" title="LocalBroadcastManager"></a>LocalBroadcastManager</h2><h3 id="简介-1"><a href="#简介-1" class="headerlink" title="简介"></a>简介</h3><p>LocalBroadcastManager是Android Support包提供了一个工具，是用来在同一个应用内的不同组件间发送Broadcast的。</p>
+<p>使用LocalBroadcastManager有如下好处：</p>
+<ul>
+<li>发送的广播只会在自己App内传播，不会泄露给其他App，确保隐私数据不会泄露</li>
+<li>其他App也无法向你的App发送该广播，不用担心其他App会来搞破坏</li>
+<li>比系统全局广播更加高效</li>
+</ul>
+<h3 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h3><ol>
+<li><p>通过getInstance获取实例</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);</div></pre></td></tr></table></figure>
+</li>
+<li><p>通过函数 registerReceiver来注册监听器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">lbm.registerReceiver(new BroadcastReceiver() &#123;  </div><div class="line">        @Override  </div><div class="line">        public void onReceive(Context context, Intent intent) &#123;  </div><div class="line">        // TODO Handle the received local broadcast  </div><div class="line">        &#125;  </div><div class="line">    &#125;, new IntentFilter(LOCAL_ACTION));</div></pre></td></tr></table></figure>
+</li>
+<li><p>通过 sendBroadcast 函数来发送广播</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">lbm.sendBroadcast(new Intent(LOCAL_ACTION));</div></pre></td></tr></table></figure></li>
+</ol>
 
       
     </div>
@@ -364,15 +368,15 @@
     <nav id="article-nav">
         
             <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2016/07/23/AnromOS_deploy/">
-                    Anrom日常发布方法
+                <a href="/2016/09/22/oneday-activity-lifecycle/">
+                    Activity生命周期
                 </a>
             </div>
         
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2016/07/19/make_blog_with_hexo/">
-                    使用hexo搭建blog
+                <a href="/2016/09/21/oneday_service/">
+                    android_service
                 </a>
             </div>
         
@@ -384,7 +388,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目錄</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#相关地址"><span class="toc-number">1.</span> <span class="toc-text">相关地址</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#加入项目方法"><span class="toc-number">2.</span> <span class="toc-text">加入项目方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#构建本地环境"><span class="toc-number">2.1.</span> <span class="toc-text">构建本地环境</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#安装Node-js"><span class="toc-number">2.1.1.</span> <span class="toc-text">安装Node.js</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装git"><span class="toc-number">2.1.2.</span> <span class="toc-text">安装git</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#申请github帐号"><span class="toc-number">2.1.3.</span> <span class="toc-text">申请github帐号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装-hexo"><span class="toc-number">2.1.4.</span> <span class="toc-text">安装 hexo</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#生成网站"><span class="toc-number">2.1.5.</span> <span class="toc-text">生成网站</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#打开本地服务器，预览网站效果"><span class="toc-number">2.1.6.</span> <span class="toc-text">打开本地服务器，预览网站效果</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#关联到github项目"><span class="toc-number">2.2.</span> <span class="toc-text">关联到github项目</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#修改hexo配置"><span class="toc-number">2.2.1.</span> <span class="toc-text">修改hexo配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#初始化hexo-deployer"><span class="toc-number">2.2.2.</span> <span class="toc-text">初始化hexo-deployer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#同步网站代码到本地"><span class="toc-number">2.2.3.</span> <span class="toc-text">同步网站代码到本地</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#生成本地网站，并预览效果"><span class="toc-number">2.2.4.</span> <span class="toc-text">生成本地网站，并预览效果</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#github项目配置"><span class="toc-number">2.3.</span> <span class="toc-text">github项目配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#加入organization"><span class="toc-number">2.3.1.</span> <span class="toc-text">加入organization</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#加入-anrom-team"><span class="toc-number">2.3.2.</span> <span class="toc-text">加入 anrom team</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#本地生成新的ssh密钥"><span class="toc-number">2.3.3.</span> <span class="toc-text">本地生成新的ssh密钥</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#将ssh密钥递交到github"><span class="toc-number">2.3.4.</span> <span class="toc-text">将ssh密钥递交到github</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#网站编辑"><span class="toc-number">3.</span> <span class="toc-text">网站编辑</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#同步代码"><span class="toc-number">3.1.</span> <span class="toc-text">同步代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#创建新博文"><span class="toc-number">3.2.</span> <span class="toc-text">创建新博文</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#创建新页面"><span class="toc-number">3.3.</span> <span class="toc-text">创建新页面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#生成网站-1"><span class="toc-number">3.4.</span> <span class="toc-text">生成网站</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#打开本服务器预览"><span class="toc-number">3.5.</span> <span class="toc-text">打开本服务器预览</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#递交修改到github"><span class="toc-number">3.6.</span> <span class="toc-text">递交修改到github</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#查看结果"><span class="toc-number">3.7.</span> <span class="toc-text">查看结果</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#常用命令"><span class="toc-number">4.</span> <span class="toc-text">常用命令</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#部分目录说明"><span class="toc-number">5.</span> <span class="toc-text">部分目录说明</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#简介"><span class="toc-number">1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#源码位置"><span class="toc-number">2.</span> <span class="toc-text">源码位置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#注册广播"><span class="toc-number">3.</span> <span class="toc-text">注册广播</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#两种方法"><span class="toc-number">3.1.</span> <span class="toc-text">两种方法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#发送广播"><span class="toc-number">4.</span> <span class="toc-text">发送广播</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#广播分类"><span class="toc-number">5.</span> <span class="toc-text">广播分类</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Normal-broadcasts（普通广播）"><span class="toc-number">5.1.</span> <span class="toc-text">Normal broadcasts（普通广播）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Ordered-broadcasts（有序广播）"><span class="toc-number">5.2.</span> <span class="toc-text">Ordered broadcasts（有序广播）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#StickyBroadcast-（异步广播）"><span class="toc-number">5.3.</span> <span class="toc-text">StickyBroadcast （异步广播）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#生命周期"><span class="toc-number">6.</span> <span class="toc-text">生命周期</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#题目解答"><span class="toc-number">7.</span> <span class="toc-text">题目解答</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#LocalBroadcastManager"><span class="toc-number">8.</span> <span class="toc-text">LocalBroadcastManager</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#简介-1"><span class="toc-number">8.1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用方法"><span class="toc-number">8.2.</span> <span class="toc-text">使用方法</span></a></li></ol></li></ol>
         
     </div>
     <style>
@@ -420,7 +424,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"AnromOS发布网站的搭建　| IChrisKing　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"BroadcastReceiver　| IChrisKing　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -436,7 +440,7 @@
     
       <div class="duoshuo" id="comments">
     <div id="comment-box" ></div>
-    <div class="ds-thread" id="ds-thread" data-thread-key="2016/07/21/AnromOS_Web_Build/" data-title="AnromOS发布网站的搭建" data-url="http://yoursite.com/2016/07/21/AnromOS_Web_Build/"></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2016/09/22/oneday_BroadcastReceiver/" data-title="BroadcastReceiver" data-url="http://yoursite.com/2016/09/22/oneday_BroadcastReceiver/"></div>
     <script>
         var duoshuoQuery = {short_name:"ichrisking"};
         var loadComment = function(){
@@ -459,7 +463,7 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2016/07/23/AnromOS_deploy/" title="上一篇: Anrom日常发布方法">
+            <a href="/2016/09/22/oneday-activity-lifecycle/" title="上一篇: Activity生命周期">
                 <i class="fa fa-angle-left"></i>
             </a>
         
@@ -467,7 +471,7 @@
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2016/07/19/make_blog_with_hexo/" title="下一篇: 使用hexo搭建blog">
+            <a href="/2016/09/21/oneday_service/" title="下一篇: android_service">
                 <i class="fa fa-angle-right"></i>
             </a>
         

@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Chris King" />
+
+
+
+<meta name="description" content="详细分析Activity的生命周期。举例说明各种操作过程中，Activity生命周期变化的过程。分析横屏竖屏切换过程中的生命周期变化。分析onSaveInstanceState方法和onRestoreInstanceState方法的执行时机。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Activity生命周期">
+<meta property="og:url" content="http://yoursite.com/2016/09/22/oneday-activity-lifecycle/index.html">
+<meta property="og:site_name" content="IChrisKing">
+<meta property="og:description" content="详细分析Activity的生命周期。举例说明各种操作过程中，Activity生命周期变化的过程。分析横屏竖屏切换过程中的生命周期变化。分析onSaveInstanceState方法和onRestoreInstanceState方法的执行时机。">
+<meta property="og:image" content="http://yoursite.com/assets/img/android_activity/activity_life_cycle.png">
+<meta property="og:updated_time" content="2016-09-22T08:13:59.049Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Activity生命周期">
+<meta name="twitter:description" content="详细分析Activity的生命周期。举例说明各种操作过程中，Activity生命周期变化的过程。分析横屏竖屏切换过程中的生命周期变化。分析onSaveInstanceState方法和onRestoreInstanceState方法的执行时机。">
+<meta name="twitter:image" content="http://yoursite.com/assets/img/android_activity/activity_life_cycle.png">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="IChrisKing" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>Activity生命周期 | IChrisKing</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: undefined
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Chris King</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">#IMNOTCHRISLEE</p>
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜單</li>
+                        <li>標籤</li>
+                        
+                        <li>友情鏈接</li>
+                        
+                        
+                        <li>關於我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主頁</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">標籤雲</a></li>
+                        
+                            <li><a href="/about/">關於我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="https://chrisking310@gmail.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="https://github.com/IChrisKing" title="GitHub"></a>
+                            
+                                <a class="fa 新浪博客" href="http://blog.sina.com.cn/u/1733434252" title="新浪博客"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android开发工程师面试指南/">Android开发工程师面试指南</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android面试一天一题/">Android面试一天一题</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Anrom/">Anrom</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SEAndroid/">SEAndroid</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SELinux/">SELinux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/anrom/">anrom</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shadowsocks-vps/">shadowsocks/vps</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tool/">tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/填坑/">填坑</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://anromos.github.io/">Anrom OS</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://github.com/AnromOS">Team GitHub</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">Android ROM 开发</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Chris King</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Chris King</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">#IMNOTCHRISLEE</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主頁</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">標籤雲</a></li>
+                
+                    <li><a href="/about/">關於我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="https://chrisking310@gmail.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/IChrisKing" title="GitHub"></a>
+                            
+                                <a class="fa 新浪博客" target="_blank" href="http://blog.sina.com.cn/u/1733434252" title="新浪博客"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="標籤" friends="友情鏈接" about="關於我"/>
+</nav>
+      <div class="body-wrap"><article id="post-oneday-activity-lifecycle" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/09/22/oneday-activity-lifecycle/" class="article-date">
+      <time datetime="2016-09-22T02:24:09.000Z" itemprop="datePublished">2016-09-22</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Activity生命周期
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/Android/">Android</a><a class="article-category-link" href="/categories/Android/Android面试一天一题/">Android面试一天一题</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android面试一天一题/">Android面试一天一题</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p><a href="http://www.jianshu.com/p/ae6e1d93cc8e" target="_blank" rel="external">Android面试一天一题（3 Day）</a></p>
+<p>题目：怎么理解Activity的生命周期？</p>
+<h2 id="Activity生命周期"><a href="#Activity生命周期" class="headerlink" title="Activity生命周期"></a>Activity生命周期</h2><p>Activity是由Activity栈进管理，当来到一个新的Activity后，此Activity将被加入到Activity栈顶，之前的Activity位于此Activity底部。Acitivity一般意义上有四种状态：</p>
+<p>1.当Activity位于栈顶时，此时正好处于屏幕最前方，此时处于运行状态；</p>
+<p>2.当Activity失去了焦点但仍然对用于可见（如栈顶的Activity是透明的或者栈顶Activity并不是铺满整个手机屏幕），此时处于暂停状态；</p>
+<p>3.当Activity被其他Activity完全遮挡，此时此Activity对用户不可见，此时处于停止状态；</p>
+<p>4.当Activity由于人为或系统原因（如低内存等）被销毁，此时处于销毁状态；</p>
+<p>在每个不同的状态阶段，Android系统对Activity内相应的方法进行了回调。因此，我们在程序中写Activity时，一般都是继承Activity类并重写相应的回调方法。</p>
+<p><img src="/assets/img/android_activity/activity_life_cycle.png" alt="image"></p>
+<ol>
+<li>Activity实例是由系统自动创建，并在不同的状态期间回调相应的方法。一个最简单的完整的Activity生命周期会按照如下顺序回调：onCreate -&gt; onStart -&gt; onResume -&gt; onPause -&gt; onStop -&gt; onDestroy。称之为entire lifetime</li>
+<li>当执行onStart回调方法时，Activity开始被用户所见（也就是说，onCreate时用户是看不到此Activity的，那用户看到的是哪个？当然是此Activity之前的那个Activity），一直到onStop之前，此阶段Activity都是被用户可见，称之为visible lifetime</li>
+<li>当执行到onResume回调方法时，Activity可以响应用户交互，一直到onPause方法之前，此阶段Activity称之为foreground lifetime</li>
+</ol>
+<h2 id="一些例子"><a href="#一些例子" class="headerlink" title="一些例子"></a>一些例子</h2><p>在实际应用场景中，假设A Activity位于栈顶，此时用户操作，从A Activity跳转到B Activity。那么对AB来说，具体会回调哪些生命周期中的方法呢？回调方法的具体回调顺序又是怎么样的呢？</p>
+<p>开始时，A被实例化，执行的回调有A:onCreate -&gt; A:onStart -&gt; A:onResume。</p>
+<p>当用户点击A中按钮来到B时，假设B全部遮挡住了A，将依次执行A:onPause -&gt; B:onCreate -&gt; B:onStart -&gt; B:onResume -&gt; A:onStop。</p>
+<p>此时如果点击Back键，将依次执行B:onPause -&gt; A:onRestart -&gt; A:onStart -&gt; A:onResume -&gt; B:onStop -&gt; B:onDestroy。</p>
+<p>至此，Activity栈中只有A。在Android中，有两个按键在影响Activity生命周期这块需要格外区分下，即Back键和Home键。我们先直接看下实验结果：</p>
+<p>此时如果按下Back键，系统返回到桌面，并依次执行A:onPause -&gt; A:onStop -&gt; A:onDestroy。</p>
+<p>此时如果按下Home键（非长按），系统返回到桌面，并依次执行A:onPause -&gt; A:onStop。由此可见，Back键和Home键主要区别在于是否会执行onDestroy。</p>
+<h2 id="一个别人踩过的坑"><a href="#一个别人踩过的坑" class="headerlink" title="一个别人踩过的坑"></a>一个别人踩过的坑</h2><p><strong>重点是：只要没有人为的调用A的finish()方法，虽然A执行了onDestroy，但Activity栈中依然保留有A</strong></p>
+<p>由于Android本身的特性，使得现在不少应用都没有直接退出应用程序的功能，按照一般的逻辑，当Activity栈中有且只有一个Activity时，当按下Back键此Activity会执行onDestroy，那么下次点击此应用程图标将从重新启动，因此，当前不少应用程序都是采取如Home键的效果，当点击了Back键，系统返回到桌面，然后点击应用程序图标，直接回到之前的Activity界面，这种效果是怎么实现的呢？</p>
+<p>通过重写按下Back键的回调函数，转成Home键的效果即可。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">public void onBackPressed() &#123;</div><div class="line">    Intent home = new Intent(Intent.ACTION_MAIN);</div><div class="line">    home.addCategory(Intent.CATEGORY_HOME);</div><div class="line">    startActivity(home);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>当然，此种方式通过Home键效果强行影响到Back键对Activity生命周期的影响。注意，此方法只是针对按Back键需要退回到桌面时的Activity且达到Home效果才重写。</p>
+<p>或者，为达到此类效果，Activity实际上提供了直接的方法。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">activity.moveTaskToBack(true);</div></pre></td></tr></table></figure></p>
+<p>moveTaskToBack()此方法直接将当前Activity所在的Task移到后台，同时保留activity顺序和状态。</p>
+<p>在之前的项目开发过程中，当时遇到一个很奇怪的问题：手机上的“开发者选项”中有一个“不保留活动”的设置，当开启此设置，手机上的设置提示是“用户离开后即销毁每个活动”，开启后，对于其他的应用程序是从A Acticity到B Activity，然后Back键回到A，此时，其他应用程序只是先白屏（有可能黑屏等，取决于主题设置）一下，然后A开始可见，但是我的应用程序中出现的一个结果却是直接返回到了桌面。一开始百思不得其解。最后终于定位出问题。首先，我们需要明确开启此设置项后对Activity生命周期的影响。开启此设置项后，当A到B时，假设B全部遮挡住了A，将依次执行A:onPause -&gt; B:onCreate -&gt; B:onStart -&gt; B:onResume -&gt; A:onStop -&gt; A:onDestroy。是的，A在系统原本的生命周期回调中增加了onDestroy。此即“用户离开后即销毁每个活动”的含义。但此时需要注意的是，只要没有认为的调用A的finish()方法，虽然A执行了onDestroy，但Activity栈中依然保留有A，此时B处于栈顶。那么在B中按Back键回到A时，将依次执行：B:onPause -&gt; A:onCreate -&gt; A:onStart -&gt; A:onResume -&gt; B:onStop -&gt; B:onDestroy。没错，A从onCreate开始执行了。此处也就解释了为什么A可能会出现白屏（或黑屏等）一下的原因了。</p>
+<p>那么为什么我的应用程序会跟其他应用程序出现不一样呢?最后定为出问题在于当时我的应用程序中为了做到完全退出应用程序效果，专门使用了一个Activity栈去维护Activity（当时是借鉴了网上的此类实现方案，现在想想，实在没必要，且不说Android本身特性决定了没必要通过如此方法去达到退出效果，仅仅是此方法本身也存在很大的问题，现在在网上依然能见到有不少文章说到应用程序退出可以使用此方法，哎。。），在onCreate中入栈，onDestroy出栈，调用了如下方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">// 结束Activity&amp;从堆栈中移除</div><div class="line">AppManager.getAppManager().finishActivity(this);</div></pre></td></tr></table></figure></p>
+<p>其中，AppManager中finishActivity函数具体定义是：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line"> * 结束指定的Activity</div><div class="line"> */</div><div class="line">public void finishActivity(Activity activity) &#123;</div><div class="line">    if (activity != null) &#123;</div><div class="line">        activityStack.remove(activity);</div><div class="line">        activity.finish();</div><div class="line">        activity = null;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>至此，相信大家应该看出问题的所在了吧。</p>
+<p>没错，问题在于执行了activity的finish()方法！！ activity的finish()方法至少有两个层面含义，1.将此Activity从Activity栈中移除，2.调用了此Activity的onDestroy方法。对于不开启“不保留活动”的设置项，实际上也没什么影响，但是一旦开启此设置，问题显露无疑。开启此此设置后，正常情况下离开A，即使执行了A的onDestroy，Activity栈中还是有A的，但是我这样写后，finish()方法一执行，Activity栈中就没有A了，因此，当点击Back键时，Activity栈中已经没有此应用的任何Activity了，直接来到了手机桌面。</p>
+<p>可能，有些人会说，我就是要通过此种方法想去完全退出应用程序，同时希望自己的Activity栈和系统中Activity栈保持一致，怎么办呢？</p>
+<p>在此，可以通过如下改写去实现：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line">* 结束指定的Activity</div><div class="line"> */</div><div class="line">public void finishActivity(Activity activity) &#123;</div><div class="line">    if (activity != null) &#123;</div><div class="line">    // 为与系统Activity栈保持一致，且考虑到手机设置项里的&quot;不保留活动&quot;选项引起的Activity生命周期调用onDestroy()方法所带来的问题,此处需要作出如下修正</div><div class="line">    if(activity.isFinishing())&#123;</div><div class="line">        activityStack.remove(activity);</div><div class="line">        //activity.finish();</div><div class="line">        activity = null;</div><div class="line">    &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="横屏竖屏切换"><a href="#横屏竖屏切换" class="headerlink" title="横屏竖屏切换"></a>横屏竖屏切换</h2><p>1、新建一个Activity，并把各个生命周期打印出来</p>
+<p>2、运行Activity，得到如下信息</p>
+<p>onCreate–&gt;<br>onStart–&gt;<br>onResume–&gt;</p>
+<p>3、按crtl+f12切换成横屏时</p>
+<p>onSaveInstanceState–&gt;<br>onPause–&gt;<br>onStop–&gt;<br>onDestroy–&gt;<br>onCreate–&gt;<br>onStart–&gt;<br>onRestoreInstanceState–&gt;<br>onResume–&gt;</p>
+<p>4、再按crtl+f12切换成竖屏时，发现打印了两次相同的log</p>
+<p>onSaveInstanceState–&gt;<br>onPause–&gt;<br>onStop–&gt;<br>onDestroy–&gt;<br>onCreate–&gt;<br>onStart–&gt;<br>onRestoreInstanceState–&gt;<br>onResume–&gt;<br>onSaveInstanceState–&gt;<br>onPause–&gt;<br>onStop–&gt;<br>onDestroy–&gt;<br>onCreate–&gt;<br>onStart–&gt;<br>onRestoreInstanceState–&gt;<br>onResume–&gt;</p>
+<p>5、修改AndroidManifest.xml，把该Activity添加 android:configChanges=”orientation”，执行步骤3</p>
+<p>onSaveInstanceState–&gt;<br>onPause–&gt;<br>onStop–&gt;<br>onDestroy–&gt;<br>onCreate–&gt;<br>onStart–&gt;<br>onRestoreInstanceState–&gt;<br>onResume–&gt;</p>
+<p>6、再执行步骤4，发现不会再打印相同信息，但多打印了一行onConfigChanged</p>
+<p>onSaveInstanceState–&gt;<br>onPause–&gt;<br>onStop–&gt;<br>onDestroy–&gt;<br>onCreate–&gt;<br>onStart–&gt;<br>onRestoreInstanceState–&gt;<br>onResume–&gt;<br>onConfigurationChanged–&gt;</p>
+<p>7、把步骤5的android:configChanges=”orientation” 改成 android:configChanges=”orientation|keyboardHidden”，执行步骤3，就只打印onConfigChanged</p>
+<p>onConfigurationChanged–&gt;</p>
+<p>8、执行步骤4</p>
+<p>onConfigurationChanged–&gt;<br>onConfigurationChanged–&gt;</p>
+<p> 总结：</p>
+<p>1、不设置Activity的android:configChanges时，切屏会重新调用各个生命周期，切横屏时会执行一次，切竖屏时会执行两次</p>
+<p>2、设置Activity的android:configChanges=”orientation”时，切屏还是会重新调用各个生命周期，切横、竖屏时只会执行一次</p>
+<p>3、设置Activity的android:configChanges=”orientation|keyboardHidden”时，切屏不会重新调用各个生命周期，只会执行onConfigurationChanged方法</p>
+<h4 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h4><ol>
+<li><p>当前Activity产生事件弹出Toast和AlertDialog的时候Activity的生命周期不会有改变</p>
+</li>
+<li><p>Activity运行时按下HOME键(跟被完全覆盖是一样的)：onSaveInstanceState –&gt; onPause –&gt; onStop       onRestart –&gt;onStart—&gt;onResume</p>
+</li>
+<li><p>Activity未被完全覆盖只是失去焦点：onPause—&gt;onResume</p>
+</li>
+<li><p>在一些特殊的情况中，你可能希望当一种或者多种配置改变时避免重新启动你的activity。你可以通过在manifest中设置android:configChanges属性来实现这点。</p>
+<p> 你可以在这里声明activity可以处理的任何配置改变，当这些配置改变时不会重新启动activity，而会调用activity的<br>onConfigurationChanged(Resources.Configuration)方法。如果改变的配置中包含了你所无法处理的配置（在android:configChanges并未声明），<br>你的activity仍然要被重新启动，而onConfigurationChanged(Resources.Configuration)将不会被调用。</p>
+</li>
+</ol>
+<h2 id="Activity-recreate-Activity-重新创建-自我恢复-机制"><a href="#Activity-recreate-Activity-重新创建-自我恢复-机制" class="headerlink" title="Activity recreate(Activity 重新创建/自我恢复)机制"></a>Activity recreate(Activity 重新创建/自我恢复)机制</h2><p>Android中为Actvity的实例状态保存和恢复提供了相应的机制，通过提供相应的实例状态保存和恢复回调，将状态数据存储到系统中的Bundle中。相应的回调函数分别为：onSaveInstanceState(Bundle)和onRestoreInstanceState(Bundle)。当然，对于实例状态的恢复，也可以直接通过onCreate(Bundle)中的Bundle参数进行。onCreate(Bundle)和onRestoreInstanceState(Bundle)都能恢复实例状态，且一般情况下，两种方式恢复实例状态功能相同，唯一比较有差别的地方，在于恢复实例状态的时机，onRestoreInstanceState(Bundle)回调时机更加靠后。</p>
+<p>当某个activity变得“容易”被系统销毁时，该activity的onSaveInstanceState就会被执行，除非该activity是被用户主动销毁的，例如当用户按BACK键的时候。何为“容易”？言下之意就是该activity还没有被销毁，而仅仅是一种可能性。这种可能性有这么几种情况： </p>
+<ol>
+<li>当用户按下HOME键时。<br>这是显而易见的，系统不知道你按下HOME后要运行多少其他的程序，自然也不知道activity A是否会被销毁，故系统会调用onSaveInstanceState，让用户有机会保存某些非永久性的数据。以下几种情况的分析都遵循该原则 </li>
+<li>长按HOME键，选择运行其他的程序时。 </li>
+<li>按下电源按键（关闭屏幕显示）时。 </li>
+<li>从activity A中启动一个新的activity时。 </li>
+<li>屏幕方向切换时，例如从竖屏切换到横屏时。<br>在屏幕切换之前，系统会销毁activity A，在屏幕切换之后系统又会自动地创建activity A，所以onSaveInstanceState一定会被执行。 </li>
+</ol>
+<p>总而言之，onSaveInstanceState的调用遵循一个重要原则，即当系统“未经你许可”时销毁了你的activity，则onSaveInstanceState会被系统调用，这是系统的责任，因为它必须要提供一个机会让你保存你的数据<br>至于onRestoreInstanceState方法，需要注意的是，</p>
+<p><strong>onSaveInstanceState方法和onRestoreInstanceState方法“不一定”是成对的被调用的。</strong></p>
+<p>onRestoreInstanceState被调用的前提是，activity A“确实”被系统销毁了，而如果仅仅是停留在有这种可能性的情况下，则该方法不会被调用，例如，当正在显示activity A的时候，用户按下HOME键回到主界面，然后用户紧接着又返回到activity A，这种情况下activity A一般不会因为内存的原因被系统销毁，故activity A的onRestoreInstanceState方法不会被执行。</p>
+<p>另外，onRestoreInstanceState的bundle参数也会传递到onCreate方法中，你也可以选择在onCreate方法中做数据还原。 </p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+
+
+    <nav id="article-nav">
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/09/22/oneday_BroadcastReceiver/">
+                    BroadcastReceiver
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目錄</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Activity生命周期"><span class="toc-number">1.</span> <span class="toc-text">Activity生命周期</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#一些例子"><span class="toc-number">2.</span> <span class="toc-text">一些例子</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#一个别人踩过的坑"><span class="toc-number">3.</span> <span class="toc-text">一个别人踩过的坑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#横屏竖屏切换"><span class="toc-number">4.</span> <span class="toc-text">横屏竖屏切换</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#补充"><span class="toc-number">4.0.1.</span> <span class="toc-text">补充</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Activity-recreate-Activity-重新创建-自我恢复-机制"><span class="toc-number">5.</span> <span class="toc-text">Activity recreate(Activity 重新创建/自我恢复)机制</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隱藏目錄"  title="點擊按鈕隱藏或者顯示文章目錄">
+
+    <script>
+        yiliaConfig.toc = ["隱藏目錄", "顯示目錄", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"Activity生命周期　| IChrisKing　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <div id="comment-box" ></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2016/09/22/oneday-activity-lifecycle/" data-title="Activity生命周期" data-url="http://yoursite.com/2016/09/22/oneday-activity-lifecycle/"></div>
+    <script>
+        var duoshuoQuery = {short_name:"ichrisking"};
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+            s.async = true; s.charset = 'UTF-8';
+            (d.head || d.body).appendChild(s);
+        }
+
+        
+    </script>
+    
+    <script> loadComment(); </script>
+
+</div>
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="回到主頁"><i class="fa fa-home"></i></a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2016/09/22/oneday_BroadcastReceiver/" title="下一篇: BroadcastReceiver">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/09/22/oneday-activity-lifecycle/">Activity生命周期</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/22/oneday_BroadcastReceiver/">BroadcastReceiver</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/21/oneday_service/">android_service</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/21/sunjdk/">如何安装sunjdk，并用它替代openjdk</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/19/mvp_in_android/">MVP in Android</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/19/java_synchronized/">Java并发</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/18/java_list_hashmap/">Java集合框架</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/09/java_basic/">Java基础知识</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/08/design_pattern/">设计模式概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/31/Binder/">Binder</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/24/Fragment/">Fragment</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/24/Android-TouchEvent/">Android事件分发机制</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/23/ANR-and-FC/">ANR与FC</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/23/Android-performance-optimization/">Android性能优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/23/how_to_use_locate_image_file_in_hexo/">如何在hexo中使用本地图片</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/23/reinstall-hexo-after-reinstall-OS/">重装系统后，修复hexo</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/22/Android_memory_leak/">Android内存泄漏</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/18/Android1_1/">Android基础知识</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/05/build_shadowsocks/">配置shadowsocks</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/24/change-hexo-theme-to-maupassant/">对我的Blog做了点改动</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/23/AnromOS_deploy/">Anrom日常发布方法</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/21/AnromOS_Web_Build/">AnromOS发布网站的搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/19/make_blog_with_hexo/">使用hexo搭建blog</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/08/rsync/">拷貝代碼利器rsync</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/31/add_jar_into_android_mk_file/">給Android系統應用加jar包</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/16/port22_Connection_refused/">port 22: Connection refused</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/01/SEAndroid/">SEAndroid in Android5.x</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/06/11/access_ssl_with_okhttp/">使用OkHttp访问ssl（https）网络</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/04/20/build_java_jar_based_on_android_code/">如何使用android源码来制作java的jar包</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/02/04/save_discarding_commits/">找回差點丟失的commit</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/01/16/build_new_project_in_work_zone/">如何爲辦公區新建一個項目</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/01/06/add_new_function_in_local_service/">爲android添加一個新的service函數</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/03/21/deny_connect_with_usb/">源碼中實現禁止手機鏈接usb</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/02/14/add_tomoyo_to_android_system/">移植TOMOYO的步驟</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/06/09/make_deamon_thead_in_android/">爲android編寫一個deamon進程</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2016 Chris King
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、簡單且強大的網誌框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="簡而不減 Hexo 雙欄網誌主題  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到訪數"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本頁閱讀量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回頂部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看評論"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="轉到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+             categories: ".article-category a, a.tag-list-link", 
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
