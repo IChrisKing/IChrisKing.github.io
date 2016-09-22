@@ -15,16 +15,16 @@
 
 
 
-<meta name="description" content="使用hexo搭建本博客的过程">
+<meta name="description" content="Java中使用值传递的情况和使用引用传递的情况">
 <meta property="og:type" content="article">
-<meta property="og:title" content="使用hexo搭建blog">
-<meta property="og:url" content="http://yoursite.com/2016/07/19/make_blog_with_hexo/index.html">
+<meta property="og:title" content="Java中的值传递和引用传递">
+<meta property="og:url" content="http://yoursite.com/2016/09/22/pass-by-value-or-reference/index.html">
 <meta property="og:site_name" content="IChrisKing">
-<meta property="og:description" content="使用hexo搭建本博客的过程">
-<meta property="og:updated_time" content="2016-08-30T02:59:11.216Z">
+<meta property="og:description" content="Java中使用值传递的情况和使用引用传递的情况">
+<meta property="og:updated_time" content="2016-09-22T09:47:11.381Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="使用hexo搭建blog">
-<meta name="twitter:description" content="使用hexo搭建本博客的过程">
+<meta name="twitter:title" content="Java中的值传递和引用传递">
+<meta name="twitter:description" content="Java中使用值传递的情况和使用引用传递的情况">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -56,7 +56,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>使用hexo搭建blog | IChrisKing</title>
+<title>Java中的值传递和引用传递 | IChrisKing</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -258,11 +258,11 @@
     </div>
     <link class="menu-list" tags="標籤" friends="友情鏈接" about="關於我"/>
 </nav>
-      <div class="body-wrap"><article id="post-make_blog_with_hexo" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-pass-by-value-or-reference" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/07/19/make_blog_with_hexo/" class="article-date">
-      <time datetime="2016-07-19T14:44:08.000Z" itemprop="datePublished">2016-07-19</time>
+      <a href="/2016/09/22/pass-by-value-or-reference/" class="article-date">
+      <time datetime="2016-09-22T09:16:06.000Z" itemprop="datePublished">2016-09-22</time>
 </a>
 
 
@@ -277,7 +277,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      使用hexo搭建blog
+      Java中的值传递和引用传递
     </h1>
   
 
@@ -286,13 +286,13 @@
       <div class="article-info article-info-post">
         
     <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/hexo/">hexo</a>
+    <a class="article-category-link" href="/categories/Android/">Android</a><a class="article-category-link" href="/categories/Android/Android面试一天一题/">Android面试一天一题</a>
     </div>
 
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/">hexo</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android面试一天一题/">Android面试一天一题</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -302,41 +302,32 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h2 id="安装node-js"><a href="#安装node-js" class="headerlink" title="安装node.js"></a>安装node.js</h2><p>由于node.js官网打不开，使用一个国内的地址替代<br><a href="http://nodejs.cn" target="_blank" rel="external">http://nodejs.cn</a></p>
-<p>Linux(x64)版本node.js下载地址：<a href="https://nodejs.org/dist/v6.2.0/node-v6.2.0-linux-x64.tar.gz" target="_blank" rel="external">https://nodejs.org/dist/v6.2.0/node-v6.2.0-linux-x64.tar.gz</a></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ tar xvf node-v6.2.0-linux-x64.tar.gz)</div><div class="line">$ cd node-v6.2.0-linux-x64.tar.gz</div><div class="line">$ cd bin</div><div class="line">$ ./node -v</div><div class="line">v6.2.0</div></pre></td></tr></table></figure>
-<p>将bin添加到PATH中</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sudo vim /etc/profile</div></pre></td></tr></table></figure>
-<p>添加</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">#node.js</div><div class="line">export PATH=$PATH:/path_to_nodejs/bin</div></pre></td></tr></table></figure>
-<h2 id="安装git"><a href="#安装git" class="headerlink" title="安装git"></a>安装git</h2><h2 id="申请github帐号"><a href="#申请github帐号" class="headerlink" title="申请github帐号"></a>申请github帐号</h2><h2 id="添加SSH-Keys"><a href="#添加SSH-Keys" class="headerlink" title="添加SSH Keys"></a>添加SSH Keys</h2><h2 id="安装-hexo"><a href="#安装-hexo" class="headerlink" title="安装 hexo"></a>安装 hexo</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">npm install hexo -g</div><div class="line">npm update hexo -g</div><div class="line">hexo init &lt;folder&gt;</div></pre></td></tr></table></figure>
-<p>如果指定 <folder>，便会在目前的资料夹建立一个名为 <folder> 的新资料夹；否则会在目前资料夹初始化，最好指定，不然可能安装到HOME下去<br>我安装到了myblog。</folder></folder></p>
-<h2 id="创建新博文"><a href="#创建新博文" class="headerlink" title="创建新博文"></a>创建新博文</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo new &quot;Hey,man&quot;</div></pre></td></tr></table></figure>
-<h2 id="创建新页面"><a href="#创建新页面" class="headerlink" title="创建新页面"></a>创建新页面</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo new page &quot;firstPage&quot;</div></pre></td></tr></table></figure>
-<h2 id="生成网站"><a href="#生成网站" class="headerlink" title="生成网站"></a>生成网站</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo generate</div></pre></td></tr></table></figure>
-<h2 id="打开服务器"><a href="#打开服务器" class="headerlink" title="打开服务器"></a>打开服务器</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo server</div></pre></td></tr></table></figure>
-<p>服务器会跑在 <a href="http://localhost:4000" target="_blank" rel="external">http://localhost:4000</a> (默认4000端口，可在_config.yml中设定)</p>
-<h1 id="配置github"><a href="#配置github" class="headerlink" title="配置github"></a>配置github</h1><h2 id="建立repository"><a href="#建立repository" class="headerlink" title="建立repository"></a>建立repository</h2><p>建立与你github的用户名对应的仓库，仓库名必须为your_user_name.github.io，固定写法 然后建立关联<br>编辑本地hexo文件夹下的_config.yml文件<br>修改最底下的几行：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">deploy:</div><div class="line">  type: git</div><div class="line">  repository: https://github.com/your_github_name/your_github_name.github.io.git</div><div class="line">  branch: master</div></pre></td></tr></table></figure>
-<p>注意：将your_github_name 替换为你的github名，或者整个地址替换为github上该repository的地址</p>
-<h2 id="将本地的网站部署到git上"><a href="#将本地的网站部署到git上" class="headerlink" title="将本地的网站部署到git上"></a>将本地的网站部署到git上</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">npm install hexo-deployer-git --save</div><div class="line">hexo deploy</div></pre></td></tr></table></figure>
-<h2 id="查看部署结果"><a href="#查看部署结果" class="headerlink" title="查看部署结果"></a>查看部署结果</h2><p>在浏览器中访问 <a href="http://your_github_name.github.io" target="_blank" rel="external">http://your_github_name.github.io</a><br>注意替换your_github_name</p>
-<h2 id="部署命令"><a href="#部署命令" class="headerlink" title="部署命令"></a>部署命令</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">hexo clean</div><div class="line">hexo generate</div><div class="line">hexo deploy</div></pre></td></tr></table></figure>
-<h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">hexo new &quot;postName&quot; #新建文章</div><div class="line">hexo new page &quot;pageName&quot; #新建页面</div><div class="line">hexo generate #生成静态页面至public目录</div><div class="line">hexo server #开启预览访问端口（默认端口4000，&apos;ctrl + c&apos;关闭server）</div><div class="line">hexo deploy #将.deploy目录部署到GitHub</div><div class="line">hexo help  # 查看帮助</div><div class="line">hexo version  #查看Hexo的版本</div></pre></td></tr></table></figure>
-<h2 id="使用ssh替代https，避免每次deploy都要输入username和password"><a href="#使用ssh替代https，避免每次deploy都要输入username和password" class="headerlink" title="使用ssh替代https，避免每次deploy都要输入username和password"></a>使用ssh替代https，避免每次deploy都要输入username和password</h2><p>在github的该repository目录中，点击 Clone or download, 选择Use SSH，复制地址。</p>
-<p>修改_config.yml,拖到最后，将repository: 后面的https地址，换为ssh的地址。</p>
-<p>修改hexo/.deploy_git/.git/config 将remote = 后面的https地址，换为ssh地址。</p>
-<p>再次运行hexo deploy，应该会直接递交成功，不需要输入username和password。</p>
-<h1 id="部分目录说明"><a href="#部分目录说明" class="headerlink" title="部分目录说明"></a>部分目录说明</h1><p>source/ 目录下放着新建的页面</p>
-<p>source/_posts/ 目录下放着发布的博文，使用markdown格式，可使用相关编辑器编写内容</p>
-<p>public/ 目录对应着github上的目录结构</p>
-<p>_config.yml 配置文件，可以在其中修改blog名之类的，注意每一项配置的:后面是有空格的。</p>
-<h1 id="将整个项目同步到Github"><a href="#将整个项目同步到Github" class="headerlink" title="将整个项目同步到Github"></a>将整个项目同步到Github</h1><p>在ithub上新建一个repository，命名blog_backup<br>git@github.com:IChrisKing/blog_backup.git<br>根据github的提示，在myblog下，</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">git init</div><div class="line">git status</div><div class="line">git add XXXXXXXXXXXX</div><div class="line">git commit &quot;upload all hexo source&quot;</div><div class="line">git remote add origin git@github.com:IChrisKing/blog_backup.git</div><div class="line">git push -u origin master</div></pre></td></tr></table></figure>
-<p>以后每次修改都需要在myblog中进行一次递交，递交到github的blog_backup项目</p>
-<p>并且在修改了_config.yml中的message内容有，使用</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo deploy -g</div></pre></td></tr></table></figure>
-<p>进行一次递交，这次递交是到github中的blog项目</p>
+        <p><a href="http://www.jianshu.com/p/c0c5e0540928" target="_blank" rel="external">Android面试一天一题（7 Day）</a></p>
+<p>题目：Java的值传递和引用传递问题</p>
+<p>值传递，传递的是值的拷贝，也就是说传递后就互不相关了。</p>
+<p>引用传递，指的是在方法调用时，传递的参数是按引用进行传递，其实传递的引用的地址，也就是变量所对应的内存空间的地址。</p>
+<p>简单的说，基本类型是按值传递的，方法的实参是一个原值的复本。类对象是按对象的引用地址（内存地址）传递地址的值，那么在方法内对这个对象进行修改是会直接反应在原对象上的（或者说这两个引用指向同一内存地址）。</p>
+<p>三句话总结一下：</p>
+<ol>
+<li>对象就是传引用</li>
+<li>原始类型（byte,char,short,int,long,float,double，boolean<br>）就是传值</li>
+<li>String，Integer, Double等immutable类型因为没有提供自身修改的函数，每次操作都是新生成一个对象，所以要特殊对待。可以认为是传值。<br>Integer 和 String 一样。保存value的类变量是Final属性，无法被修改，只能被重新赋值／生成新的对象。 当Integer 做为方法参数传递进方法内时，对其的赋值都会导致 原Integer 的引用被 指向了方法内的栈地址，失去了对原类变量地址的指向。对赋值后的Integer对象做得任何操作，都不会影响原来对象。</li>
+</ol>
+<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><ol>
+<li>按值传递<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public class TempTest &#123;  </div><div class="line">    private void test1(int a)&#123;  </div><div class="line">        a = 5;  </div><div class="line">        System.out.println(&quot;test1方法中的a=&quot;+a);  </div><div class="line">&#125;  </div><div class="line">public static void main(String[] args) &#123;  </div><div class="line">    TempTest t = new TempTest();  </div><div class="line">    int a = 3;  </div><div class="line">    t.test1(a);//传递后，test1方法对变量值的改变不影响这里的a  </div><div class="line">    System.out.println(”main方法中的a=”+a);  </div><div class="line">    &#125;  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>运行结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">test1方法中的a=5  </div><div class="line">main方法中的a=3</div></pre></td></tr></table></figure></p>
+<ol>
+<li>按引用传递<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">public class TempTest &#123;  </div><div class="line">    private void test1(A a)&#123;  </div><div class="line">    a.age = 20;  </div><div class="line">    System.out.println(&quot;test1方法中的age=&quot;+a.age);  </div><div class="line">&#125;  </div><div class="line">public static void main(String[] args) &#123;  </div><div class="line">    TempTest t = new TempTest();  </div><div class="line">    A a = new A();  </div><div class="line">    a.age = 10;  </div><div class="line">    t.test1(a);  </div><div class="line">    System.out.println(”main方法中的age=”+a.age);  </div><div class="line">    &#125;  </div><div class="line">&#125;  </div><div class="line">class A&#123;  </div><div class="line">    public int age = 0;  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>运行结果<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">test1方法中的age=20  </div><div class="line">main方法中的age=20</div></pre></td></tr></table></figure></p>
+<ol>
+<li>String的测试<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">class test&#123;</div><div class="line">	public static void main(String[] args) &#123;</div><div class="line">    	String x = new String(&quot;xxxx&quot;);</div><div class="line">		String y = &quot;yyyy&quot;;    </div><div class="line">		change(x,y);</div><div class="line">    	System.out.println(&quot;main: &quot;+ x);</div><div class="line">		System.out.println(&quot;main: &quot; + y);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	public static void change(String x,String y) &#123;</div><div class="line">    	x = &quot;x&quot;;</div><div class="line">		y = &quot;y&quot;;</div><div class="line">    	System.out.println(&quot;change: &quot; + x);</div><div class="line">		System.out.println(&quot;change: &quot; + y);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>运行结果<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">change: x</div><div class="line">change: y</div><div class="line">main: xxxx</div><div class="line">main: yyyy</div></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -348,16 +339,10 @@
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2016/07/21/AnromOS_Web_Build/">
-                    AnromOS发布网站的搭建
-                </a>
-            </div>
-        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2016/06/08/rsync/">
-                    拷貝代碼利器rsync
+                <a href="/2016/09/22/oneday-activity-lifecycle/">
+                    Activity生命周期
                 </a>
             </div>
         
@@ -369,7 +354,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目錄</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#安装node-js"><span class="toc-number">1.</span> <span class="toc-text">安装node.js</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装git"><span class="toc-number">2.</span> <span class="toc-text">安装git</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#申请github帐号"><span class="toc-number">3.</span> <span class="toc-text">申请github帐号</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#添加SSH-Keys"><span class="toc-number">4.</span> <span class="toc-text">添加SSH Keys</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装-hexo"><span class="toc-number">5.</span> <span class="toc-text">安装 hexo</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#创建新博文"><span class="toc-number">6.</span> <span class="toc-text">创建新博文</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#创建新页面"><span class="toc-number">7.</span> <span class="toc-text">创建新页面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#生成网站"><span class="toc-number">8.</span> <span class="toc-text">生成网站</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#打开服务器"><span class="toc-number">9.</span> <span class="toc-text">打开服务器</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#配置github"><span class="toc-number"></span> <span class="toc-text">配置github</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#建立repository"><span class="toc-number">1.</span> <span class="toc-text">建立repository</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#将本地的网站部署到git上"><span class="toc-number">2.</span> <span class="toc-text">将本地的网站部署到git上</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#查看部署结果"><span class="toc-number">3.</span> <span class="toc-text">查看部署结果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#部署命令"><span class="toc-number">4.</span> <span class="toc-text">部署命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常用命令"><span class="toc-number">5.</span> <span class="toc-text">常用命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用ssh替代https，避免每次deploy都要输入username和password"><span class="toc-number">6.</span> <span class="toc-text">使用ssh替代https，避免每次deploy都要输入username和password</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#部分目录说明"><span class="toc-number"></span> <span class="toc-text">部分目录说明</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#将整个项目同步到Github"><span class="toc-number"></span> <span class="toc-text">将整个项目同步到Github</span></a>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#例子"><span class="toc-number">1.</span> <span class="toc-text">例子</span></a></li></ol>
         
     </div>
     <style>
@@ -405,7 +390,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"使用hexo搭建blog　| IChrisKing　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"Java中的值传递和引用传递　| IChrisKing　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -421,7 +406,7 @@
     
       <div class="duoshuo" id="comments">
     <div id="comment-box" ></div>
-    <div class="ds-thread" id="ds-thread" data-thread-key="2016/07/19/make_blog_with_hexo/" data-title="使用hexo搭建blog" data-url="http://yoursite.com/2016/07/19/make_blog_with_hexo/"></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2016/09/22/pass-by-value-or-reference/" data-title="Java中的值传递和引用传递" data-url="http://yoursite.com/2016/09/22/pass-by-value-or-reference/"></div>
     <script>
         var duoshuoQuery = {short_name:"ichrisking"};
         var loadComment = function(){
@@ -444,15 +429,13 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2016/07/21/AnromOS_Web_Build/" title="上一篇: AnromOS发布网站的搭建">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主頁"><i class="fa fa-home"></i></a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2016/06/08/rsync/" title="下一篇: 拷貝代碼利器rsync">
+            <a href="/2016/09/22/oneday-activity-lifecycle/" title="下一篇: Activity生命周期">
                 <i class="fa fa-angle-right"></i>
             </a>
         
