@@ -261,10 +261,78 @@
 </nav>
       <div class="body-wrap">
   
-    <article id="post-sort-1" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-composite-pattern" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/11/02/sort-1/" class="article-date">
+      <a href="/2016/11/04/composite-pattern/" class="article-date">
+      <time datetime="2016-11-04T11:33:32.000Z" itemprop="datePublished">2016-11-04</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/11/04/composite-pattern/">Android中的设计模式之组合模式</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              介绍了组合模式，然后给出在Android源码中使用组合模式的例子，最经典的就是View和ViewGroup的组合。几乎所有在/frameworks/base/core/java/android/widget/目录下的类和布局类都会用到这对组合。
+          
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/设计模式/">设计模式</a><a class="article-category-link" href="/categories/设计模式/Java/">Java</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+    </div>
+
+      
+        <p class="article-more-link">
+          <a href="/2016/11/04/composite-pattern/#more">查看全文 >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-Sort" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/11/02/Sort/" class="article-date">
       <time datetime="2016-11-02T10:42:33.000Z" itemprop="datePublished">2016-11-02</time>
 </a>
 
@@ -280,7 +348,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/11/02/sort-1/">直接插入排序</a>
+      <a class="article-title" href="/2016/11/02/Sort/">各种排序算法</a>
     </h1>
   
 
@@ -290,7 +358,7 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-              直接插入排序
+              直接插入排序，希尔排序，简单选择排序
           
       
     </div>
@@ -310,7 +378,7 @@
 
       
         <p class="article-more-link">
-          <a href="/2016/11/02/sort-1/#more">查看全文 >></a>
+          <a href="/2016/11/02/Sort/#more">查看全文 >></a>
         </p>
       
       <div class="clearfix"></div>
@@ -348,7 +416,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/11/01/oneday-ShardPreferences/">oneday-ShardPreferences</a>
+      <a class="article-title" href="/2016/11/01/oneday-ShardPreferences/">ShardPreferences</a>
     </h1>
   
 
@@ -358,7 +426,7 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-               
+              给出了一个使用SharedPreferences的例子，并从例子出发，分析SharedPreferences创建，获取，写入的源码。
           
       
     </div>
@@ -416,7 +484,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/10/31/oneday-AsyncTask/">oneday-AsyncTask</a>
+      <a class="article-title" href="/2016/10/31/oneday-AsyncTask/">AsyncTask</a>
     </h1>
   
 
@@ -465,10 +533,10 @@
 
 
   
-    <article id="post-singleton" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-singleton_pattern" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/10/26/singleton/" class="article-date">
+      <a href="/2016/10/26/singleton_pattern/" class="article-date">
       <time datetime="2016-10-25T23:57:24.000Z" itemprop="datePublished">2016-10-26</time>
 </a>
 
@@ -484,7 +552,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/10/26/singleton/">单例模式</a>
+      <a class="article-title" href="/2016/10/26/singleton_pattern/">Android中的设计模式之单例模式</a>
     </h1>
   
 
@@ -494,7 +562,7 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-              综合了一下各种singleton的写法和分析。饿汉式，懒汉式，匿名内部类，双重校验锁。
+              综合了一下各种singleton的写法和分析。饿汉式，懒汉式，匿名内部类，双重校验锁。给出了单例模式在Android源码中使用的例子，主要是像InputMethodManager这样全局唯一的对象。在frameworks/base/core/java/android/view目录下有很多例子
           
       
     </div>
@@ -514,7 +582,7 @@
 
       
         <p class="article-more-link">
-          <a href="/2016/10/26/singleton/#more">查看全文 >></a>
+          <a href="/2016/10/26/singleton_pattern/#more">查看全文 >></a>
         </p>
       
       <div class="clearfix"></div>
@@ -855,74 +923,6 @@
       
         <p class="article-more-link">
           <a href="/2016/09/22/oneday-activity-lifecycle/#more">查看全文 >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-pass-by-value-or-reference" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/09/22/pass-by-value-or-reference/" class="article-date">
-      <time datetime="2016-09-22T11:16:06.000Z" itemprop="datePublished">2016-09-22</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/09/22/pass-by-value-or-reference/">Java中的值传递和引用传递</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-              Java中使用值传递的情况和使用引用传递的情况
-          
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/Android/">Android</a><a class="article-category-link" href="/categories/Android/Android-everyday/">Android_everyday</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android-everyday/">Android_everyday</a></li></ul>
-    </div>
-
-      
-        <p class="article-more-link">
-          <a href="/2016/09/22/pass-by-value-or-reference/#more">查看全文 >></a>
         </p>
       
       <div class="clearfix"></div>
