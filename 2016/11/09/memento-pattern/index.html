@@ -15,19 +15,20 @@
 
 
 
-<meta name="description" content="Android Fragment的生命周期以及一些与Activity交互的方式">
+<meta name="description" content="备忘录模式在Android源码中的运用还有待继续确认和补充">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Fragment">
-<meta property="og:url" content="http://yoursite.com/2016/08/24/Fragment/index.html">
+<meta property="og:title" content="Android中的设计模式之备忘录模式">
+<meta property="og:url" content="http://yoursite.com/2016/11/09/memento-pattern/index.html">
 <meta property="og:site_name" content="IChrisKing">
-<meta property="og:description" content="Android Fragment的生命周期以及一些与Activity交互的方式">
-<meta property="og:image" content="http://yoursite.com/assets/img/Fragment/FragmentWithActivity.jpg">
-<meta property="og:image" content="http://yoursite.com/assets/img/Fragment/complete_android_fragment_lifecycle.png">
-<meta property="og:updated_time" content="2016-10-10T05:22:53.383Z">
+<meta property="og:description" content="备忘录模式在Android源码中的运用还有待继续确认和补充">
+<meta property="og:image" content="http://yoursite.com/assets/img/memento_pattern/memento.png">
+<meta property="og:image" content="http://yoursite.com/assets/img/memento_pattern/white.png">
+<meta property="og:image" content="http://yoursite.com/assets/img/memento_pattern/black.png">
+<meta property="og:updated_time" content="2016-11-09T09:25:52.687Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Fragment">
-<meta name="twitter:description" content="Android Fragment的生命周期以及一些与Activity交互的方式">
-<meta name="twitter:image" content="http://yoursite.com/assets/img/Fragment/FragmentWithActivity.jpg">
+<meta name="twitter:title" content="Android中的设计模式之备忘录模式">
+<meta name="twitter:description" content="备忘录模式在Android源码中的运用还有待继续确认和补充">
+<meta name="twitter:image" content="http://yoursite.com/assets/img/memento_pattern/memento.png">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -59,7 +60,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>Fragment | IChrisKing</title>
+<title>Android中的设计模式之备忘录模式 | IChrisKing</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -261,11 +262,11 @@
     </div>
     <link class="menu-list" tags="標籤" friends="友情鏈接" about="關於我"/>
 </nav>
-      <div class="body-wrap"><article id="post-Fragment" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-memento-pattern" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/08/24/Fragment/" class="article-date">
-      <time datetime="2016-08-24T14:09:33.000Z" itemprop="datePublished">2016-08-24</time>
+      <a href="/2016/11/09/memento-pattern/" class="article-date">
+      <time datetime="2016-11-09T09:09:58.000Z" itemprop="datePublished">2016-11-09</time>
 </a>
 
 
@@ -280,7 +281,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Fragment
+      Android中的设计模式之备忘录模式
     </h1>
   
 
@@ -289,13 +290,13 @@
       <div class="article-info article-info-post">
         
     <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/Android/">Android</a><a class="article-category-link" href="/categories/Android/Android开发工程师/">Android开发工程师</a>
+    <a class="article-category-link" href="/categories/设计模式/">设计模式</a><a class="article-category-link" href="/categories/设计模式/Java/">Java</a>
     </div>
 
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android开发工程师/">Android开发工程师</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -305,97 +306,31 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p><a href="https://github.com/GeniusVJR/LearningNotes/blob/master/Part1/Android/Fragment.md" target="_blank" rel="external">原文链接</a></p>
-<h2 id="Fragment依附于Activity的生命状态"><a href="#Fragment依附于Activity的生命状态" class="headerlink" title="Fragment依附于Activity的生命状态"></a>Fragment依附于Activity的生命状态</h2><p><img src="/assets/img/Fragment/FragmentWithActivity.jpg" alt="image"></p>
-<h2 id="Fragment生命周期方法含义"><a href="#Fragment生命周期方法含义" class="headerlink" title="Fragment生命周期方法含义"></a>Fragment生命周期方法含义</h2><ul>
-<li>public void onAttach(Context context)<ul>
-<li>onAttach方法会在Fragment于窗口关联后立刻调用。从该方法开始，就可以通过Fragment.getActivity方法获取与Fragment关联的窗口对象，但因为Fragment的控件未初始化，所以不能够操作控件。</li>
-</ul>
-</li>
-</ul>
-<ul>
-<li>public void onCreate(Bundle savedInstanceState)<ul>
-<li>在调用完onAttach执行完之后立刻调用onCreate方法，可以在Bundle对象中获取一些在Activity中传过来的数据。通常会在该方法中读取保存的状态，获取或初始化一些数据。在该方法中不要进行耗时操作，不然窗口不会显示。</li>
-</ul>
-</li>
-</ul>
-<ul>
-<li>public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState)<ul>
-<li>该方法是Fragment很重要的一个生命周期方法，因为会在该方法中创建在Fragment显示的View，其中inflater是用来装载布局文件的，container是<fragment>标签的父标签对应对象，savedInstanceState参数可以获取Fragment保存的状态，如果未保存那么就为null。</fragment></li>
-</ul>
-</li>
-</ul>
-<ul>
-<li>public void onViewCreated(View view,Bundle savedInstanceState)<ul>
-<li>Android在创建完Fragment中的View对象之后，会立刻回调该方法。其种view参数就是onCreateView中返回的view，而bundle对象用于一般用途。</li>
-</ul>
-</li>
-</ul>
-<ul>
-<li>public void onActivityCreated(Bundle savedInstanceState)<ul>
-<li>在Activity的onCreate方法执行完之后，Android系统会立刻调用该方法，表示窗口已经初始化完成，从这一个时候开始，就可以在Fragment中使用getActivity().findViewById(Id);来操控Activity中的view了。</li>
-</ul>
-</li>
-</ul>
-<ul>
-<li>public void onStart()<ul>
-<li>当系统调用该方法的时候，fragment已经显示在ui上，但还不能进行互动，因为onResume方法还没执行完。</li>
-</ul>
-</li>
-</ul>
-<ul>
-<li>public void onResume()<ul>
-<li>该方法为fragment从创建到显示Android系统调用的最后一个生命周期方法，调用完该方法时候，fragment就可以与用户互动了。</li>
-</ul>
-</li>
-</ul>
-<ul>
-<li>public void onPause()<ul>
-<li>fragment由活跃状态变成非活跃状态执行的第一个回调方法，通常可以在这个方法中保存一些需要临时暂停的工作。如保存音乐播放进度，然后在onResume中恢复音乐播放进度。</li>
-</ul>
-</li>
-</ul>
-<ul>
-<li>public void onStop()<ul>
-<li>当onStop返回的时候，fragment将从屏幕上消失。</li>
-</ul>
-</li>
-</ul>
-<ul>
-<li>public void onDestoryView()<ul>
-<li>该方法的调用意味着在 onCreateView 中创建的视图都将被移除。</li>
-</ul>
-</li>
-</ul>
-<ul>
-<li>public void onDestroy()<ul>
-<li>Android在Fragment不再使用时会调用该方法，要注意的是~这时Fragment还和Activity藕断丝连！并且可以获得Fragment对象，但无法对获得的Fragment进行任何操作。</li>
-</ul>
-</li>
-</ul>
-<ul>
-<li>public void onDetach()<ul>
-<li>为Fragment生命周期中的最后一个方法，当该方法执行完后，Fragment与Activity不再有关联</li>
-</ul>
-</li>
-</ul>
-<h2 id="Fragment与Activity传递参数"><a href="#Fragment与Activity传递参数" class="headerlink" title="Fragment与Activity传递参数"></a>Fragment与Activity传递参数</h2><p>Fragment.setArguments(Bundle args)</p>
-<p>Fragment.getArguments()</p>
-<h2 id="Fragment状态持久化"><a href="#Fragment状态持久化" class="headerlink" title="Fragment状态持久化"></a>Fragment状态持久化</h2><ul>
-<li><p>方法一：</p>
-<p>protected void onSaveInstanceState(Bundle outState)</p>
-<p>protected void onRestoreInstanceState(Bundle savedInstanceState) </p>
-</li>
-<li><p>方法二：这个方法仅仅能够保存Fragment中的控件状态，比如说EditText中用户已经输入的文字，并且，空间必须设置id，否则无法保存控件状态</p>
-<p>FragmentManager.putFragment(Bundle bundle, String key, Fragment fragment) </p>
-<p>FragmentManager.getFragment(Bundle bundle, String key)</p>
-<ul>
-<li>方法三：保存变量<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line">  /** Activity中的代码 **/</div><div class="line"> FragmentB fragmentB;</div><div class="line"></div><div class="line">@Override</div><div class="line">protected void onCreate(@Nullable Bundle savedInstanceState) &#123;</div><div class="line">    super.onCreate(savedInstanceState);</div><div class="line">    setContentView(R.layout.fragment_activity);</div><div class="line">    if( savedInstanceState != null )&#123;</div><div class="line">        fragmentB = (FragmentB) getSupportFragmentManager().getFragment(savedInstanceState,&quot;fragmentB&quot;);</div><div class="line">    &#125;</div><div class="line">    init();</div><div class="line">&#125;</div><div class="line"></div><div class="line">@Override</div><div class="line">protected void onSaveInstanceState(Bundle outState) &#123;</div><div class="line">    if( fragmentB != null )&#123;</div><div class="line">        getSupportFragmentManager().putFragment(outState,&quot;fragmentB&quot;,fragmentB);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    super.onSaveInstanceState(outState);</div><div class="line">&#125;</div><div class="line"></div><div class="line">/** Fragment中保存变量的代码 **/</div><div class="line"></div><div class="line">@Nullable</div><div class="line">@Override</div><div class="line">public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) &#123;</div><div class="line">    AppLog.e(&quot;onCreateView&quot;);</div><div class="line">    if ( null != savedInstanceState )&#123;</div><div class="line">        String savedString = savedInstanceState.getString(&quot;string&quot;);</div><div class="line">        //得到保存下来的string</div><div class="line">    &#125;</div><div class="line">    View root = inflater.inflate(R.layout.fragment_a,null);</div><div class="line">    return root;</div><div class="line">&#125;</div><div class="line"></div><div class="line">@Override</div><div class="line">public void onSaveInstanceState(Bundle outState) &#123;</div><div class="line">    outState.putString(&quot;string&quot;,&quot;anAngryAnt&quot;);</div><div class="line">    super.onSaveInstanceState(outState);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-</ul>
-</li>
-</ul>
-<h2 id="complete-activity-fragment-lifecycle"><a href="#complete-activity-fragment-lifecycle" class="headerlink" title="complete activity/fragment lifecycle"></a>complete activity/fragment lifecycle</h2><p> <img src="/assets/img/Fragment/complete_android_fragment_lifecycle.png" alt="image"></p>
+        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>备忘录模式又叫做快照模式(Snapshot Pattern)或Token模式，是对象的行为模式。</p>
+<p>　　备忘录对象是一个用来存储另外一个对象内部状态的快照的对象。备忘录模式的用意是在不破坏封装的条件下，将一个对象的状态捕捉(Capture)住，并外部化，存储起来，从而可以在将来合适的时候把这个对象还原到存储起来的状态。备忘录模式常常与命令模式和迭代子模式一同使用。</p>
+<p><img src="/assets/img/memento_pattern/memento.png" alt="image"><br>备忘录模式所涉及的角色有三个：备忘录(Memento)角色、发起人(Originator)角色、负责人(Caretaker)角色。</p>
+<h3 id="备忘录-Memento-角色"><a href="#备忘录-Memento-角色" class="headerlink" title="备忘录(Memento)角色"></a>备忘录(Memento)角色</h3><p>　　备忘录角色又如下责任：</p>
+<p>　　（1）将发起人（Originator）对象的内战状态存储起来。备忘录可以根据发起人对象的判断来决定存储多少发起人（Originator）对象的内部状态。</p>
+<p>　　（2）备忘录可以保护其内容不被发起人（Originator）对象之外的任何对象所读取。</p>
+<p>　　备忘录有两个等效的接口：</p>
+<p>　　●　　窄接口：负责人（Caretaker）对象（和其他除发起人对象之外的任何对象）看到的是备忘录的窄接口(narrow interface)，这个窄接口只允许它把备忘录对象传给其他的对象。</p>
+<p>　　●　　宽接口：与负责人对象看到的窄接口相反的是，发起人对象可以看到一个宽接口(wide interface)，这个宽接口允许它读取所有的数据，以便根据这些数据恢复这个发起人对象的内部状态。</p>
+<h3 id="发起人（Originator）角色"><a href="#发起人（Originator）角色" class="headerlink" title="发起人（Originator）角色"></a>发起人（Originator）角色</h3><p>　　发起人角色有如下责任：</p>
+<p>　　（1）创建一个含有当前的内部状态的备忘录对象。</p>
+<p>　　（2）使用备忘录对象存储其内部状态。</p>
+<h3 id="负责人（Caretaker）角色"><a href="#负责人（Caretaker）角色" class="headerlink" title="负责人（Caretaker）角色"></a>负责人（Caretaker）角色</h3><p>　　负责人角色有如下责任：</p>
+<p>　　（1）负责保存备忘录对象。</p>
+<p>　　（2）不检查备忘录对象的内容。</p>
+<h2 id="白箱模式和黑箱模式"><a href="#白箱模式和黑箱模式" class="headerlink" title="白箱模式和黑箱模式"></a>白箱模式和黑箱模式</h2><p>代码查看：<a href="http://www.cnblogs.com/java-my-life/archive/2012/06/06/2534942.html" target="_blank" rel="external">http://www.cnblogs.com/java-my-life/archive/2012/06/06/2534942.html</a></p>
+<h3 id="白箱模式"><a href="#白箱模式" class="headerlink" title="白箱模式"></a>白箱模式</h3><p>备忘录角色对任何对象都提供一个接口，即宽接口，备忘录角色的内部所存储的状态就对所有对象公开。因此这个实现又叫做“白箱实现”。</p>
+<p>　　“白箱”实现将发起人角色的状态存储在一个大家都看得到的地方，因此是破坏封装性的。但是通过程序员自律，同样可以在一定程度上实现模式的大部分用意。因此白箱实现仍然是有意义的。<br><img src="/assets/img/memento_pattern/white.png" alt="image"></p>
+<h3 id="黑箱模式"><a href="#黑箱模式" class="headerlink" title="黑箱模式"></a>黑箱模式</h3><p>　备忘录角色对发起人（Originator）角色对象提供一个宽接口，而为其他对象提供一个窄接口。这样的实现叫做“黑箱实现”。</p>
+<p>　　在JAVA语言中，实现双重接口的办法就是将备忘录角色类设计成发起人角色类的内部成员类。</p>
+<p>　　将Memento设成Originator类的内部类，从而将Memento对象封装在Originator里面；在外部提供一个标识接口MementoIF给Caretaker以及其他对象。这样，Originator类看到的是Menmento的所有接口，而Caretaker以及其他对象看到的仅仅是标识接口MementoIF所暴露出来的接口。<br><img src="/assets/img/memento_pattern/black.png" alt="image"></p>
+<h2 id="Android中的备忘录模式"><a href="#Android中的备忘录模式" class="headerlink" title="Android中的备忘录模式"></a>Android中的备忘录模式</h2><p>在不破坏封装性的前提下，捕获一个对象的内部状态，并在该对象之外保存这个状态，这样以后就可以将该对象恢复到先前保存的状态。</p>
+<p>Android中的Canvas是一个黑箱的备忘录模式。组织者，把原发器的状态State（全部或者部分状态，一般是变量的值），通过CreateMemento()方法保存起来，继续运行后，等待合适的时机，在通过SetMemento()方法可以再次恢复到之前的状态。在这个过程中，我们并没有对这些状态做任何的访问和设置，实际上这些状态都是私有的，对外是禁止访问的，我们只是通过Memento对象的两个最简单的方法就达到了这个效果。Memento经常写成Originator的内部类。</p>
+<p>查看他的源码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public int save() &#123;</div><div class="line">    return native_save(mNativeCanvasWrapper, MATRIX_SAVE_FLAG | CLIP_SAVE_FLAG);</div><div class="line">&#125;</div><div class="line"></div><div class="line">public int save(@Saveflags int saveFlags) &#123;</div><div class="line">    return native_save(mNativeCanvasWrapper, saveFlags);</div><div class="line">&#125;</div><div class="line"></div><div class="line">    public void restore() &#123;</div><div class="line">    boolean throwOnUnderflow = !sCompatibilityRestore || !isHardwareAccelerated();</div><div class="line">    native_restore(mNativeCanvasWrapper, throwOnUnderflow);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>　　从上面的两个方法中，它们实现了自我状态的恢复，实际上我们只是执行了两个没有接触任何内部信息的方法，实际上这两个方法就是在操作我们看不到的这些内部状态信息。</p>
 
       
     </div>
@@ -407,16 +342,10 @@
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2016/08/31/Binder/">
-                    Binder
-                </a>
-            </div>
-        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2016/08/24/Android-TouchEvent/">
-                    Android事件分发机制
+                <a href="/2016/11/08/template-method-pattern/">
+                    Android中的设计模式之模板方法模式
                 </a>
             </div>
         
@@ -428,7 +357,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目錄</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Fragment依附于Activity的生命状态"><span class="toc-number">1.</span> <span class="toc-text">Fragment依附于Activity的生命状态</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Fragment生命周期方法含义"><span class="toc-number">2.</span> <span class="toc-text">Fragment生命周期方法含义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Fragment与Activity传递参数"><span class="toc-number">3.</span> <span class="toc-text">Fragment与Activity传递参数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Fragment状态持久化"><span class="toc-number">4.</span> <span class="toc-text">Fragment状态持久化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#complete-activity-fragment-lifecycle"><span class="toc-number">5.</span> <span class="toc-text">complete activity/fragment lifecycle</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#简介"><span class="toc-number">1.</span> <span class="toc-text">简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#备忘录-Memento-角色"><span class="toc-number">1.1.</span> <span class="toc-text">备忘录(Memento)角色</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#发起人（Originator）角色"><span class="toc-number">1.2.</span> <span class="toc-text">发起人（Originator）角色</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#负责人（Caretaker）角色"><span class="toc-number">1.3.</span> <span class="toc-text">负责人（Caretaker）角色</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#白箱模式和黑箱模式"><span class="toc-number">2.</span> <span class="toc-text">白箱模式和黑箱模式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#白箱模式"><span class="toc-number">2.1.</span> <span class="toc-text">白箱模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#黑箱模式"><span class="toc-number">2.2.</span> <span class="toc-text">黑箱模式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Android中的备忘录模式"><span class="toc-number">3.</span> <span class="toc-text">Android中的备忘录模式</span></a></li></ol>
         
     </div>
     <style>
@@ -464,7 +393,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"Fragment　| IChrisKing　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"Android中的设计模式之备忘录模式　| IChrisKing　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -480,7 +409,7 @@
     
       <div class="duoshuo" id="comments">
     <div id="comment-box" ></div>
-    <div class="ds-thread" id="ds-thread" data-thread-key="2016/08/24/Fragment/" data-title="Fragment" data-url="http://yoursite.com/2016/08/24/Fragment/"></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2016/11/09/memento-pattern/" data-title="Android中的设计模式之备忘录模式" data-url="http://yoursite.com/2016/11/09/memento-pattern/"></div>
     <script>
         var duoshuoQuery = {short_name:"ichrisking"};
         var loadComment = function(){
@@ -503,15 +432,13 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2016/08/31/Binder/" title="上一篇: Binder">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主頁"><i class="fa fa-home"></i></a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2016/08/24/Android-TouchEvent/" title="下一篇: Android事件分发机制">
+            <a href="/2016/11/08/template-method-pattern/" title="下一篇: Android中的设计模式之模板方法模式">
                 <i class="fa fa-angle-right"></i>
             </a>
         
