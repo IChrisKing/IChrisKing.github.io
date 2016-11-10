@@ -15,18 +15,19 @@
 
 
 
-<meta name="description" content="在hexo中使用本地图片的步骤，需要安装相关的插件，将图片放在对应的位置，并正确的引用图片">
+<meta name="description" content="介绍了享元模式的定义，给出了简单享元模式和复合享元模式的例子。Android中享元模式的运用主要突出的时其高效利用细粒度对象的特点。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="如何在hexo中使用本地图片">
-<meta property="og:url" content="http://yoursite.com/2016/08/23/how_to_use_locate_image_file_in_hexo/index.html">
+<meta property="og:title" content="Android中的设计模式之享元模式">
+<meta property="og:url" content="http://yoursite.com/2016/11/10/flyweight-pattern/index.html">
 <meta property="og:site_name" content="IChrisKing">
-<meta property="og:description" content="在hexo中使用本地图片的步骤，需要安装相关的插件，将图片放在对应的位置，并正确的引用图片">
-<meta property="og:image" content="http://yoursite.com/assets/img/head.png">
-<meta property="og:updated_time" content="2016-08-30T02:57:57.991Z">
+<meta property="og:description" content="介绍了享元模式的定义，给出了简单享元模式和复合享元模式的例子。Android中享元模式的运用主要突出的时其高效利用细粒度对象的特点。">
+<meta property="og:image" content="http://yoursite.com/assets/img/flyweight_pattern/simple.png">
+<meta property="og:image" content="http://yoursite.com/assets/img/flyweight_pattern/complex.png">
+<meta property="og:updated_time" content="2016-11-10T03:13:04.220Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="如何在hexo中使用本地图片">
-<meta name="twitter:description" content="在hexo中使用本地图片的步骤，需要安装相关的插件，将图片放在对应的位置，并正确的引用图片">
-<meta name="twitter:image" content="http://yoursite.com/assets/img/head.png">
+<meta name="twitter:title" content="Android中的设计模式之享元模式">
+<meta name="twitter:description" content="介绍了享元模式的定义，给出了简单享元模式和复合享元模式的例子。Android中享元模式的运用主要突出的时其高效利用细粒度对象的特点。">
+<meta name="twitter:image" content="http://yoursite.com/assets/img/flyweight_pattern/simple.png">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -58,7 +59,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>如何在hexo中使用本地图片 | IChrisKing</title>
+<title>Android中的设计模式之享元模式 | IChrisKing</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -260,11 +261,11 @@
     </div>
     <link class="menu-list" tags="標籤" friends="友情鏈接" about="關於我"/>
 </nav>
-      <div class="body-wrap"><article id="post-how_to_use_locate_image_file_in_hexo" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-flyweight-pattern" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/08/23/how_to_use_locate_image_file_in_hexo/" class="article-date">
-      <time datetime="2016-08-23T03:03:26.000Z" itemprop="datePublished">2016-08-23</time>
+      <a href="/2016/11/10/flyweight-pattern/" class="article-date">
+      <time datetime="2016-11-10T02:52:58.000Z" itemprop="datePublished">2016-11-10</time>
 </a>
 
 
@@ -279,7 +280,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      如何在hexo中使用本地图片
+      Android中的设计模式之享元模式
     </h1>
   
 
@@ -288,13 +289,13 @@
       <div class="article-info article-info-post">
         
     <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/hexo/">hexo</a>
+    <a class="article-category-link" href="/categories/设计模式/">设计模式</a><a class="article-category-link" href="/categories/设计模式/Java/">Java</a>
     </div>
 
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/">hexo</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -304,12 +305,27 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h3 id="安装相关插件"><a href="#安装相关插件" class="headerlink" title="安装相关插件"></a>安装相关插件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">npm install hexo-renderer-jade --save</div><div class="line">npm install hexo-renderer-sass --save</div></pre></td></tr></table></figure>
-<h3 id="创建相关目录"><a href="#创建相关目录" class="headerlink" title="创建相关目录"></a>创建相关目录</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mkdir /path/to/your/blog/source/assets/img/</div></pre></td></tr></table></figure>
-<h3 id="打开assets支持"><a href="#打开assets支持" class="headerlink" title="打开assets支持"></a>打开assets支持</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">vim _config.yml</div><div class="line">修改这一行</div><div class="line">post_asset_folder: true</div></pre></td></tr></table></figure>
-<h3 id="放置图片文件"><a href="#放置图片文件" class="headerlink" title="放置图片文件"></a>放置图片文件</h3><p>将要使用的图片文件放到/path/to/your/blog/source/assets/img/目录下<br>如head.png</p>
-<h3 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">![image](/assets/img/head.png)</div></pre></td></tr></table></figure>
-<h3 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h3><p><img src="/assets/img/head.png" alt="image"></p>
+        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>享元模式是对象的结构模式。享元模式以共享的方式高效地支持大量的细粒度对象。</p>
+<p>在JAVA语言中，String类型就是使用了享元模式。String对象是final类型，对象一旦创建就不可改变。在JAVA中字符串常量都是存在常量池中的，JAVA会确保一个字符串常量在常量池中只有一个拷贝。</p>
+<p>享元模式采用一个共享来避免大量拥有相同内容对象的开销。这种开销最常见、最直观的就是内存的损耗。享元对象能做到共享的关键是区分内蕴状态(Internal State)和外蕴状态(External State)。</p>
+<p>　　一个内蕴状态是存储在享元对象内部的，并且是不会随环境的改变而有所不同。因此，一个享元可以具有内蕴状态并可以共享。</p>
+<p>　　一个外蕴状态是随环境的改变而改变的、不可以共享的。享元对象的外蕴状态必须由客户端保存，并在享元对象被创建之后，在需要使用的时候再传入到享元对象内部。外蕴状态不可以影响享元对象的内蕴状态，它们是相互独立的。</p>
+<h3 id="单纯享元模式"><a href="#单纯享元模式" class="headerlink" title="单纯享元模式"></a>单纯享元模式</h3><p>　在单纯的享元模式中，所有的享元对象都是可以共享的。<br><img src="/assets/img/flyweight_pattern/simple.png" alt="image"><br>　　单纯享元模式所涉及到的角色如下：</p>
+<p>　　●　　抽象享元(Flyweight)角色 ：给出一个抽象接口，以规定出所有具体享元角色需要实现的方法。</p>
+<p>　　●　　具体享元(ConcreteFlyweight)角色：实现抽象享元角色所规定出的接口。如果有内蕴状态的话，必须负责为内蕴状态提供存储空间。</p>
+<p>　　●　　享元工厂(FlyweightFactory)角色 ：本角色负责创建和管理享元角色。本角色必须保证享元对象可以被系统适当地共享。当一个客户端对象调用一个享元对象的时候，享元工厂角色会检查系统中是否已经有一个符合要求的享元对象。如果已经有了，享元工厂角色就应当提供这个已有的享元对象；如果系统中没有一个适当的享元对象的话，享元工厂角色就应当创建一个合适的享元对象。</p>
+<p><a href="http://www.cnblogs.com/java-my-life/archive/2012/04/26/2468499.html" target="_blank" rel="external">源码查看</a></p>
+<h3 id="复合享元模式"><a href="#复合享元模式" class="headerlink" title="复合享元模式"></a>复合享元模式</h3><p>在单纯享元模式中，所有的享元对象都是单纯享元对象，也就是说都是可以直接共享的。还有一种较为复杂的情况，将一些单纯享元使用合成模式加以复合，形成复合享元对象。这样的复合享元对象本身不能共享，但是它们可以分解成单纯享元对象，而后者则可以共享。<br><img src="/assets/img/flyweight_pattern/complex.png" alt="image"><br>复合享元角色所涉及到的角色如下：</p>
+<p>　　●　　抽象享元(Flyweight)角色 ：给出一个抽象接口，以规定出所有具体享元角色需要实现的方法。</p>
+<p>　　●　　具体享元(ConcreteFlyweight)角色：实现抽象享元角色所规定出的接口。如果有内蕴状态的话，必须负责为内蕴状态提供存储空间。</p>
+<p>　　●　  复合享元(ConcreteCompositeFlyweight)角色 ：复合享元角色所代表的对象是不可以共享的，但是一个复合享元对象可以分解成为多个本身是单纯享元对象的组合。复合享元角色又称作不可共享的享元对象。</p>
+<p>　　●　  享元工厂(FlyweightFactory)角色 ：本角 色负责创建和管理享元角色。本角色必须保证享元对象可以被系统适当地共享。当一个客户端对象调用一个享元对象的时候，享元工厂角色会检查系统中是否已经有 一个符合要求的享元对象。如果已经有了，享元工厂角色就应当提供这个已有的享元对象；如果系统中没有一个适当的享元对象的话，享元工厂角色就应当创建一个 合适的享元对象。</p>
+<h3 id="享元的优缺点"><a href="#享元的优缺点" class="headerlink" title="享元的优缺点"></a>享元的优缺点</h3><p>享元模式的优缺点<br>　　享元模式的优点在于它大幅度地降低内存中对象的数量。但是，它做到这一点所付出的代价也是很高的：</p>
+<p>　　●　　享元模式使得系统更加复杂。为了使对象可以共享，需要将一些状态外部化，这使得程序的逻辑复杂化。</p>
+<p>　　●　　享元模式将享元对象的状态外部化，而读取外部状态使得运行时间稍微变长。</p>
+<h2 id="Android中的享元模式"><a href="#Android中的享元模式" class="headerlink" title="Android中的享元模式"></a>Android中的享元模式</h2><p>享元模式是一种针对大量细粒度对象有效使用的一种模式。享元模式在Android中的运用过程中明显剥离和简化了享元工厂这一部分。主要突出的是享元对对象复用的特点。</p>
+<p>Android中的Message、Parcel和TypedArray都利用了享元模式。以Message为例，Message中的obtain方法和recycle方法共同维护一个message Pool实现了message对象的复用。</p>
+<p>Message通过next成员变量保有对下一个Message的引用，从而构成了一个Message链表。Message Pool就通过该链表的表头管理着所有闲置的Message，一个Message在使用完后可以通过recycle()方法进入Message Pool，并在需要时通过obtain静态方法从Message Pool获取。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line">public static Message obtain() &#123;</div><div class="line">        synchronized (sPoolSync) &#123;</div><div class="line">            if (sPool != null) &#123;</div><div class="line">                Message m = sPool;</div><div class="line">                sPool = m.next;</div><div class="line">                m.next = null;</div><div class="line">                m.flags = 0; // clear in-use flag</div><div class="line">                sPoolSize--;</div><div class="line">                return m;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        return new Message();</div><div class="line">    &#125;</div><div class="line"></div><div class="line"> void recycleUnchecked() &#123;</div><div class="line">        // Mark the message as in use while it remains in the recycled object pool.</div><div class="line">        // Clear out all other details.</div><div class="line">        flags = FLAG_IN_USE;</div><div class="line">        what = 0;</div><div class="line">        arg1 = 0;</div><div class="line">        arg2 = 0;</div><div class="line">        obj = null;</div><div class="line">        replyTo = null;</div><div class="line">        sendingUid = -1;</div><div class="line">        when = 0;</div><div class="line">        target = null;</div><div class="line">        callback = null;</div><div class="line">        data = null;</div><div class="line"></div><div class="line">        synchronized (sPoolSync) &#123;</div><div class="line">            if (sPoolSize &lt; MAX_POOL_SIZE) &#123;</div><div class="line">                next = sPool;</div><div class="line">                sPool = this;</div><div class="line">                sPoolSize++;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -321,16 +337,10 @@
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2016/08/23/Android-performance-optimization/">
-                    Android性能优化
-                </a>
-            </div>
-        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2016/08/23/reinstall-hexo-after-reinstall-OS/">
-                    重装系统后，修复hexo
+                <a href="/2016/11/09/memento-pattern/">
+                    Android中的设计模式之备忘录模式
                 </a>
             </div>
         
@@ -342,7 +352,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目錄</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#安装相关插件"><span class="toc-number">1.</span> <span class="toc-text">安装相关插件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#创建相关目录"><span class="toc-number">2.</span> <span class="toc-text">创建相关目录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#打开assets支持"><span class="toc-number">3.</span> <span class="toc-text">打开assets支持</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#放置图片文件"><span class="toc-number">4.</span> <span class="toc-text">放置图片文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用方法"><span class="toc-number">5.</span> <span class="toc-text">使用方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#效果"><span class="toc-number">6.</span> <span class="toc-text">效果</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#简介"><span class="toc-number">1.</span> <span class="toc-text">简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#单纯享元模式"><span class="toc-number">1.1.</span> <span class="toc-text">单纯享元模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#复合享元模式"><span class="toc-number">1.2.</span> <span class="toc-text">复合享元模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#享元的优缺点"><span class="toc-number">1.3.</span> <span class="toc-text">享元的优缺点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Android中的享元模式"><span class="toc-number">2.</span> <span class="toc-text">Android中的享元模式</span></a></li></ol>
         
     </div>
     <style>
@@ -378,7 +388,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"如何在hexo中使用本地图片　| IChrisKing　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"Android中的设计模式之享元模式　| IChrisKing　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -394,7 +404,7 @@
     
       <div class="duoshuo" id="comments">
     <div id="comment-box" ></div>
-    <div class="ds-thread" id="ds-thread" data-thread-key="2016/08/23/how_to_use_locate_image_file_in_hexo/" data-title="如何在hexo中使用本地图片" data-url="http://yoursite.com/2016/08/23/how_to_use_locate_image_file_in_hexo/"></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2016/11/10/flyweight-pattern/" data-title="Android中的设计模式之享元模式" data-url="http://yoursite.com/2016/11/10/flyweight-pattern/"></div>
     <script>
         var duoshuoQuery = {short_name:"ichrisking"};
         var loadComment = function(){
@@ -417,15 +427,13 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2016/08/23/Android-performance-optimization/" title="上一篇: Android性能优化">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主頁"><i class="fa fa-home"></i></a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2016/08/23/reinstall-hexo-after-reinstall-OS/" title="下一篇: 重装系统后，修复hexo">
+            <a href="/2016/11/09/memento-pattern/" title="下一篇: Android中的设计模式之备忘录模式">
                 <i class="fa fa-angle-right"></i>
             </a>
         
