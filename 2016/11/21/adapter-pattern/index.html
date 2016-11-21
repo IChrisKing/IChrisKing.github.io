@@ -15,16 +15,21 @@
 
 
 
-<meta name="description" content="本地修改commit之後沒有及時push，然後執行了repo sync操作，導致本地修改被覆蓋，引起discarding commits時的補救方法">
+<meta name="description" content="介绍了适配器模式。然后以android中的ListAdapter为例，介绍了适配器模式在android中的运用。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="找回差點丟失的commit">
-<meta property="og:url" content="http://yoursite.com/2015/02/04/save_discarding_commits/index.html">
+<meta property="og:title" content="Android中的设计模式之适配器模式">
+<meta property="og:url" content="http://yoursite.com/2016/11/21/adapter-pattern/index.html">
 <meta property="og:site_name" content="IChrisKing">
-<meta property="og:description" content="本地修改commit之後沒有及時push，然後執行了repo sync操作，導致本地修改被覆蓋，引起discarding commits時的補救方法">
-<meta property="og:updated_time" content="2016-09-07T08:43:09.110Z">
+<meta property="og:description" content="介绍了适配器模式。然后以android中的ListAdapter为例，介绍了适配器模式在android中的运用。">
+<meta property="og:image" content="http://yoursite.com/assets/img/adapter_pattern/adapter_class.png">
+<meta property="og:image" content="http://yoursite.com/assets/img/adapter_pattern/adapter_object.png">
+<meta property="og:image" content="http://yoursite.com/assets/img/adapter_pattern/adapter_empty.png">
+<meta property="og:image" content="http://yoursite.com/assets/img/adapter_pattern/adapter_android.png">
+<meta property="og:updated_time" content="2016-11-21T07:25:02.459Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="找回差點丟失的commit">
-<meta name="twitter:description" content="本地修改commit之後沒有及時push，然後執行了repo sync操作，導致本地修改被覆蓋，引起discarding commits時的補救方法">
+<meta name="twitter:title" content="Android中的设计模式之适配器模式">
+<meta name="twitter:description" content="介绍了适配器模式。然后以android中的ListAdapter为例，介绍了适配器模式在android中的运用。">
+<meta name="twitter:image" content="http://yoursite.com/assets/img/adapter_pattern/adapter_class.png">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -56,7 +61,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>找回差點丟失的commit | IChrisKing</title>
+<title>Android中的设计模式之适配器模式 | IChrisKing</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -258,11 +263,11 @@
     </div>
     <link class="menu-list" tags="標籤" friends="友情鏈接" about="關於我"/>
 </nav>
-      <div class="body-wrap"><article id="post-save_discarding_commits" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-adapter-pattern" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2015/02/04/save_discarding_commits/" class="article-date">
-      <time datetime="2015-02-04T03:23:40.000Z" itemprop="datePublished">2015-02-04</time>
+      <a href="/2016/11/21/adapter-pattern/" class="article-date">
+      <time datetime="2016-11-21T11:03:26.000Z" itemprop="datePublished">2016-11-21</time>
 </a>
 
 
@@ -277,7 +282,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      找回差點丟失的commit
+      Android中的设计模式之适配器模式
     </h1>
   
 
@@ -286,13 +291,13 @@
       <div class="article-info article-info-post">
         
     <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/Linux/">Linux</a>
+    <a class="article-category-link" href="/categories/设计模式/">设计模式</a><a class="article-category-link" href="/categories/设计模式/Java/">Java</a>
     </div>
 
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/填坑/">填坑</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -302,17 +307,63 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h2 id="git-reflog"><a href="#git-reflog" class="headerlink" title="git reflog"></a><code>git reflog</code></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">612952f HEAD@&#123;0&#125;: checkout: moving from 612952fbfad9e480d5cd3486034399644393c253 to anrom-4.0</div><div class="line">612952f HEAD@&#123;1&#125;: checkout: moving from a873309d7579ccceff13a1881bbc23740d62fe83 to 612952fbfad9e480d5cd3486034399644393c253</div><div class="line">a873309 HEAD@&#123;2&#125;: commit: add new functions to install packages in different zone  --這一條就是差點丟失的commit，編號a873309</div><div class="line">612952f HEAD@&#123;3&#125;: merge 612952fbfad9e480d5cd3486034399644393c253: Fast-forward</div></pre></td></tr></table></figure>
-<p>在其中找到被discarding的commit，他對應的id是a873309，後面會用到</p>
-<h2 id="git-branch-tmp-a873309"><a href="#git-branch-tmp-a873309" class="headerlink" title="git branch tmp a873309"></a><code>git branch tmp a873309</code></h2><h2 id="git-branch-av"><a href="#git-branch-av" class="headerlink" title="git branch -av"></a><code>git branch -av</code></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">* anrom-4.0               612952f fix destory activity save downloadinfo sttus</div><div class="line">  tmp                     a873309 add new functions to install packages in different zone</div><div class="line">  remotes/anrom/anrom-4.0 612952f fix destory activity save downloadinfo sttus</div><div class="line">  remotes/m/anrom-4.0     -&gt; anrom/anrom-4.0</div></pre></td></tr></table></figure>
-<h2 id="git-checkout-tmp"><a href="#git-checkout-tmp" class="headerlink" title="git checkout tmp"></a><code>git checkout tmp</code></h2><p>切换到分支 ‘tmp’</p>
-<h2 id="git-remote-v"><a href="#git-remote-v" class="headerlink" title="git remote -v"></a><code>git remote -v</code></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">anrom http://anrom.ancode.org:81/p/anrom/packages/apps/AnromMarket (fetch)</div><div class="line">anrom http://anrom.ancode.org:81/p/anrom/packages/apps/AnromMarket (push)</div><div class="line">point ssh://chris@anrom.ancode.org:29418/anrom/packages/apps/AnromMarket.git (fetch)</div><div class="line">point ssh://chris@anrom.ancode.org:29418/anrom/packages/apps/AnromMarket.git (push)</div></pre></td></tr></table></figure>
-<h2 id="git-log"><a href="#git-log" class="headerlink" title="git log"></a><code>git log</code></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">commit a873309d7579ccceff13a1881bbc23740d62fe83</div><div class="line">Author: Chris King</div><div class="line">Date:   Fri Jan 30 18:26:38 2015 +0800</div><div class="line"></div><div class="line">    add new functions to install packages in different zone</div><div class="line">    </div><div class="line">    Change-Id: If42919eebd83723f8b3bff54a715c5ec2d49eb5a</div><div class="line"></div><div class="line">commit 612952fbfad9e480d5cd3486034399644393c253</div><div class="line">Author: NancyZhang &lt;1049754324@qq.com&gt;</div><div class="line">Date:   Tue Dec 30 10:43:14 2014 +0800</div><div class="line"></div><div class="line">    fix destory activity save downloadinfo sttus</div></pre></td></tr></table></figure>
-<h2 id="git-checkout-anrom-4-0"><a href="#git-checkout-anrom-4-0" class="headerlink" title="git checkout anrom-4.0"></a><code>git checkout anrom-4.0</code></h2><h2 id="git-cherry-pick-a873309d7579ccceff13a1881bbc23740d62fe83"><a href="#git-cherry-pick-a873309d7579ccceff13a1881bbc23740d62fe83" class="headerlink" title="git cherry-pick  a873309d7579ccceff13a1881bbc23740d62fe83"></a><code>git cherry-pick  a873309d7579ccceff13a1881bbc23740d62fe83</code></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">[anrom-4.0 bf79eec] add new functions to install packages in different zone</div><div class="line"> 6 个文件被修改，插入 390 行(+)，删除 194 行(-)</div><div class="line"> create mode 100644 src/org/ancode/anrommarket/InstallTask.java</div><div class="line"> create mode 100644 src/org/ancode/anrommarket/Installer.java</div><div class="line"> create mode 100644 src/org/ancode/anrommarket/PackageInstallObserver.java</div></pre></td></tr></table></figure>
-<h2 id="git-branch-D-tmp"><a href="#git-branch-D-tmp" class="headerlink" title="git branch -D tmp"></a><code>git branch -D tmp</code></h2><p>已删除 分支 tmp（曾为 a873309）</p>
-<h2 id="git-branch-av-1"><a href="#git-branch-av-1" class="headerlink" title="git branch -av"></a><code>git branch -av</code></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">* anrom-4.0               bf79eec add new functions to install packages in different zone</div><div class="line">  remotes/anrom/anrom-4.0 612952f fix destory activity save downloadinfo sttus</div><div class="line">  remotes/m/anrom-4.0     -&gt; anrom/anrom-4.0</div></pre></td></tr></table></figure>
-<h2 id="git-status"><a href="#git-status" class="headerlink" title="git status"></a><code>git status</code></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"># 位于分支 anrom-4.0</div><div class="line">无须提交（干净的工作区）</div></pre></td></tr></table></figure>
-<h2 id="git-push-point-HEAD-refs-for-anrom-4-0"><a href="#git-push-point-HEAD-refs-for-anrom-4-0" class="headerlink" title="git push point HEAD:refs/for/anrom-4.0"></a><code>git push point HEAD:refs/for/anrom-4.0</code></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">Counting objects: 22, done.</div><div class="line">Delta compression using up to 8 threads.</div><div class="line">Compressing objects: 100% (11/11), done.</div><div class="line">Writing objects: 100% (13/13), 5.36 KiB, done.</div><div class="line">Total 13 (delta 6), reused 0 (delta 0)</div><div class="line">remote: Resolving deltas: 100% (6/6)</div><div class="line">remote: Processing changes: new: 1, refs: 1, done    </div><div class="line">remote: </div><div class="line">remote: New Changes:</div><div class="line">remote:   http://anrom.ancode.org:81/4818</div><div class="line">remote: </div><div class="line">To ssh://chris@anrom.ancode.org:29418/anrom/packages/apps/AnromMarket.git</div><div class="line"> * [new branch]      HEAD -&gt; refs/for/anrom-4.0</div></pre></td></tr></table></figure>
+        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>适配器模式把一个类的接口变换成客户端所期待的另一种接口，从而使原本因接口不匹配而无法在一起工作的两个类能够在一起工作。</p>
+<h3 id="模式中的角色"><a href="#模式中的角色" class="headerlink" title="模式中的角色"></a>模式中的角色</h3><p>需要适配的类（Adaptee）：需要适配的类。</p>
+<p>适配器（Adapter）：通过包装一个需要适配的对象，把原接口转换成目标接口。</p>
+<p>目标接口（Target）：客户所期待的接口。可以是具体的或抽象的类，也可以是接口。</p>
+<h3 id="类的适配器模式"><a href="#类的适配器模式" class="headerlink" title="类的适配器模式"></a>类的适配器模式</h3><p>类的适配器模式把适配的类的API转换成为目标类的API。</p>
+<p><img src="/assets/img/adapter_pattern/adapter_class.png" alt="image"><br>在上图中可以看出，Adaptee类并没有sampleOperation2()方法，而客户端则期待这个方法。为使客户端能够使用Adaptee类，提供一个中间环节，即类Adapter，把Adaptee的API与Target类的API衔接起来。Adapter与Adaptee是继承关系，这决定了这个适配器模式是类的：</p>
+<p>　　模式所涉及的角色有：</p>
+<p>　　●　　目标(Target)角色：这就是所期待得到的接口。注意：由于这里讨论的是类适配器模式，因此目标不可以是类。</p>
+<p>　　●　　源(Adapee)角色：现在需要适配的接口。</p>
+<p>　　●　　适配器(Adaper)角色：适配器类是本模式的核心。适配器把源接口转换成目标接口。显然，这一角色不可以是接口，而必须是具体类。</p>
+<p><a href="http://www.cnblogs.com/java-my-life/archive/2012/04/13/2442795.html" target="_blank" rel="external">源代码</a></p>
+<h3 id="对象的适配器模式"><a href="#对象的适配器模式" class="headerlink" title="对象的适配器模式"></a>对象的适配器模式</h3><p>与类的适配器模式一样，对象的适配器模式把被适配的类的API转换成为目标类的API，与类的适配器模式不同的是，对象的适配器模式不是使用继承关系连接到Adaptee类，而是使用委派关系连接到Adaptee类。</p>
+<p><img src="/assets/img/adapter_pattern/adapter_object.png" alt="image"></p>
+<p>　　从上图可以看出，Adaptee类并没有sampleOperation2()方法，而客户端则期待这个方法。为使客户端能够使用Adaptee类，需要提供一个包装(Wrapper)类Adapter。这个包装类包装了一个Adaptee的实例，从而此包装类能够把Adaptee的API与Target类的API衔接起来。Adapter与Adaptee是委派关系，这决定了适配器模式是对象的。</p>
+<h3 id="缺省适配模式"><a href="#缺省适配模式" class="headerlink" title="缺省适配模式"></a>缺省适配模式</h3><p>在很多情况下，必须让一个具体类实现某一个接口，但是这个类又用不到接口所规定的所有的方法。通常的处理方法是，这个具体类要实现所有的方法，那些有用的方法要有实现，那些没有用的方法也要有空的、平庸的实现。</p>
+<p>　　这些空的方法是一种浪费，有时也是一种混乱。除非看过这些空方法的代码，程序员可能会以为这些方法不是空的。即便他知道其中有一些方法是空的，也不一定知道哪些方法是空的，哪些方法不是空的，除非看过这些方法的源代码或是文档。</p>
+<p>　　缺省适配模式可以很好的处理这一情况。可以设计一个抽象的适配器类实现接口，此抽象类要给接口所要求的每一种方法都提供一个空的方法。此抽象类可以使它的具体子类免于被迫实现空的方法。</p>
+<p><img src="/assets/img/adapter_pattern/adapter_empty.png" alt="image"></p>
+<p>可以看到，接口AbstractService要求定义三个方法，分别是serviceOperation1()、serviceOperation2()、serviceOperation3()；而抽象适配器类ServiceAdapter则为这三种方法都提供了平庸的实现。因此，任何继承自抽象类ServiceAdapter的具体类都可以选择它所需要的方法实现，而不必理会其他的不需要的方法。</p>
+<p>　　适配器模式的用意是要改变源的接口，以便于目标接口相容。缺省适配的用意稍有不同，它是为了方便建立一个不平庸的适配器类而提供的一种平庸实现。</p>
+<p>　　在任何时候，如果不准备实现一个接口的所有方法时，就可以使用“缺省适配模式”制造一个抽象类，给出所有方法的平庸的具体实现。这样，从这个抽象类再继承下去的子类就不必实现所有的方法了。</p>
+<h2 id="Android中的适配器模式"><a href="#Android中的适配器模式" class="headerlink" title="Android中的适配器模式"></a>Android中的适配器模式</h2><p><img src="/assets/img/adapter_pattern/adapter_android.png" alt="image"><br>以ListView为例，它需要的目标接口就是ListAdapter，继承自Adapter，其中包含一些基本方法，getCount,getView,getItem，getItemId等。</p>
+<p>数据源包括List<t>,Cursor等，为了兼容这些不同类型的数据源，需要定义不同的适配器：ArrayAdapter，CursorAdapter。这些adapter间接继承自ListAdapter，满足了ListView的需求。将数据以合适的方式提供给目标。</t></p>
+<p>以ArrayAdapter为例，查看一下源代码：</p>
+<h3 id="Adapter"><a href="#Adapter" class="headerlink" title="Adapter"></a>Adapter</h3><p>frameworks/base/core/java/android/widget/Adapter.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">public interface Adapter &#123;</div><div class="line">    .....</div><div class="line">    </div><div class="line">    int getCount();   </div><div class="line"></div><div class="line">    Object getItem(int position);</div><div class="line"></div><div class="line">    long getItemId(int position);</div><div class="line">    </div><div class="line">    .......</div><div class="line">&#125;</div><div class="line"></div><div class="line">### ListAdapter</div><div class="line">/frameworks/base/core/java/android/widget/ListAdapter.java</div></pre></td></tr></table></figure></p>
+<p>public interface ListAdapter extends Adapter {<br>……<br>    boolean isEnabled(int position);<br>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">### BaseAdapter</div><div class="line">/frameworks/base/core/java/android/widget/BaseAdapter.java</div></pre></td></tr></table></figure></p>
+<p>public abstract class BaseAdapter implements ListAdapter, SpinnerAdapter {<br>    ……</p>
+<pre><code>public void notifyDataSetChanged() {
+    mDataSetObservable.notifyChanged();
+}
+
+......
+</code></pre><p>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">### ArrayAdapter</div><div class="line">/frameworks/base/core/java/android/widget/ArrayAdapter.java</div></pre></td></tr></table></figure></p>
+<p>public class ArrayAdapter<t> extends BaseAdapter implements Filterable, ThemedSpinnerAdapter {<br>….<br>private List<t> mObjects;<br>…..</t></t></p>
+<pre><code>@Override
+public void notifyDataSetChanged() {
+    super.notifyDataSetChanged();
+    mNotifyOnChange = true;
+}
+
+.....
+
+    public int getCount() {
+    return mObjects.size();
+}
+
+public T getItem(int position) {
+    return mObjects.get(position);
+}
+
+public long getItemId(int position) {
+    return position;
+}
+
+......
+</code></pre><p>}<br>```</p>
+
       
     </div>
     
@@ -323,16 +374,10 @@
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2015/04/20/build_java_jar_based_on_android_code/">
-                    如何使用android源码来制作java的jar包
-                </a>
-            </div>
-        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2015/01/16/build_new_project_in_work_zone/">
-                    如何爲辦公區新建一個項目
+                <a href="/2016/11/17/factory-pattern/">
+                    Android中的设计模式之工厂模式系列
                 </a>
             </div>
         
@@ -344,7 +389,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目錄</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#git-reflog"><span class="toc-number">1.</span> <span class="toc-text">git reflog</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git-branch-tmp-a873309"><span class="toc-number">2.</span> <span class="toc-text">git branch tmp a873309</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git-branch-av"><span class="toc-number">3.</span> <span class="toc-text">git branch -av</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git-checkout-tmp"><span class="toc-number">4.</span> <span class="toc-text">git checkout tmp</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git-remote-v"><span class="toc-number">5.</span> <span class="toc-text">git remote -v</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git-log"><span class="toc-number">6.</span> <span class="toc-text">git log</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git-checkout-anrom-4-0"><span class="toc-number">7.</span> <span class="toc-text">git checkout anrom-4.0</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git-cherry-pick-a873309d7579ccceff13a1881bbc23740d62fe83"><span class="toc-number">8.</span> <span class="toc-text">git cherry-pick  a873309d7579ccceff13a1881bbc23740d62fe83</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git-branch-D-tmp"><span class="toc-number">9.</span> <span class="toc-text">git branch -D tmp</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git-branch-av-1"><span class="toc-number">10.</span> <span class="toc-text">git branch -av</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git-status"><span class="toc-number">11.</span> <span class="toc-text">git status</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git-push-point-HEAD-refs-for-anrom-4-0"><span class="toc-number">12.</span> <span class="toc-text">git push point HEAD:refs/for/anrom-4.0</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#简介"><span class="toc-number">1.</span> <span class="toc-text">简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#模式中的角色"><span class="toc-number">1.1.</span> <span class="toc-text">模式中的角色</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#类的适配器模式"><span class="toc-number">1.2.</span> <span class="toc-text">类的适配器模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#对象的适配器模式"><span class="toc-number">1.3.</span> <span class="toc-text">对象的适配器模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#缺省适配模式"><span class="toc-number">1.4.</span> <span class="toc-text">缺省适配模式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Android中的适配器模式"><span class="toc-number">2.</span> <span class="toc-text">Android中的适配器模式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Adapter"><span class="toc-number">2.1.</span> <span class="toc-text">Adapter</span></a></li></ol></li></ol>
         
     </div>
     <style>
@@ -380,7 +425,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"找回差點丟失的commit　| IChrisKing　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"Android中的设计模式之适配器模式　| IChrisKing　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -396,7 +441,7 @@
     
       <div class="duoshuo" id="comments">
     <div id="comment-box" ></div>
-    <div class="ds-thread" id="ds-thread" data-thread-key="2015/02/04/save_discarding_commits/" data-title="找回差點丟失的commit" data-url="http://yoursite.com/2015/02/04/save_discarding_commits/"></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2016/11/21/adapter-pattern/" data-title="Android中的设计模式之适配器模式" data-url="http://yoursite.com/2016/11/21/adapter-pattern/"></div>
     <script>
         var duoshuoQuery = {short_name:"ichrisking"};
         var loadComment = function(){
@@ -419,15 +464,13 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2015/04/20/build_java_jar_based_on_android_code/" title="上一篇: 如何使用android源码来制作java的jar包">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主頁"><i class="fa fa-home"></i></a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2015/01/16/build_new_project_in_work_zone/" title="下一篇: 如何爲辦公區新建一個項目">
+            <a href="/2016/11/17/factory-pattern/" title="下一篇: Android中的设计模式之工厂模式系列">
                 <i class="fa fa-angle-right"></i>
             </a>
         
