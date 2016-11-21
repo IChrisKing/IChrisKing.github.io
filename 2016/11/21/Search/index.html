@@ -15,16 +15,16 @@
 
 
 
-<meta name="description" content="对blog的一些修改">
+<meta name="description" content="顺序查找">
 <meta property="og:type" content="article">
-<meta property="og:title" content="对我的Blog做了点改动">
-<meta property="og:url" content="http://yoursite.com/2016/07/24/change-hexo-theme-to-maupassant/index.html">
+<meta property="og:title" content="各种查找算法">
+<meta property="og:url" content="http://yoursite.com/2016/11/21/Search/index.html">
 <meta property="og:site_name" content="IChrisKing">
-<meta property="og:description" content="对blog的一些修改">
-<meta property="og:updated_time" content="2016-08-30T02:59:59.684Z">
+<meta property="og:description" content="顺序查找">
+<meta property="og:updated_time" content="2016-11-21T07:57:45.914Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="对我的Blog做了点改动">
-<meta name="twitter:description" content="对blog的一些修改">
+<meta name="twitter:title" content="各种查找算法">
+<meta name="twitter:description" content="顺序查找">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -56,7 +56,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>对我的Blog做了点改动 | IChrisKing</title>
+<title>各种查找算法 | IChrisKing</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -258,11 +258,11 @@
     </div>
     <link class="menu-list" tags="標籤" friends="友情鏈接" about="關於我"/>
 </nav>
-      <div class="body-wrap"><article id="post-change-hexo-theme-to-maupassant" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-Search" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/07/24/change-hexo-theme-to-maupassant/" class="article-date">
-      <time datetime="2016-07-24T13:35:36.000Z" itemprop="datePublished">2016-07-24</time>
+      <a href="/2016/11/21/Search/" class="article-date">
+      <time datetime="2016-11-21T12:42:33.000Z" itemprop="datePublished">2016-11-21</time>
 </a>
 
 
@@ -277,7 +277,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      对我的Blog做了点改动
+      各种查找算法
     </h1>
   
 
@@ -286,13 +286,13 @@
       <div class="article-info article-info-post">
         
     <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/hexo/">hexo</a>
+    <a class="article-category-link" href="/categories/算法/">算法</a><a class="article-category-link" href="/categories/算法/java/">java</a>
     </div>
 
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/">hexo</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/查找算法/">查找算法</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法/">算法</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -302,14 +302,9 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h3 id="将整个blog项目的源码递交到github"><a href="#将整个blog项目的源码递交到github" class="headerlink" title="将整个blog项目的源码递交到github"></a>将整个blog项目的源码递交到github</h3><p>修改了blog_backup的目录结构，本来只有source一个目录，现在相当于回退一级，将整个myblog项目都递交到github上</p>
-<p>因为之前在source目录中已经有项目的.git，所以，直接将它拷贝到myblog下，然后直接递交了。</p>
-<p>后来试了一下从头递交的流程，已经更新之前的使用hexo搭建blog那片文章里面</p>
-<h3 id="修改theme为maupassant"><a href="#修改theme为maupassant" class="headerlink" title="修改theme为maupassant"></a>修改theme为maupassant</h3><p>看了一天的各种theme，挑了一个好看的，yilia其实很好看，然则不知道为什么，头像就是无法设置，本地hexo server都能显示正常，一递交到网络，直接访问blog，就不显示头像，想了很多方法，找了资料，没有解决，还是不浪费时间了。</p>
-<p>换了maupassant主题，看着还不错。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ git clone https://github.com/tufu9441/maupassant-hexo.git themes/maupassant</div><div class="line">$ npm install hexo-renderer-jade --save</div><div class="line">$ npm install hexo-renderer-sass --save</div></pre></td></tr></table></figure>
-<p>这两行npm install是个坑，一不小心忘了执行，结果搞坏了代码，修复了好几个小时阿。。。</p>
-<p>幸好rom项目的代码没有牵扯到换theme，幸免于难 </p>
+        <h2 id="源码地址"><a href="#源码地址" class="headerlink" title="源码地址"></a>源码地址</h2><p><a href="https://github.com/IChrisKing/SortAndFind" target="_blank" rel="external">SortAndFind</a><br><code>git@github.com:IChrisKing/SortAndFind.git</code></p>
+<h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><p>在array中查找是否存在value，如果存在多个，返回value的所有位置。</p>
+<h2 id="顺序查找"><a href="#顺序查找" class="headerlink" title="顺序查找"></a>顺序查找</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">public class SequelSearch &#123;</div><div class="line">	static int[] array;</div><div class="line">	static int value;</div><div class="line"></div><div class="line">	public static HashSet&lt;Integer&gt; searchInArray(int[] arr, int val)&#123;</div><div class="line">		array = arr;</div><div class="line">		value = val;</div><div class="line">		HashSet&lt;Integer&gt; result = sequelSearch();</div><div class="line">		return result;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	private static HashSet&lt;Integer&gt; sequelSearch() &#123;</div><div class="line">		// TODO Auto-generated method stub</div><div class="line">		HashSet&lt;Integer&gt; res = new HashSet&lt;Integer&gt;();</div><div class="line">		for(int i=0;i&lt;array.length;i++)&#123;</div><div class="line">			if(array[i] == value)&#123;</div><div class="line">				res.add(i);</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		return res;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
 
       
     </div>
@@ -321,16 +316,10 @@
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2016/08/05/build_shadowsocks/">
-                    配置shadowsocks
-                </a>
-            </div>
-        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2016/07/23/AnromOS_deploy/">
-                    Anrom日常发布方法
+                <a href="/2016/11/21/adapter-pattern/">
+                    Android中的设计模式之适配器模式
                 </a>
             </div>
         
@@ -342,7 +331,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目錄</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#将整个blog项目的源码递交到github"><span class="toc-number">1.</span> <span class="toc-text">将整个blog项目的源码递交到github</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修改theme为maupassant"><span class="toc-number">2.</span> <span class="toc-text">修改theme为maupassant</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#源码地址"><span class="toc-number">1.</span> <span class="toc-text">源码地址</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#需求"><span class="toc-number">2.</span> <span class="toc-text">需求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#顺序查找"><span class="toc-number">3.</span> <span class="toc-text">顺序查找</span></a></li></ol>
         
     </div>
     <style>
@@ -378,7 +367,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"对我的Blog做了点改动　| IChrisKing　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"各种查找算法　| IChrisKing　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -394,7 +383,7 @@
     
       <div class="duoshuo" id="comments">
     <div id="comment-box" ></div>
-    <div class="ds-thread" id="ds-thread" data-thread-key="2016/07/24/change-hexo-theme-to-maupassant/" data-title="对我的Blog做了点改动" data-url="http://yoursite.com/2016/07/24/change-hexo-theme-to-maupassant/"></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2016/11/21/Search/" data-title="各种查找算法" data-url="http://yoursite.com/2016/11/21/Search/"></div>
     <script>
         var duoshuoQuery = {short_name:"ichrisking"};
         var loadComment = function(){
@@ -417,15 +406,13 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2016/08/05/build_shadowsocks/" title="上一篇: 配置shadowsocks">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主頁"><i class="fa fa-home"></i></a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2016/07/23/AnromOS_deploy/" title="下一篇: Anrom日常发布方法">
+            <a href="/2016/11/21/adapter-pattern/" title="下一篇: Android中的设计模式之适配器模式">
                 <i class="fa fa-angle-right"></i>
             </a>
         
