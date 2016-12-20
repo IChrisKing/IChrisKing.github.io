@@ -15,31 +15,19 @@
 
 
 
-<meta name="description" content="Android Touch事件的分发过程，从Activity到ViewGroup到View">
+<meta name="description" content="装饰模式以对客户端透明的方式扩展对象的功能，是继承关系的一个替代方案。Android中的ContextWrapper的设计，是对装饰者模式的一个经典用例。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Android事件分发机制">
-<meta property="og:url" content="http://yoursite.com/2016/08/24/Android-TouchEvent/index.html">
+<meta property="og:title" content="Android中的设计模式之装饰者模式">
+<meta property="og:url" content="http://yoursite.com/2016/12/20/pattern-decorator/index.html">
 <meta property="og:site_name" content="IChrisKing">
-<meta property="og:description" content="Android Touch事件的分发过程，从Activity到ViewGroup到View">
-<meta property="og:image" content="http://yoursite.com/assets/img/Android-TouchEvent/touch_event_1.png">
-<meta property="og:image" content="http://yoursite.com/assets/img/Android-TouchEvent/touch_event_super.png">
-<meta property="og:image" content="http://yoursite.com/assets/img/Android-TouchEvent/touch_event_onInterceptTouchEvent.png">
-<meta property="og:image" content="http://yoursite.com/assets/img/Android-TouchEvent/move-up-1.png">
-<meta property="og:image" content="http://yoursite.com/assets/img/Android-TouchEvent/move-up-2.png">
-<meta property="og:image" content="http://yoursite.com/assets/img/Android-TouchEvent/move-up-3.png">
-<meta property="og:image" content="http://yoursite.com/assets/img/Android-TouchEvent/move-up-4.png">
-<meta property="og:image" content="http://yoursite.com/assets/img/Android-TouchEvent/move-up-5.png">
-<meta property="og:image" content="http://yoursite.com/assets/img/Android-TouchEvent/move-up-6.png">
-<meta property="og:image" content="http://yoursite.com/assets/img/Android-TouchEvent/move-up-7.png">
-<meta property="og:image" content="http://yoursite.com/assets/img/Android-TouchEvent/move-up-8.png">
-<meta property="og:image" content="http://yoursite.com/assets/img/Android-TouchEvent/move-up-9.png">
-<meta property="og:image" content="http://yoursite.com/assets/img/Android-TouchEvent/move-up-10.png">
-<meta property="og:image" content="http://yoursite.com/assets/img/Android-TouchEvent/move-up-11.png">
-<meta property="og:updated_time" content="2016-11-02T05:58:38.388Z">
+<meta property="og:description" content="装饰模式以对客户端透明的方式扩展对象的功能，是继承关系的一个替代方案。Android中的ContextWrapper的设计，是对装饰者模式的一个经典用例。">
+<meta property="og:image" content="http://yoursite.com/assets/img/pattern-decorator/decorator.png">
+<meta property="og:image" content="http://yoursite.com/assets/img/pattern-decorator/context.png">
+<meta property="og:updated_time" content="2016-12-20T05:48:24.942Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Android事件分发机制">
-<meta name="twitter:description" content="Android Touch事件的分发过程，从Activity到ViewGroup到View">
-<meta name="twitter:image" content="http://yoursite.com/assets/img/Android-TouchEvent/touch_event_1.png">
+<meta name="twitter:title" content="Android中的设计模式之装饰者模式">
+<meta name="twitter:description" content="装饰模式以对客户端透明的方式扩展对象的功能，是继承关系的一个替代方案。Android中的ContextWrapper的设计，是对装饰者模式的一个经典用例。">
+<meta name="twitter:image" content="http://yoursite.com/assets/img/pattern-decorator/decorator.png">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -71,7 +59,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>Android事件分发机制 | IChrisKing</title>
+<title>Android中的设计模式之装饰者模式 | IChrisKing</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -273,11 +261,11 @@
     </div>
     <link class="menu-list" tags="標籤" friends="友情鏈接" about="關於我"/>
 </nav>
-      <div class="body-wrap"><article id="post-Android-TouchEvent" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-pattern-decorator" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/08/24/Android-TouchEvent/" class="article-date">
-      <time datetime="2016-08-24T12:31:03.000Z" itemprop="datePublished">2016-08-24</time>
+      <a href="/2016/12/20/pattern-decorator/" class="article-date">
+      <time datetime="2016-12-20T11:19:47.000Z" itemprop="datePublished">2016-12-20</time>
 </a>
 
 
@@ -292,7 +280,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Android事件分发机制
+      Android中的设计模式之装饰者模式
     </h1>
   
 
@@ -301,13 +289,13 @@
       <div class="article-info article-info-post">
         
     <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/Android/">Android</a><a class="article-category-link" href="/categories/Android/Android开发工程师/">Android开发工程师</a>
+    <a class="article-category-link" href="/categories/设计模式/">设计模式</a><a class="article-category-link" href="/categories/设计模式/Java/">Java</a>
     </div>
 
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android开发工程师/">Android开发工程师</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -317,30 +305,31 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p><a href="http://www.jianshu.com/p/e99b5e8bd67b" target="_blank" rel="external">原文链接</a></p>
-<h2 id="ACTION-DOWN的传递过程"><a href="#ACTION-DOWN的传递过程" class="headerlink" title="ACTION_DOWN的传递过程"></a>ACTION_DOWN的传递过程</h2><h3 id="ACTION-DOWN的传递图"><a href="#ACTION-DOWN的传递图" class="headerlink" title="ACTION_DOWN的传递图"></a>ACTION_DOWN的传递图</h3><p><img src="/assets/img/Android-TouchEvent/touch_event_1.png" alt="image"></p>
-<p>这张图中的true，false，super是指函数的返回值。</p>
-<p>传递过程经过三个层次：activity -&gt; viewgroup -&gt; view</p>
-<p>对于每一层的分发函数dispatchTouchEvent和响应函数onTouchEvent来说：</p>
+        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>装饰模式又名包装(Wrapper)模式。装饰模式以对客户端透明的方式扩展对象的功能，是继承关系的一个替代方案。</p>
+<p>装饰模式以对客户透明的方式动态地给一个对象附加上更多的责任。换言之，客户端并不会觉得对象在装饰前和装饰后有什么不同。装饰模式可以在不使用创造更多子类的情况下，将对象的功能加以扩展。<br><img src="/assets/img/pattern-decorator/decorator.png" alt="image"><br>　在装饰模式中的角色有：</p>
+<p>　　●　　抽象构件(Component)角色：给出一个抽象接口，以规范准备接收附加责任的对象。</p>
+<p>　　●　　具体构件(ConcreteComponent)角色：定义一个将要接收附加责任的类。</p>
+<p>　　●　　装饰(Decorator)角色：持有一个构件(Component)对象的实例，并定义一个与抽象构件接口一致的接口。</p>
+<p>　　●　　具体装饰(ConcreteDecorator)角色：负责给构件对象“贴上”附加的责任。</p>
+<p><a href="http://www.cnblogs.com/java-my-life/archive/2012/04/20/2455726.html" target="_blank" rel="external">java中的装饰模式</a></p>
+<h2 id="装饰者模式的优点"><a href="#装饰者模式的优点" class="headerlink" title="装饰者模式的优点"></a>装饰者模式的优点</h2><p>装饰者模式实现的是从一个对象外部给对象添加功能，相当于改变了对象的外观，装饰过的对象，从外部系统来看已经不再是原来的对象，而是经过一系列装饰器装饰过的对象。<br>装饰者模式最大的好处就是灵活，它能够灵活的改变一个的对象的功能，并且是动态组合形式。另外好处就是代码复用，因为每个装饰器是独立的，可以给一个对象多次增加同一个装饰器，也可以同一个装饰器装饰不同对象。<br>在面向对象设计中：有一条基本规则</p>
+<p>尽量使用对象组合，而不是对象继承来扩展和复用功能。</p>
+<p>另外说明：</p>
+<p>各个装饰器之间最好是完全独立的功能，不要依赖，这样在进行装饰组合的时候，才没有先后调用限制。否则会降低装饰器组合的灵活性。</p>
+<p>装饰器模式的退化形式：<br>当仅仅只是添加一个功能，就没有必要再设计装饰器的抽象父类，直接在装饰器中实现组件接口，然后实现相应的拓展功能。</p>
+<h2 id="一个例子理解装饰者模式"><a href="#一个例子理解装饰者模式" class="headerlink" title="一个例子理解装饰者模式"></a>一个例子理解装饰者模式</h2><p><a href="http://www.2cto.com/kf/201512/455764.html" target="_blank" rel="external">一个例子理解装饰者模式</a></p>
+<h2 id="Android中的装饰者模式"><a href="#Android中的装饰者模式" class="headerlink" title="Android中的装饰者模式"></a>Android中的装饰者模式</h2><p>Android中的装饰者模式，最经典的就是由Context抽象类扩展出的ContextWrapper的设计。<br><img src="/assets/img/pattern-decorator/context.png" alt="image"></p>
 <ol>
-<li>返回true：消费掉该事件，不再向下一层传递。</li>
-<li>返回false：开始回溯，把它递交给上一层的onTouchEvent</li>
-<li>返回super：按照默认的流程传递事件</li>
+<li>Context就是抽象构件，它提供了应用运行的基本环境，是各组件和系统服务通信的桥梁，隐藏了应用与系统服务通信的细节，简化了上层应用的开发。所以Contex就是“装饰模式”里的Component。</li>
+<li><p>Context类是个抽象类，android.app.ContextImpl派生实现了它的抽象接口。ContextImpl对象会与Android框架层的各个服务（包括组件管理服务、资源管理服务、安装管理服务等）建立远程连接，通过对Android进程间的通信机制（IPC）和这些服务进行通信。所以ContextImpl就是“装饰模式”里的ConcreteComponent。</p>
+</li>
+<li><p>如果上层应用期望改变Context接口的实现，就需要使用android.content.ContextWrapper类，它派生自Context，其中具体实现都是通过组合的方式调用ContextImpl类的实例（在ContextWrapper中的private属性mBase）来完成的。这样的设计，使得ContextImpl与ContextWrapper子类的实现可以单独变化，彼此独立。所以可以看出ContextWrapper就是“装饰模式”里的Decorator。</p>
+</li>
+<li><p>Android的界面组件Activity、服务组件Service以及应用基类Application都派生于ContextWrapper，它们可以通过重载来修改Context接口的实现。所以可以看出Activity、服务组件Service以及应用基类Application就是“装饰模式”里的具体装饰角色A、B、C。</p>
+</li>
 </ol>
-<p>对于onInterceptTouchEvent来说：</p>
-<p>它本身是一个拦截装置，相当于给viewgroup一个跳过下层viewgroup和view，直接将事件递交给本层onTouchEvent的机会。</p>
-<ol>
-<li>返回true：递交给本层的onTouchEvent</li>
-<li>返回false：不做拦截，按照默认的流程传递事件</li>
-<li>返回super：按照默认的流程传递事件</li>
-</ol>
-<h3 id="默认的传递过程图"><a href="#默认的传递过程图" class="headerlink" title="默认的传递过程图"></a>默认的传递过程图</h3><p><img src="/assets/img/Android-TouchEvent/touch_event_super.png" alt="image"></p>
-<p>所有函数的默认实现就是返回super，也就是按照默认的流程，将事件依次传递给所有相关的函数。这个传递过程是一个U型的方向。</p>
-<h3 id="onInterceptTouchEvent方法"><a href="#onInterceptTouchEvent方法" class="headerlink" title="onInterceptTouchEvent方法"></a>onInterceptTouchEvent方法</h3><p><img src="/assets/img/Android-TouchEvent/touch_event_onInterceptTouchEvent.png" alt="image"><br>这个方法是viewgroup独有的。每个viewgroup进行事件分发的时候，会先调用onInterceptTouchEvent方法，问一问拦截器，是否需要将这个事件拦截下来，递交给本层的onTouchEvent来处理。如果要自己处理那就在onInterceptTouchEvent方法中 return true就会交给本层的onTouchEvent的处理，如果不拦截就是继续往下传。默认是不会去拦截的，因为子View也需要这个事件，所以onInterceptTouchEvent拦截器return super.onInterceptTouchEvent()和return false是一样的，是不会拦截的，事件会继续往子View的dispatchTouchEvent传递。</p>
-<h2 id="ACTION-MOVE和ACTION-UP的传递过程"><a href="#ACTION-MOVE和ACTION-UP的传递过程" class="headerlink" title="ACTION_MOVE和ACTION_UP的传递过程"></a>ACTION_MOVE和ACTION_UP的传递过程</h2><p>ACTION_MOVE和ACTION_UP的传递过程，和ACTION_DOWM事件被消费掉的函数所处的层有关。</p>
-<p>下列图中，红色箭头代表</p>
-<p>红色的箭头代表ACTION_DOWN 事件的流向</p>
-<p>蓝色的箭头代表ACTION_MOVE 和 ACTION_UP 事件的流向<br><img src="/assets/img/Android-TouchEvent/move-up-1.png" alt="image"><br><img src="/assets/img/Android-TouchEvent/move-up-2.png" alt="image"><br><img src="/assets/img/Android-TouchEvent/move-up-3.png" alt="image"><br><img src="/assets/img/Android-TouchEvent/move-up-4.png" alt="image"><br><img src="/assets/img/Android-TouchEvent/move-up-5.png" alt="image"><br><img src="/assets/img/Android-TouchEvent/move-up-6.png" alt="image"><br><img src="/assets/img/Android-TouchEvent/move-up-7.png" alt="image"><br><img src="/assets/img/Android-TouchEvent/move-up-8.png" alt="image"><br><img src="/assets/img/Android-TouchEvent/move-up-9.png" alt="image"><br><img src="/assets/img/Android-TouchEvent/move-up-10.png" alt="image"><br><img src="/assets/img/Android-TouchEvent/move-up-11.png" alt="image"></p>
+<p><a href="http://blog.csdn.net/card361401376/article/details/51222351" target="_blank" rel="external">设计模式-装饰者模式（Decorator）理解和在Android中的应用</a></p>
+<p>详细的代码分析可以参考<a href="http://www.cnblogs.com/yemeishu/archive/2012/12/30/2839489.html" target="_blank" rel="external">Android源码学习之装饰模式应用</a></p>
 
       
     </div>
@@ -352,16 +341,10 @@
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2016/08/24/Fragment/">
-                    Fragment
-                </a>
-            </div>
-        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2016/08/23/ANR-and-FC/">
-                    ANR与FC
+                <a href="/2016/12/13/activity-launch-mode/">
+                    activity启动模式
                 </a>
             </div>
         
@@ -373,7 +356,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目錄</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#ACTION-DOWN的传递过程"><span class="toc-number">1.</span> <span class="toc-text">ACTION_DOWN的传递过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ACTION-DOWN的传递图"><span class="toc-number">1.1.</span> <span class="toc-text">ACTION_DOWN的传递图</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#默认的传递过程图"><span class="toc-number">1.2.</span> <span class="toc-text">默认的传递过程图</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#onInterceptTouchEvent方法"><span class="toc-number">1.3.</span> <span class="toc-text">onInterceptTouchEvent方法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ACTION-MOVE和ACTION-UP的传递过程"><span class="toc-number">2.</span> <span class="toc-text">ACTION_MOVE和ACTION_UP的传递过程</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#简介"><span class="toc-number">1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#装饰者模式的优点"><span class="toc-number">2.</span> <span class="toc-text">装饰者模式的优点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#一个例子理解装饰者模式"><span class="toc-number">3.</span> <span class="toc-text">一个例子理解装饰者模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Android中的装饰者模式"><span class="toc-number">4.</span> <span class="toc-text">Android中的装饰者模式</span></a></li></ol>
         
     </div>
     <style>
@@ -409,7 +392,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"Android事件分发机制　| IChrisKing　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"Android中的设计模式之装饰者模式　| IChrisKing　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -425,7 +408,7 @@
     
       <div class="duoshuo" id="comments">
     <div id="comment-box" ></div>
-    <div class="ds-thread" id="ds-thread" data-thread-key="2016/08/24/Android-TouchEvent/" data-title="Android事件分发机制" data-url="http://yoursite.com/2016/08/24/Android-TouchEvent/"></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2016/12/20/pattern-decorator/" data-title="Android中的设计模式之装饰者模式" data-url="http://yoursite.com/2016/12/20/pattern-decorator/"></div>
     <script>
         var duoshuoQuery = {short_name:"ichrisking"};
         var loadComment = function(){
@@ -448,15 +431,13 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2016/08/24/Fragment/" title="上一篇: Fragment">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主頁"><i class="fa fa-home"></i></a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2016/08/23/ANR-and-FC/" title="下一篇: ANR与FC">
+            <a href="/2016/12/13/activity-launch-mode/" title="下一篇: activity启动模式">
                 <i class="fa fa-angle-right"></i>
             </a>
         
