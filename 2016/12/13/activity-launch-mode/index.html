@@ -15,16 +15,16 @@
 
 
 
-<meta name="description" content="開發系統應用AnromManager的過程中，涉及到一些網絡操作，所以使用了okhttp。這就需要把相關的jar包加入到AnromManager的Android.mk當中">
+<meta name="description" content="详细分析Activity的四种启动模式，">
 <meta property="og:type" content="article">
-<meta property="og:title" content="給Android系統應用加jar包">
-<meta property="og:url" content="http://yoursite.com/2016/05/31/add_jar_into_android_mk_file/index.html">
+<meta property="og:title" content="activity启动模式">
+<meta property="og:url" content="http://yoursite.com/2016/12/13/activity-launch-mode/index.html">
 <meta property="og:site_name" content="IChrisKing">
-<meta property="og:description" content="開發系統應用AnromManager的過程中，涉及到一些網絡操作，所以使用了okhttp。這就需要把相關的jar包加入到AnromManager的Android.mk當中">
-<meta property="og:updated_time" content="2016-11-02T05:55:08.032Z">
+<meta property="og:description" content="详细分析Activity的四种启动模式，">
+<meta property="og:updated_time" content="2016-12-14T11:01:24.979Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="給Android系統應用加jar包">
-<meta name="twitter:description" content="開發系統應用AnromManager的過程中，涉及到一些網絡操作，所以使用了okhttp。這就需要把相關的jar包加入到AnromManager的Android.mk當中">
+<meta name="twitter:title" content="activity启动模式">
+<meta name="twitter:description" content="详细分析Activity的四种启动模式，">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -56,7 +56,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>給Android系統應用加jar包 | IChrisKing</title>
+<title>activity启动模式 | IChrisKing</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -258,11 +258,11 @@
     </div>
     <link class="menu-list" tags="標籤" friends="友情鏈接" about="關於我"/>
 </nav>
-      <div class="body-wrap"><article id="post-add_jar_into_android_mk_file" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-activity-launch-mode" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/05/31/add_jar_into_android_mk_file/" class="article-date">
-      <time datetime="2016-05-31T11:27:38.000Z" itemprop="datePublished">2016-05-31</time>
+      <a href="/2016/12/13/activity-launch-mode/" class="article-date">
+      <time datetime="2016-12-13T10:30:14.000Z" itemprop="datePublished">2016-12-13</time>
 </a>
 
 
@@ -277,7 +277,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      給Android系統應用加jar包
+      activity启动模式
     </h1>
   
 
@@ -286,13 +286,13 @@
       <div class="article-info article-info-post">
         
     <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/Android/">Android</a>
+    <a class="article-category-link" href="/categories/Android/">Android</a><a class="article-category-link" href="/categories/Android/Android-everyday/">Android_everyday</a>
     </div>
 
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android-everyday/">Android_everyday</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -302,13 +302,68 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h2 id="jar放置位置"><a href="#jar放置位置" class="headerlink" title="jar放置位置"></a>jar放置位置</h2><p>jar包放在libs/下面</p>
-<h2 id="修改Android-mk"><a href="#修改Android-mk" class="headerlink" title="修改Android.mk"></a>修改Android.mk</h2><h3 id="增加jar包到LOCAL-STATIC-JAVA-LIBRARIES"><a href="#增加jar包到LOCAL-STATIC-JAVA-LIBRARIES" class="headerlink" title="增加jar包到LOCAL_STATIC_JAVA_LIBRARIES"></a>增加jar包到LOCAL_STATIC_JAVA_LIBRARIES</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">LOCAL_STATIC_JAVA_LIBRARIES := \</div><div class="line">    android-support-v4 \</div><div class="line">    android-support-v13 \</div><div class="line">    libphonenumber \</div><div class="line">    org.cyanogenmod.platform.sdk \</div><div class="line">    eventbus \</div><div class="line">    okhttp-2.5.0 \</div><div class="line">    okhttp-apache \</div><div class="line">    okio \</div><div class="line">    oss-android-sdk</div></pre></td></tr></table></figure>
-<p>其中，eventbus \<br>    okhttp-2.5.0 \<br>    okhttp-apache \<br>    okio \<br>    oss-android-sdk<br>是新增加的包，放在libs下面，okhttp因为和系统中的某个okhttp重名，所以改名加了版本号。</p>
-<h3 id="增加jar包到LOCAL-JAVA-LIBRARIES"><a href="#增加jar包到LOCAL-JAVA-LIBRARIES" class="headerlink" title="增加jar包到LOCAL_JAVA_LIBRARIES"></a>增加jar包到LOCAL_JAVA_LIBRARIES</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">LOCAL_JAVA_LIBRARIES := telephony-common \</div><div class="line">    org.apache.http.legacy</div></pre></td></tr></table></figure>
-<p>org.apache.http.legacy 不是libs下面的，但也用到了，加到LOCAL_JAVA_LIBRARIES项，并在项目的AndroidManifests.xml中加入声明，具体位置在：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&lt;application android:label=&quot;@string/app_name&quot;</div><div class="line">             android:icon=&quot;@drawable/icon&quot;</div><div class="line">             android:theme=&quot;@style/Theme.Setup&quot;</div><div class="line">             android:uiOptions=&quot;none&quot;</div><div class="line">             android:name=&quot;.AnromMgrApp&quot;&gt;</div><div class="line"></div><div class="line">    &lt;uses-library android:name=&quot;org.apache.http.legacy&quot; android:required=&quot;false&quot; /&gt;</div></pre></td></tr></table></figure></p>
-<h3 id="增加LOCAL-PREBUILT-STATIC-JAVA-LIBRARIES"><a href="#增加LOCAL-PREBUILT-STATIC-JAVA-LIBRARIES" class="headerlink" title="增加LOCAL_PREBUILT_STATIC_JAVA_LIBRARIES"></a>增加LOCAL_PREBUILT_STATIC_JAVA_LIBRARIES</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">include $(CLEAR_VARS)</div><div class="line"></div><div class="line">LOCAL_PREBUILT_STATIC_JAVA_LIBRARIES := \</div><div class="line">    eventbus:libs/eventbus-2.4.0.jar \</div><div class="line">    okhttp-2.5.0:libs/okhttp-2.5.0.jar \</div><div class="line">    okhttp-apache:libs/okhttp-apache-2.5.0.jar \</div><div class="line">    okio:libs/okio-1.6.0.jar \</div><div class="line">    oss-android-sdk:libs/oss-android-sdk-1.4.0.jar</div><div class="line"></div><div class="line">include $(BUILD_MULTI_PREBUILT)</div></pre></td></tr></table></figure>
-<h3 id="完整的Android-mk文件"><a href="#完整的Android-mk文件" class="headerlink" title="完整的Android.mk文件"></a>完整的Android.mk文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line">LOCAL_PATH := $(call my-dir)</div><div class="line">include $(CLEAR_VARS)</div><div class="line"></div><div class="line">LOCAL_STATIC_JAVA_LIBRARIES := \</div><div class="line">    android-support-v4 \</div><div class="line">    android-support-v13 \</div><div class="line">    libphonenumber \</div><div class="line">    org.cyanogenmod.platform.sdk \</div><div class="line">    eventbus \</div><div class="line">    okhttp-2.5.0 \</div><div class="line">    okhttp-apache \</div><div class="line">    okio \</div><div class="line">    oss-android-sdk</div><div class="line"></div><div class="line">LOCAL_SRC_FILES := $(call all-java-files-under, src)</div><div class="line"></div><div class="line">LOCAL_MODULE_TAGS := optional</div><div class="line"></div><div class="line">LOCAL_PACKAGE_NAME := AnromManager</div><div class="line">LOCAL_CERTIFICATE := platform</div><div class="line">LOCAL_PRIVILEGED_MODULE := true</div><div class="line"></div><div class="line">LOCAL_PROGUARD_FLAG_FILES := proguard.flags</div><div class="line"></div><div class="line"></div><div class="line">LOCAL_JAVA_LIBRARIES := telephony-common \</div><div class="line">    org.apache.http.legacy</div><div class="line"></div><div class="line">LOCAL_RESOURCE_DIR := $(addprefix $(LOCAL_PATH)/, $(res_dir))</div><div class="line">LOCAL_AAPT_FLAGS := --auto-add-overlay</div><div class="line"></div><div class="line">include $(BUILD_PACKAGE)</div><div class="line"></div><div class="line">include $(CLEAR_VARS)</div><div class="line"></div><div class="line">LOCAL_PREBUILT_STATIC_JAVA_LIBRARIES := \</div><div class="line">    eventbus:libs/eventbus-2.4.0.jar \</div><div class="line">    okhttp-2.5.0:libs/okhttp-2.5.0.jar \</div><div class="line">    okhttp-apache:libs/okhttp-apache-2.5.0.jar \</div><div class="line">    okio:libs/okio-1.6.0.jar \</div><div class="line">    oss-android-sdk:libs/oss-android-sdk-1.4.0.jar</div><div class="line"></div><div class="line">include $(BUILD_MULTI_PREBUILT)</div></pre></td></tr></table></figure>
+        <h2 id="任务栈与启动模式"><a href="#任务栈与启动模式" class="headerlink" title="任务栈与启动模式"></a>任务栈与启动模式</h2><p>指定一个Activity的任务栈模式，也就是启动模式。<br>任务栈有以下四种：</p>
+<ul>
+<li>standard 标准模式，默认使用该模式</li>
+<li>singletop 单一顶部模式 （如果当前activity就在栈顶，就不新建）</li>
+<li>singleTask 单一任务栈，干掉头上的其他Activity，自己变成栈顶</li>
+<li>singleInstance 单一实例(单例)，任务栈里面只有自己</li>
+</ul>
+<h2 id="两种指定任务栈的方式"><a href="#两种指定任务栈的方式" class="headerlink" title="两种指定任务栈的方式"></a>两种指定任务栈的方式</h2><h3 id="manifest中指定"><a href="#manifest中指定" class="headerlink" title="manifest中指定"></a>manifest中指定</h3><p>使用manifest里面的Activity的launchMode属性来制定启动模式<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">android:name=&quot;.MainActivity&quot;</div><div class="line">android:launchMode=&quot;standard&quot;</div></pre></td></tr></table></figure></p>
+<h3 id="代码中指定intent-addFlag"><a href="#代码中指定intent-addFlag" class="headerlink" title="代码中指定intent.addFlag"></a>代码中指定intent.addFlag</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Intent intent  = new Intent();</div><div class="line">intent.setClass(FirstActivity.this,SecondActivity.class);</div><div class="line">// 通过Intent的addFlag指定</div><div class="line">intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);</div><div class="line">startActivity(intent);</div></pre></td></tr></table></figure>
+<h3 id="对比"><a href="#对比" class="headerlink" title="对比"></a>对比</h3><ol>
+<li>代码中指定的优先级更高</li>
+<li>manifest无法设定 FLAG_ACTIVITY_CLEAR_TOP 标识</li>
+<li>代码指定无法指定为 singleInstance启动模式</li>
+</ol>
+<h2 id="启动模式详解"><a href="#启动模式详解" class="headerlink" title="启动模式详解"></a>启动模式详解</h2><h3 id="standard-标准模式-默认启动模式"><a href="#standard-标准模式-默认启动模式" class="headerlink" title="standard 标准模式 默认启动模式"></a>standard 标准模式 默认启动模式</h3><p>每开启一个Activity，就会在栈顶添加一个Activity实例。多次间隔或者直接启动一个甲Activity会添加多个甲的示例，可重复添加。（间隔 ABA, 直接 ACC或者AAA）</p>
+<h3 id="singletop-单一顶部模式"><a href="#singletop-单一顶部模式" class="headerlink" title="singletop 单一顶部模式"></a>singletop 单一顶部模式</h3><p>如果开启的Activity已经存在一个实例在任务栈的顶部（仅限于顶部）,再去开启这个Activity，任务栈不会创建新的Activity的实例了，而是复用已经存在的这个Activity，onNewIntent方法被调用；之前打开过，但不是位于栈顶，那么还是会产生新的实例入栈，不会回调onNewIntent方法。</p>
+<p>当我们把一个Activity B 设置为singleTop，当我们打开B页面，会出现几种情况：</p>
+<p>说明：当前A和C都是Standard，B是singleTop</p>
+<ol>
+<li><p>之前没打开过：<br>假设我们首先打开了A，此时任务栈S1里面只有A。然后打开singleTop的B，B入S1栈（谁打开它进入谁的栈）。此时S1的情况是BA，B为栈顶。</p>
+</li>
+<li><p>之前打开过，且位于栈顶：<br>复用这个栈，不会有新的实例压入栈中。同时 onNewIntent 方法会被回调，我们可以利用这个方法获得页面传过来的消息或者其他操作。</p>
+</li>
+<li><p>之前打开过，但是不是位于栈顶：<br>还是会产生新的实例入栈。</p>
+</li>
+</ol>
+<h3 id="singleTask-单一任务（整个任务栈只有一个实例）"><a href="#singleTask-单一任务（整个任务栈只有一个实例）" class="headerlink" title="singleTask 单一任务（整个任务栈只有一个实例）"></a>singleTask 单一任务（整个任务栈只有一个实例）</h3><p>如果开启的Activity已经存在一个实例在任务栈S1，当再次去开启这个Activity时</p>
+<ol>
+<li>位于栈顶则直接复用，回调onNewIntent方法</li>
+<li>位于栈中，也会复用，回调onNewIntent方法，但复用的同时会自己上方的全部Activity都干掉。</li>
+</ol>
+<h3 id="singleInstance-单一实例，任务栈中只存在自己"><a href="#singleInstance-单一实例，任务栈中只存在自己" class="headerlink" title="singleInstance 单一实例，任务栈中只存在自己"></a>singleInstance 单一实例，任务栈中只存在自己</h3><p>当启动一个启动模式为singleInstance的Activity时（之前没启动过），这时系统将开辟出另外一个任务栈，用于存放这个Activity，而且这个新的任务栈只能存放自身这唯一一个Activity。</p>
+<p>singleInstance页面作为前台任务打开自己，则复用，任务栈顺序无变化</p>
+<p>singleInstance页面作为后台任务栈，则切换成为前台任务栈，无新实例产生，复用。</p>
+<p>复用就会调用onNewIntent方法。</p>
+<h2 id="FLAG"><a href="#FLAG" class="headerlink" title="FLAG"></a>FLAG</h2><p>在代码中指定任务栈，其实就是在代码中执行intent.addFlag<br>在代码中指定flag可以改变activity的启动方式，且最后指定的Flag是activity最终任务栈的启动模式。</p>
+<h3 id="Intent-FLAG-ACTIVITY-NEW-TASK"><a href="#Intent-FLAG-ACTIVITY-NEW-TASK" class="headerlink" title="Intent.FLAG_ACTIVITY_NEW_TASK"></a>Intent.FLAG_ACTIVITY_NEW_TASK</h3><ul>
+<li>intent.FLAG_ACTIVITY_NEW_TASK单独使用并无任何效果，需要和taskAffinity一起配合着使用。</li>
+<li>当和taskAffinity一起配合着使用时：Intent.FLAG_ACTIVITY_NEW_TASK + android:taskAffinity 指定非程序包名的任务栈名，与清单文件里面指定 android:launchMode=”singleInstance”效果一致 </li>
+<li>这个Flag常用于在服务中启动Activity，因为服务没有Activity的任务栈，所以只能用一个新的任务栈来启动这个Activity创建实例。</li>
+</ul>
+<h3 id="Intent-FLAG-ACTIVITY-SINGLE-TOP"><a href="#Intent-FLAG-ACTIVITY-SINGLE-TOP" class="headerlink" title="Intent.FLAG_ACTIVITY_SINGLE_TOP"></a>Intent.FLAG_ACTIVITY_SINGLE_TOP</h3><p>与在manifest.xml中指定 android:launchMode=”singleTop”效果一致</p>
+<h3 id="Intent-FLAG-ACTIVITY-NEW-TASK-1"><a href="#Intent-FLAG-ACTIVITY-NEW-TASK-1" class="headerlink" title="Intent.FLAG_ACTIVITY_NEW_TASK"></a>Intent.FLAG_ACTIVITY_NEW_TASK</h3><p>首先会查找是否存在和被启动的Activity具有相同的亲和性的任务栈（即taskAffinity，注意同一个应用程序中的activity的亲和性一样，所以下面的例子a会在同一个栈中），如果有，刚直接把这个栈整体移动到前台，并保持栈中的状态不变，即栈中的activity顺序不变，如果没有，则新建一个栈来存放被启动的activity</p>
+<h4 id="例子a"><a href="#例子a" class="headerlink" title="例子a"></a>例子a</h4><p>Activity A和Activity B在同一个应用中.</p>
+<p>Activity A启动开僻Task堆栈(堆栈状态: A), 在Activity A中启动Activity B, 启动Activity B的Intent的Flag设为FLAG_ACTIVITY_NEW_TASK, Activity B被压入Activity A所在堆栈(堆栈状态: AB).</p>
+<p>原因是默认情况下同一个应用中的所有Activity拥有相同的关系(taskAffinity).</p>
+<h4 id="例子b"><a href="#例子b" class="headerlink" title="例子b"></a>例子b</h4><p> Activity A在名称为”TaskOne应用”的应用中, Activity B和Activity C在名称为”TaskTwo应用”的应用中.</p>
+<p>在Launcher中单击”TaskOne应用”图标, Activity A启动开僻Task堆栈, 命名为TaskA(TaskA堆栈状态: A),在Activity A中启动Activity B, 启动Activity C的Intent的Flag设为FLAG_ACTIVITY_NEW_TASK,Android系统会为Activity B开僻一个新的Task, 命名为TaskB(TaskB堆栈状态: B), 长按Home键, 选择TaskOne, Activity A回到前台, 再次启动Activity B（两种情况1.从桌面启动；2.从Activity A启动，两种情况一样）, 这时TaskB回到前台, Activity B显示, 供用户使用, 即:包含FLAG_ACTIVITY_NEW_TASK的Intent启动Activity的Task正在运行, 则不会为该Activity创建新的Task,而是将原有的Task返回到前台显示.</p>
+<h4 id="例子c"><a href="#例子c" class="headerlink" title="例子c"></a>例子c</h4><p>Activity A在名称为”TaskOne应用”的应用中, Activity B和Activity C在名称为”TaskTwo应用”的应用中.</p>
+<p>在Launcher中单击”TaskOne应用”图标, Activity A启动开僻Task堆栈, 命名为TaskA(TaskA堆栈状态: A),在Activity A中启动Activity B,启动Activity B的Intent的Flag设为FLAG_ACTIVITY_NEW_TASK, Android系统会为Activity B开僻一个新的Task, 命名为TaskB(TaskB堆栈状态: B),  在Activity B中启动Activity C(TaskB的状态: BC) 长按Home键, 选择TaskOne, Activity A回到前台, 再次启动Activity B(从桌面或者ActivityA启动，也是一样的),这时TaskB回到前台, Activity C显示,供用户使用.说明了在此种情况下设置FLAG_ACTIVITY_NEW_TASK后，会先查找是不是有Activity B存在的栈，根据亲和性(taskAffinity)，如果有，刚直接把这个栈整体移动到前台，并保持栈中的状态不变，即栈中的顺序不变</p>
+<h3 id="Intent-FLAG-ACTIVITY-CLEAR-TOP"><a href="#Intent-FLAG-ACTIVITY-CLEAR-TOP" class="headerlink" title="Intent.FLAG_ACTIVITY_CLEAR_TOP"></a>Intent.FLAG_ACTIVITY_CLEAR_TOP</h3><ul>
+<li>如果activity在栈中，则activity启动时，同一个任务栈里面位于它上方的activity会全部被清空。</li>
+</ul>
+<p>例子：Activity A启动开僻Task堆栈(堆栈状态: A), 在Activity A中启动Activity B(堆栈状态: AB), 在Activity B中启动Activity C(堆栈状态: ABC), 在Activity C中启动Activity D(堆栈状态: ABCD), 在Activity D中启动Activity B,启动Activity B的Intent的Flag设置为FLAG_ACTIVITY_CLEAR_TOP, (堆栈状态: AB).</p>
+<ul>
+<li><p>如果activity在栈顶，再次打开自己（并且也设置为Intent.FLAG_ACTIVITY_CLEAR_TOP）时，会摧毁旧的，重建新的。虽然从任务栈的内容看来，没有变化，但其实对于activity的生命周期来说，已经经历了摧毁重建的过程。</p>
+</li>
+<li><p>这个标记位通常是和FLAG_ACTIVITY_NEW_TASK配合着使用的。在这种情况下被启动的Activty如果已经存在，那么系统就会调用它的onNewIntent方法。如果被调用的Activity使用默认的standrad模式，那么它连同它之上的Activity都要出栈，系统会创建新的实例并入栈置为栈顶。</p>
+</li>
+</ul>
+<h3 id="Intent-FLAG-ACTIVITY-EXCLUDE-FROM-RECENTS"><a href="#Intent-FLAG-ACTIVITY-EXCLUDE-FROM-RECENTS" class="headerlink" title="Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS"></a>Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS</h3><p>具有这个标记的Activity不会出现在Activity的历史列表中.<br>他等同于在xml里面设定 </p>
+<p>android:excludeFromRecents=”true”<br><a href="http://www.cnblogs.com/xiaoQLu/archive/2012/07/17/2595294.html" target="_blank" rel="external">http://www.cnblogs.com/xiaoQLu/archive/2012/07/17/2595294.html</a></p>
 
       
     </div>
@@ -320,16 +375,10 @@
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2016/06/08/rsync/">
-                    拷貝代碼利器rsync
-                </a>
-            </div>
-        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2016/03/16/port22_Connection_refused/">
-                    port 22: Connection refused
+                <a href="/2016/12/12/bin-tree/">
+                    二叉搜索树
                 </a>
             </div>
         
@@ -341,7 +390,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目錄</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#jar放置位置"><span class="toc-number">1.</span> <span class="toc-text">jar放置位置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#修改Android-mk"><span class="toc-number">2.</span> <span class="toc-text">修改Android.mk</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#增加jar包到LOCAL-STATIC-JAVA-LIBRARIES"><span class="toc-number">2.1.</span> <span class="toc-text">增加jar包到LOCAL_STATIC_JAVA_LIBRARIES</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#增加jar包到LOCAL-JAVA-LIBRARIES"><span class="toc-number">2.2.</span> <span class="toc-text">增加jar包到LOCAL_JAVA_LIBRARIES</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#增加LOCAL-PREBUILT-STATIC-JAVA-LIBRARIES"><span class="toc-number">2.3.</span> <span class="toc-text">增加LOCAL_PREBUILT_STATIC_JAVA_LIBRARIES</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#完整的Android-mk文件"><span class="toc-number">2.4.</span> <span class="toc-text">完整的Android.mk文件</span></a></li></ol></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#任务栈与启动模式"><span class="toc-number">1.</span> <span class="toc-text">任务栈与启动模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#两种指定任务栈的方式"><span class="toc-number">2.</span> <span class="toc-text">两种指定任务栈的方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#manifest中指定"><span class="toc-number">2.1.</span> <span class="toc-text">manifest中指定</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#代码中指定intent-addFlag"><span class="toc-number">2.2.</span> <span class="toc-text">代码中指定intent.addFlag</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#对比"><span class="toc-number">2.3.</span> <span class="toc-text">对比</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#启动模式详解"><span class="toc-number">3.</span> <span class="toc-text">启动模式详解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#standard-标准模式-默认启动模式"><span class="toc-number">3.1.</span> <span class="toc-text">standard 标准模式 默认启动模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#singletop-单一顶部模式"><span class="toc-number">3.2.</span> <span class="toc-text">singletop 单一顶部模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#singleTask-单一任务（整个任务栈只有一个实例）"><span class="toc-number">3.3.</span> <span class="toc-text">singleTask 单一任务（整个任务栈只有一个实例）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#singleInstance-单一实例，任务栈中只存在自己"><span class="toc-number">3.4.</span> <span class="toc-text">singleInstance 单一实例，任务栈中只存在自己</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#FLAG"><span class="toc-number">4.</span> <span class="toc-text">FLAG</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Intent-FLAG-ACTIVITY-NEW-TASK"><span class="toc-number">4.1.</span> <span class="toc-text">Intent.FLAG_ACTIVITY_NEW_TASK</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Intent-FLAG-ACTIVITY-SINGLE-TOP"><span class="toc-number">4.2.</span> <span class="toc-text">Intent.FLAG_ACTIVITY_SINGLE_TOP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Intent-FLAG-ACTIVITY-NEW-TASK-1"><span class="toc-number">4.3.</span> <span class="toc-text">Intent.FLAG_ACTIVITY_NEW_TASK</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#例子a"><span class="toc-number">4.3.1.</span> <span class="toc-text">例子a</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#例子b"><span class="toc-number">4.3.2.</span> <span class="toc-text">例子b</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#例子c"><span class="toc-number">4.3.3.</span> <span class="toc-text">例子c</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Intent-FLAG-ACTIVITY-CLEAR-TOP"><span class="toc-number">4.4.</span> <span class="toc-text">Intent.FLAG_ACTIVITY_CLEAR_TOP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Intent-FLAG-ACTIVITY-EXCLUDE-FROM-RECENTS"><span class="toc-number">4.5.</span> <span class="toc-text">Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS</span></a></li></ol></li></ol>
         
     </div>
     <style>
@@ -377,7 +426,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"給Android系統應用加jar包　| IChrisKing　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"activity启动模式　| IChrisKing　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -393,7 +442,7 @@
     
       <div class="duoshuo" id="comments">
     <div id="comment-box" ></div>
-    <div class="ds-thread" id="ds-thread" data-thread-key="2016/05/31/add_jar_into_android_mk_file/" data-title="給Android系統應用加jar包" data-url="http://yoursite.com/2016/05/31/add_jar_into_android_mk_file/"></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2016/12/13/activity-launch-mode/" data-title="activity启动模式" data-url="http://yoursite.com/2016/12/13/activity-launch-mode/"></div>
     <script>
         var duoshuoQuery = {short_name:"ichrisking"};
         var loadComment = function(){
@@ -416,15 +465,13 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2016/06/08/rsync/" title="上一篇: 拷貝代碼利器rsync">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主頁"><i class="fa fa-home"></i></a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2016/03/16/port22_Connection_refused/" title="下一篇: port 22: Connection refused">
+            <a href="/2016/12/12/bin-tree/" title="下一篇: 二叉搜索树">
                 <i class="fa fa-angle-right"></i>
             </a>
         
