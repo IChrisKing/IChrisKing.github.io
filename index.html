@@ -184,7 +184,7 @@
                 
                 <section class="switch-part switch-part2">
                     <div class="widget tagcloud" id="js-tagcloud">
-                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-everyday/">Android_everyday</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android开发工程师/">Android开发工程师</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Anrom/">Anrom</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SEAndroid/">SEAndroid</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SELinux/">SELinux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/anrom/">anrom</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shadowsocks-vps/">shadowsocks/vps</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tool/">tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/填坑/">填坑</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/排序算法/">排序算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/查找算法/">查找算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-everyday/">Android_everyday</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android开发工程师/">Android开发工程师</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Anrom/">Anrom</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C-C/">C/C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SEAndroid/">SEAndroid</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SELinux/">SELinux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/anrom/">anrom</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cjdns/">cjdns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cjdns源码分析/">cjdns源码分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shadowsocks-vps/">shadowsocks/vps</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tool/">tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/填坑/">填坑</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/排序算法/">排序算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/查找算法/">查找算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
                     </div>
                 </section>
                 
@@ -260,6 +260,210 @@
     <link class="menu-list" tags="標籤" friends="友情鏈接" about="關於我"/>
 </nav>
       <div class="body-wrap">
+  
+    <article id="post-ping-pong" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/01/12/ping-pong/" class="article-date">
+      <time datetime="2017-01-12T09:50:41.000Z" itemprop="datePublished">2017-01-12</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/01/12/ping-pong/">cjdns源码分析--SwitchPing的发送，接收与回复</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              “SwitchPing是peer之间保活的重要手段，分析这个过程，可以理解在cjdns中，peer之间是如何进行ping/pong操作，来保持联系的。ping是一个互相交互的动作，节点之间会互相发送ping，来保证连接的有效性。收到ping的节点会回复pong来回应对方的ping。”
+          
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/cjdns/">cjdns</a><a class="article-category-link" href="/categories/cjdns/cjdns源码分析/">cjdns源码分析</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C-C/">C/C++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cjdns/">cjdns</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cjdns源码分析/">cjdns源码分析</a></li></ul>
+    </div>
+
+      
+        <p class="article-more-link">
+          <a href="/2017/01/12/ping-pong/#more">查看全文 >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-contentprovider" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/01/04/contentprovider/" class="article-date">
+      <time datetime="2017-01-04T03:34:00.000Z" itemprop="datePublished">2017-01-04</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/01/04/contentprovider/">Android中的ContentProvider,ContentResolver,ContentObserver</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              以一个使用ContentProvider的例子为切入点，根据使用过程，深入源码中分析了ContentProvider的运行原理。内容主要涉及到ContentProvider,ContentResolver,ContentObserver这三个类。
+          
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/Android/">Android</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li></ul>
+    </div>
+
+      
+        <p class="article-more-link">
+          <a href="/2017/01/04/contentprovider/#more">查看全文 >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-pattern-proxy" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/12/21/pattern-proxy/" class="article-date">
+      <time datetime="2016-12-21T11:15:06.000Z" itemprop="datePublished">2016-12-21</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/12/21/pattern-proxy/">Android中的设计模式之代理模式</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              代理模式给某一个对象提供一个代理对象，并由代理对象控制对原对象的引用。Android中的系统service都是采用代理模式来向上层提供服务的。本文以ActivityManager为例，讲解代理模式在Android中的应用。
+          
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/设计模式/">设计模式</a><a class="article-category-link" href="/categories/设计模式/Java/">Java</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+    </div>
+
+      
+        <p class="article-more-link">
+          <a href="/2016/12/21/pattern-proxy/#more">查看全文 >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
   
     <article id="post-pattern-decorator" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -737,213 +941,9 @@
 
 
   
-    <article id="post-pattern-adapter" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/11/21/pattern-adapter/" class="article-date">
-      <time datetime="2016-11-21T11:03:26.000Z" itemprop="datePublished">2016-11-21</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/11/21/pattern-adapter/">Android中的设计模式之适配器模式</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-              介绍了适配器模式。然后以android中的ListAdapter为例，介绍了适配器模式在android中的运用。
-          
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/设计模式/">设计模式</a><a class="article-category-link" href="/categories/设计模式/Java/">Java</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
-    </div>
-
-      
-        <p class="article-more-link">
-          <a href="/2016/11/21/pattern-adapter/#more">查看全文 >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-pattern-factory" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/11/17/pattern-factory/" class="article-date">
-      <time datetime="2016-11-17T10:21:26.000Z" itemprop="datePublished">2016-11-17</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/11/17/pattern-factory/">Android中的设计模式之工厂模式系列</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-              工厂模式系列主要包括简单工厂模式，工厂方法模式，抽象工厂模式。在Android中主要用到的是抽象工厂模式。对于抽象工厂类ThreadFactory，Android中的AsyncTask,MultiTaskDealer,ActivityView各自有不同的实现方式。
-          
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/设计模式/">设计模式</a><a class="article-category-link" href="/categories/设计模式/Java/">Java</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
-    </div>
-
-      
-        <p class="article-more-link">
-          <a href="/2016/11/17/pattern-factory/#more">查看全文 >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-pattern-flyweight" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/11/10/pattern-flyweight/" class="article-date">
-      <time datetime="2016-11-10T02:52:58.000Z" itemprop="datePublished">2016-11-10</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/11/10/pattern-flyweight/">Android中的设计模式之享元模式</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-              介绍了享元模式的定义，给出了简单享元模式和复合享元模式的例子。Android中享元模式的运用主要突出的时其高效利用细粒度对象的特点。
-          
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/设计模式/">设计模式</a><a class="article-category-link" href="/categories/设计模式/Java/">Java</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
-    </div>
-
-      
-        <p class="article-more-link">
-          <a href="/2016/11/10/pattern-flyweight/#more">查看全文 >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
   
     <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
     </nav>
   
 </div>
@@ -952,7 +952,7 @@
         <div id="footer-info">
             <div class="footer-left">
                 <i class="fa fa-copyright"></i> 
-                2016 Chris King
+                2016-2017 Chris King
             </div>
             <div class="footer-right">
                 <a href="http://hexo.io/" target="_blank" title="快速、簡單且強大的網誌框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="簡而不減 Hexo 雙欄網誌主題  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>

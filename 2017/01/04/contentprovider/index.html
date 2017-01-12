@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Chris King" />
+
+
+
+<meta name="description" content="以一个使用ContentProvider的例子为切入点，根据使用过程，深入源码中分析了ContentProvider的运行原理。内容主要涉及到ContentProvider,ContentResolver,ContentObserver这三个类。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android中的ContentProvider,ContentResolver,ContentObserver">
+<meta property="og:url" content="http://yoursite.com/2017/01/04/contentprovider/index.html">
+<meta property="og:site_name" content="IChrisKing">
+<meta property="og:description" content="以一个使用ContentProvider的例子为切入点，根据使用过程，深入源码中分析了ContentProvider的运行原理。内容主要涉及到ContentProvider,ContentResolver,ContentObserver这三个类。">
+<meta property="og:updated_time" content="2017-01-06T02:29:07.511Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android中的ContentProvider,ContentResolver,ContentObserver">
+<meta name="twitter:description" content="以一个使用ContentProvider的例子为切入点，根据使用过程，深入源码中分析了ContentProvider的运行原理。内容主要涉及到ContentProvider,ContentResolver,ContentObserver这三个类。">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="IChrisKing" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>Android中的ContentProvider,ContentResolver,ContentObserver | IChrisKing</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: undefined
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Chris King</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">#IMNOTCHRISLEE</p>
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜單</li>
+                        <li>標籤</li>
+                        
+                        <li>友情鏈接</li>
+                        
+                        
+                        <li>關於我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主頁</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">標籤雲</a></li>
+                        
+                            <li><a href="/about/">關於我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="https://chrisking310@gmail.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="https://github.com/IChrisKing" title="GitHub"></a>
+                            
+                                <a class="fa 新浪博客" href="http://blog.sina.com.cn/u/1733434252" title="新浪博客"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-everyday/">Android_everyday</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android开发工程师/">Android开发工程师</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Anrom/">Anrom</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C-C/">C/C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SEAndroid/">SEAndroid</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SELinux/">SELinux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/anrom/">anrom</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cjdns/">cjdns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cjdns源码分析/">cjdns源码分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shadowsocks-vps/">shadowsocks/vps</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tool/">tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/填坑/">填坑</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/排序算法/">排序算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/查找算法/">查找算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://anromos.github.io/">Anrom OS</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://github.com/AnromOS">Team GitHub</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">Android ROM 开发</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Chris King</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Chris King</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">#IMNOTCHRISLEE</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主頁</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">標籤雲</a></li>
+                
+                    <li><a href="/about/">關於我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="https://chrisking310@gmail.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/IChrisKing" title="GitHub"></a>
+                            
+                                <a class="fa 新浪博客" target="_blank" href="http://blog.sina.com.cn/u/1733434252" title="新浪博客"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="標籤" friends="友情鏈接" about="關於我"/>
+</nav>
+      <div class="body-wrap"><article id="post-contentprovider" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/01/04/contentprovider/" class="article-date">
+      <time datetime="2017-01-04T03:34:00.000Z" itemprop="datePublished">2017-01-04</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Android中的ContentProvider,ContentResolver,ContentObserver
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/Android/">Android</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h2 id="ContentProvider简介"><a href="#ContentProvider简介" class="headerlink" title="ContentProvider简介"></a>ContentProvider简介</h2><p>ContentProvider是Android四大组件之一。主要实现应用程序之间共享数据的功能，为存储和获取数据提供统一的接口。</p>
+<p>Android系统本身提供了一些默认的ContentProvider，包括音频，视频，图片，通讯录等。</p>
+<p>ContentProvider提供一些方法，对数据进行操作：<br>　　 query：查询<br>　　 insert：插入<br>　　 update：更新<br>　　 delete：删除<br>　　 getType：得到数据类型<br>　　 onCreate：创建数据时调用的回调函数<br>　　<br>每个ContentProvider拥有一个公开的URI，其他应用使用这个URI来进行数据获取和操作。</p>
+<h2 id="URI类简介"><a href="#URI类简介" class="headerlink" title="URI类简介"></a>URI类简介</h2><p>通用资源标志符（Universal Resource Identifier, 简称”URI”）。</p>
+<p>Uri代表要操作的数据，Android上可用的每种资源 - 图像、视频片段等都可以用Uri来表示。</p>
+<h3 id="Android中的URI"><a href="#Android中的URI" class="headerlink" title="Android中的URI"></a>Android中的URI</h3><p>Android的Uri由以下三部分组成：</p>
+<p> content://com.cj.mycontentprovider/contact</p>
+<p>一：scheme<br>ContentProvider（内容提供者）的scheme已经由Android所规定，<br> scheme为：content://</p>
+<p>二：主机名<br>主机名（或叫Authority）用于唯一标识这个ContentProvider，比如这里com.cj.mycontentprovider，外部调用者可以根据这个标识来找到它。</p>
+<p>三：path<br>路径（path）可以用来表示我们要操作的数据，路径的构建应根据业务而定，如上面程序:</p>
+<p>Android中的URI： </p>
+<pre><code>所有联系人的Uri： content://contacts/people
+某个联系人的Uri: content://contacts/people/5
+所有图片Uri: content://media/external
+某个图片的Uri：content://media/external/images/media/4
+</code></pre><p>我们很经常需要解析Uri，并从Uri中获取数据。</p>
+<p>Android系统提供了两个用于操作Uri的工具类，分别为UriMatcher 和ContentUris 。</p>
+<h3 id="UriMatcher"><a href="#UriMatcher" class="headerlink" title="UriMatcher"></a>UriMatcher</h3><p>UriMatcher 类主要用于匹配Uri.</p>
+<p>使用方法如下。</p>
+<p>首先第一步，初始化：<br>UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);  </p>
+<p>第二步注册需要的Uri:<br>matcher.addURI(“com.yfz.Lesson”, “people”, PEOPLE);<br>matcher.addURI(“com.yfz.Lesson”, “person/#”, PEOPLE_ID);  </p>
+<p>第三部，与已经注册的Uri进行匹配:<br>Uri uri = Uri.parse(“content://“ + “com.yfz.Lesson” + “/people”);<br>int match = matcher.match(uri);<br>       switch (match)<br>       {<br>           case PEOPLE:<br>               return “vnd.Android.cursor.dir/people”;<br>           case PEOPLE_ID:<br>               return “vnd.android.cursor.item/people”;<br>           default:<br>               return null;<br>       }  </p>
+<p>match方法匹配后会返回一个匹配码Code，即在使用注册方法addURI时传入的第三个参数。 </p>
+<p>上述方法会返回”vnd.Android.cursor.dir/person”. </p>
+<p>总结: </p>
+<p>–常量 UriMatcher.NO_MATCH 表示不匹配任何路径的返回码</p>
+<p>–# 号为通配符</p>
+<p>–* 号为任意字符 </p>
+<h3 id="ContentUris"><a href="#ContentUris" class="headerlink" title="ContentUris"></a>ContentUris</h3><p>ContentUris 类用于获取Uri路径后面的ID部分</p>
+<p>1)为路径加上ID: withAppendedId(uri, id)</p>
+<p>比如有这样一个Uri<br>Uri uri = Uri.parse(“content://com.yfz.Lesson/people”)  </p>
+<p>通过withAppendedId方法，为该Uri加上ID<br>Uri resultUri = ContentUris.withAppendedId(uri, 10);<br>最后resultUri为: content://com.yfz.Lesson/people/10</p>
+<p>2)从路径中获取ID: parseId(uri)</p>
+<p>Uri uri = Uri.parse(“content://com.yfz.Lesson/people/10”)<br>long personid = ContentUris.parseId(uri);<br>最后personid 为 :10 </p>
+<h2 id="一个使用ContentProvider的例子"><a href="#一个使用ContentProvider的例子" class="headerlink" title="一个使用ContentProvider的例子"></a>一个使用ContentProvider的例子</h2><h3 id="写提供数据的应用"><a href="#写提供数据的应用" class="headerlink" title="写提供数据的应用"></a>写提供数据的应用</h3><p>首先是MyContentProvider类，它继承自ContentProvider类，提供上面提到的六个基本方法：</p>
+<p>　　 query：查询<br>　　 insert：插入<br>　　 update：更新<br>　　 delete：删除<br>　　 getType：得到数据类型<br>　　 onCreate：创建数据时调用的回调函数</p>
+<p>数据的处理实际是使用SELite来实现的。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div></pre></td><td class="code"><pre><div class="line">package com.cj.providerdemo2;  </div><div class="line">  </div><div class="line">import android.content.ContentProvider;  </div><div class="line">import android.content.ContentResolver;  </div><div class="line">import android.content.ContentUris;  </div><div class="line">import android.content.ContentValues;  </div><div class="line">import android.content.Context;  </div><div class="line">import android.content.UriMatcher;  </div><div class="line">import android.database.Cursor;  </div><div class="line">import android.database.sqlite.SQLiteDatabase;  </div><div class="line">import android.database.sqlite.SQLiteOpenHelper;  </div><div class="line">import android.net.Uri;  </div><div class="line">  </div><div class="line">public class MyContentProvider extends ContentProvider &#123;  </div><div class="line">    private final static int CONTACT = 1;  </div><div class="line">  </div><div class="line">    private static UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);  </div><div class="line">    static &#123;  </div><div class="line">        uriMatcher.addURI(&quot;com.cj.mycontentprovider&quot;,&quot;contact&quot;,CONTACT);  </div><div class="line">    &#125;  </div><div class="line">  </div><div class="line">    private MyDBHelp dbHelp;  </div><div class="line">  </div><div class="line">    @Override  </div><div class="line">    public int delete(Uri uri, String selection, String[] selectionArgs) &#123;  </div><div class="line">        int id =0;  </div><div class="line">        if(uriMatcher.match(uri) == CONTACT)&#123;  </div><div class="line">            SQLiteDatabase database = dbHelp.getWritableDatabase();  </div><div class="line">            id= database.delete(&quot;contact&quot;, selection, selectionArgs);  </div><div class="line">            contentResolver.notifyChange(uri,null);  </div><div class="line">        &#125;  </div><div class="line">       return id;  </div><div class="line">    &#125;  </div><div class="line">  </div><div class="line">    @Override  </div><div class="line">    public String getType(Uri uri) &#123;  </div><div class="line">        // TODO: Implement this to handle requests for the MIME type of the data  </div><div class="line">        // at the given URI.  </div><div class="line">        throw new UnsupportedOperationException(&quot;Not yet implemented&quot;);  </div><div class="line">    &#125;  </div><div class="line">  </div><div class="line">    @Override  </div><div class="line">    public Uri insert(Uri uri, ContentValues values) &#123;  </div><div class="line">        Uri u = null;  </div><div class="line">        if(uriMatcher.match(uri) == CONTACT)&#123;  </div><div class="line">            SQLiteDatabase database = dbHelp.getWritableDatabase();  </div><div class="line">  </div><div class="line">            long d = database.insert(&quot;contact&quot;, &quot;_id&quot;, values);  </div><div class="line">            u = ContentUris.withAppendedId(uri,d);  </div><div class="line">            contentResolver.notifyChange(u,null);  </div><div class="line">        &#125;  </div><div class="line">        return u;  </div><div class="line">  </div><div class="line">    &#125;  </div><div class="line">    private ContentResolver contentResolver;  </div><div class="line">    @Override  </div><div class="line">    public boolean onCreate() &#123;  </div><div class="line">        Context context = getContext();  </div><div class="line">        contentResolver = context.getContentResolver();  </div><div class="line">        dbHelp = new MyDBHelp(context,&quot;contact.db&quot;,null,1);  </div><div class="line">        return true;  </div><div class="line">    &#125;  </div><div class="line">  </div><div class="line">    @Override  </div><div class="line">    public Cursor query(Uri uri, String[] projection, String selection,  </div><div class="line">                        String[] selectionArgs, String sortOrder) &#123;  </div><div class="line">        Cursor cursor = null;  </div><div class="line">        if(uriMatcher.match(uri) == CONTACT)&#123;  </div><div class="line">            SQLiteDatabase database = dbHelp.getReadableDatabase();  </div><div class="line">            cursor = database.query(&quot;contact&quot;, projection, selection, selectionArgs, null, null, sortOrder);  </div><div class="line">            cursor.setNotificationUri(contentResolver,uri);  </div><div class="line">        &#125;  </div><div class="line">        return cursor;  </div><div class="line">  </div><div class="line">    &#125;  </div><div class="line">  </div><div class="line">    @Override  </div><div class="line">    public int update(Uri uri, ContentValues values, String selection,  </div><div class="line">                      String[] selectionArgs) &#123;  </div><div class="line">        // TODO: Implement this to handle requests to update one or more rows.  </div><div class="line">        throw new UnsupportedOperationException(&quot;Not yet implemented&quot;);  </div><div class="line">    &#125;  </div><div class="line">  </div><div class="line">    /** </div><div class="line">     * </div><div class="line">     */  </div><div class="line">    private static  class MyDBHelp extends SQLiteOpenHelper&#123;  </div><div class="line">  </div><div class="line">        public MyDBHelp(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) &#123;  </div><div class="line">            super(context, name, factory, version);  </div><div class="line">  </div><div class="line">        &#125;  </div><div class="line">  </div><div class="line">        @Override  </div><div class="line">        public void onCreate(SQLiteDatabase db) &#123;  </div><div class="line">            String sql = &quot;create table contact(_id integer primary key autoincrement,&quot; +  </div><div class="line">                    &quot;name text not null,number text not null);&quot;;  </div><div class="line">            db.execSQL(sql);  </div><div class="line">        &#125;  </div><div class="line">  </div><div class="line">        @Override  </div><div class="line">        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) &#123;  </div><div class="line">            onCreate(db);  </div><div class="line">  </div><div class="line">        &#125;  </div><div class="line">    &#125;  </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>可以看到这个类实现了ContentProvider要求的基本方法。</p>
+<p>在onCreate方法中，使用了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">contentResolver = context.getContentResolver();</div></pre></td></tr></table></figure></p>
+<p>query方法中，<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cursor.setNotificationUri(contentResolver,uri);</div></pre></td></tr></table></figure></p>
+<p>在insert和delete方法中，调用了contentResolver.notifyChange(uri,null);  事实上，ContentResoler是联系ContentProvider和使用它的应用之间的纽带。使用它的应用程序，是通过ContentResoler来调用ContentProvider中的方法的。具体调用方式，后面再说。</p>
+<h3 id="声明这个ContentProvider"><a href="#声明这个ContentProvider" class="headerlink" title="声明这个ContentProvider"></a>声明这个ContentProvider</h3><p>写好自己的ContentProvider类之后，需要在Manifest.xml文件中声明这个ContentProvider<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;provider</div><div class="line">	android:name=&quot;.MyContentProvider&quot;</div><div class="line">	android:authorities=&quot;com.cj.mycontentprovider&quot;</div><div class="line">	android:enabled=&quot;true&quot;</div><div class="line">	android:exported=&quot;true&quot;&gt;</div><div class="line">&lt;/provider&gt;</div></pre></td></tr></table></figure></p>
+<p>我们知道，其他应用如果想要访问这个应用程序，使用MyContentProvider提供的那些方法，来获取和操作数据，需要知道对应的uri。</p>
+<p>uri的三个组成部分中，scheme已经被Android固定设置为content://，而这里ContentProvider有一个属性authorities,就是uri的第二部分：主机名,为了保证唯一性,一般使用包名的方式命名。</p>
+<p>剩下uri的第三部分path，上面关于UriMatcher类的使用方法中说过，使用分为三步，结合MyContentProvider类的代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">private static UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);  </div><div class="line">static &#123;  </div><div class="line">    uriMatcher.addURI(&quot;com.cj.mycontentprovider&quot;,&quot;contact&quot;,CONTACT);  </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>  首先初始化：  <code>private static UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);</code><br>  然后注册uri：<code>uriMatcher.addURI(&quot;com.cj.mycontentprovider&quot;,&quot;contact&quot;,CONTACT);</code><br>  最后在 增删改查的方法中进行uri匹配<code>if(uriMatcher.match(uri) == CONTACT)</code></p>
+<h3 id="写使用数据的应用"><a href="#写使用数据的应用" class="headerlink" title="写使用数据的应用"></a>写使用数据的应用</h3><p>  注意，这是另一个应用了。这个应用会通过content://com.cj.mycontentprovider/contact这个uri来使用上一个应用中提供的数据。<br>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div></pre></td><td class="code"><pre><div class="line">  package com.cj.providerdemo1;  </div><div class="line">  </div><div class="line">import android.app.Activity;  </div><div class="line">import android.content.ContentResolver;  </div><div class="line">import android.content.Context;  </div><div class="line">import android.content.Intent;  </div><div class="line">import android.database.ContentObserver;  </div><div class="line">import android.database.Cursor;  </div><div class="line">import android.net.Uri;  </div><div class="line">import android.os.Bundle;  </div><div class="line">import android.os.Handler;  </div><div class="line">import android.support.v7.app.AppCompatActivity;  </div><div class="line">import android.view.LayoutInflater;  </div><div class="line">import android.view.View;  </div><div class="line">import android.view.ViewGroup;  </div><div class="line">import android.widget.AdapterView;  </div><div class="line">import android.widget.Button;  </div><div class="line">import android.widget.CursorAdapter;  </div><div class="line">import android.widget.ListView;  </div><div class="line">import android.widget.TextView;  </div><div class="line">  </div><div class="line">public class MainActivity extends AppCompatActivity &#123;  </div><div class="line">    private ListView lv;  </div><div class="line">    private Button btn;  </div><div class="line">    private ContentResolver resolver;  </div><div class="line">    private MyAdapter myAdapter;  </div><div class="line">    private Cursor cursor;  </div><div class="line">    @Override  </div><div class="line">    protected void onCreate(Bundle savedInstanceState) &#123;  </div><div class="line">        super.onCreate(savedInstanceState);  </div><div class="line">        setContentView(R.layout.activity_main);  </div><div class="line">        lv = (ListView) findViewById(R.id.lv);  </div><div class="line">        btn = (Button) findViewById(R.id.btn);  </div><div class="line">        resolver = getContentResolver();  </div><div class="line">        cursor = resolver.query(Uri.parse(&quot;content://com.cj.mycontentprovider/contact&quot;), null, null,  </div><div class="line">                null, null);  </div><div class="line">            myAdapter = new MyAdapter(this,cursor);  </div><div class="line">            lv.setAdapter(myAdapter);  </div><div class="line">        btn.setOnClickListener(new View.OnClickListener() &#123;  </div><div class="line">            @Override  </div><div class="line">            public void onClick(View v) &#123;  </div><div class="line">                MainActivity.this.startActivityForResult(new Intent(MainActivity.this,AddActivity.class),  </div><div class="line">                        1);  </div><div class="line">            &#125;  </div><div class="line">        &#125;);  </div><div class="line">        String[] s = new String[2];  </div><div class="line">        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() &#123;  </div><div class="line">            @Override  </div><div class="line">            public void onItemClick(AdapterView&lt;?&gt; parent, View view, int position, long id) &#123;  </div><div class="line">                resolver.delete(Uri.parse(&quot;content://com.cj.mycontentprovider/contact&quot;),  </div><div class="line">                null,null);  </div><div class="line">  </div><div class="line">  </div><div class="line">            &#125;  </div><div class="line">        &#125;);  </div><div class="line">        resolver.registerContentObserver(Uri.parse(&quot;content://com.cj.mycontentprovider/contact&quot;),  </div><div class="line">                true,new MyContentObserver(new Handler()));  </div><div class="line">    &#125;  </div><div class="line">  </div><div class="line">    @Override  </div><div class="line">    protected void onActivityResult(int requestCode, int resultCode, Intent data) &#123;  </div><div class="line">        super.onActivityResult(requestCode, resultCode, data);  </div><div class="line">  </div><div class="line">  </div><div class="line">    &#125;  </div><div class="line">    private class MyContentObserver extends ContentObserver&#123;  </div><div class="line">  </div><div class="line">        /** </div><div class="line">         * Creates a content observer. </div><div class="line">         * </div><div class="line">         * @param handler The handler to run &#123;@link #onChange&#125; on, or null if none. </div><div class="line">         */  </div><div class="line">        public MyContentObserver(Handler handler) &#123;  </div><div class="line">            super(handler);  </div><div class="line">        &#125;  </div><div class="line">  </div><div class="line">        @Override  </div><div class="line">        public void onChange(boolean selfChange) &#123;  </div><div class="line">            myAdapter.notifyDataSetChanged();  </div><div class="line">  </div><div class="line">        &#125;  </div><div class="line">    &#125;  </div><div class="line">    private static class MyAdapter extends CursorAdapter&#123;  </div><div class="line">        private Cursor cursor;  </div><div class="line">        private Context context;  </div><div class="line">        public MyAdapter(Context context, Cursor c) &#123;  </div><div class="line">            super(context, c);  </div><div class="line">            this.context = context;  </div><div class="line">            this.cursor = c;  </div><div class="line">        &#125;  </div><div class="line">  </div><div class="line">        @Override  </div><div class="line">        public View newView(Context context, Cursor cursor, ViewGroup parent) &#123;  </div><div class="line">            LayoutInflater layoutInflater = LayoutInflater.from(context);  </div><div class="line">            View view = layoutInflater.inflate(R.layout.item, null);  </div><div class="line">            if(cursor !=null)&#123;  </div><div class="line">                view.setTag(cursor.getInt(cursor.getColumnIndex(&quot;_id&quot;)));  </div><div class="line">            &#125;  </div><div class="line">            return view;  </div><div class="line">        &#125;  </div><div class="line">  </div><div class="line">        @Override  </div><div class="line">        public void bindView(View view, Context context, Cursor cursor) &#123;  </div><div class="line">            TextView name = (TextView) view.findViewById(R.id.tv_name);  </div><div class="line">            TextView num = (TextView) view.findViewById(R.id.tv_num);  </div><div class="line">            if(cursor !=null)&#123;  </div><div class="line">                name.setText(cursor.getString(cursor.getColumnIndex(&quot;name&quot;)));  </div><div class="line">                num.setText(cursor.getString(cursor.getColumnIndex(&quot;number&quot;)));  </div><div class="line">            &#125;  </div><div class="line">        &#125;  </div><div class="line">  </div><div class="line">        @Override  </div><div class="line">        public long getItemId(int position) &#123;  </div><div class="line">            return super.getItemId(position);  </div><div class="line">        &#125;  </div><div class="line">    &#125;  </div><div class="line">  </div><div class="line">  </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line">package com.cj.providerdemo1;  </div><div class="line">  </div><div class="line">import android.app.Activity;  </div><div class="line">import android.content.ContentValues;  </div><div class="line">import android.net.Uri;  </div><div class="line">import android.support.v7.app.AppCompatActivity;  </div><div class="line">import android.os.Bundle;  </div><div class="line">import android.view.View;  </div><div class="line">import android.widget.EditText;  </div><div class="line">import android.widget.Toast;  </div><div class="line">  </div><div class="line">public class AddActivity extends AppCompatActivity &#123;  </div><div class="line">    private EditText et_name;  </div><div class="line">    private EditText et_num;  </div><div class="line">    @Override  </div><div class="line">    protected void onCreate(Bundle savedInstanceState) &#123;  </div><div class="line">        super.onCreate(savedInstanceState);  </div><div class="line">        setContentView(R.layout.activity_add);  </div><div class="line">        et_name = (EditText) findViewById(R.id.et_name);  </div><div class="line">        et_num = (EditText) findViewById(R.id.et_num);  </div><div class="line">    &#125;  </div><div class="line">    public void add(View view)&#123;  </div><div class="line">        String name = et_name.getText().toString();  </div><div class="line">        String num = et_num.getText().toString();  </div><div class="line">        if(name == null || num == null)&#123;  </div><div class="line">            Toast.makeText(this,&quot;姓名和号码不能为空&quot;,Toast.LENGTH_SHORT).show();  </div><div class="line">        &#125;else &#123;  </div><div class="line">            ContentValues contentValues = new ContentValues();  </div><div class="line">            contentValues.put(&quot;name&quot;,name);  </div><div class="line">            contentValues.put(&quot;number&quot;,num);  </div><div class="line">            getContentResolver().insert(Uri.parse(&quot;content://com.cj.mycontentprovider/contact&quot;),contentValues);  </div><div class="line">            setResult(Activity.RESULT_OK);  </div><div class="line">            finish();  </div><div class="line">        &#125;  </div><div class="line">  </div><div class="line">    &#125;  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这个应用主要提供两个功能：1.查询数据并显示。2.新增数据并显示。都是使用ContentResolver，通过uri来使用第一个应用程序中的方法来实现的。</p>
+<p>首先，获取ContentResolver<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">resolver = getContentResolver();</div></pre></td></tr></table></figure></p>
+<p>然后通过query方法来获得数据。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cursor = resolver.query(Uri.parse(&quot;content://com.cj.mycontentprovider/contact&quot;), null, null,  </div><div class="line">               null, null);</div></pre></td></tr></table></figure></p>
+<p>然而resolver是如何最终调用到我们的MyContentProvider中的query方法的呢？下面深入源码来分析这个过程。</p>
+<h2 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h2><h3 id="获取ContentResoler对象"><a href="#获取ContentResoler对象" class="headerlink" title="获取ContentResoler对象"></a>获取ContentResoler对象</h3><p>一切都从getContentResoler()这个方法开始。<br>framerwork/base/core/java/android/content/ContextWrapper.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">public ContentResolver getContentResolver() &#123;</div><div class="line">    return mBase.getContentResolver();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p> mBase变量是ContextImpl类型,是在创建activity的时候,new 一个ContextImpl对象,赋值给activity的.</p>
+<p> frameworks/base/core/java/android/app/ContextImpl.java<br> <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"> @Override</div><div class="line">public ContentResolver getContentResolver() &#123;</div><div class="line">    return mContentResolver;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p> 这里直接返回了ContextImpl对象的成员变量mContentResolver;这个变量是在APP启动的时候赋值的<br> frameworks/base/core/java/android/app/ActivityThread.java<br> <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">private Activity performLaunchActivity(ActivityClientRecord r, Intent customIntent) &#123;  </div><div class="line">      ....  </div><div class="line"> </div><div class="line">      Activity activity = null;  </div><div class="line">    ...  </div><div class="line">      &#125;  </div><div class="line"> </div><div class="line">      try &#123;  </div><div class="line">      ...  </div><div class="line">          if (activity != null) &#123;  </div><div class="line">              Context appContext = createBaseContextForActivity(r, activity);//创建contextimpl的地方  </div><div class="line">              CharSequence title = r.activityInfo.loadLabel(appContext.getPackageManager());  </div><div class="line">              Configuration config = new Configuration(mCompatConfiguration);  </div><div class="line">              if (DEBUG_CONFIGURATION) Slog.v(TAG, &quot;Launching activity &quot;  </div><div class="line">                      + r.activityInfo.name + &quot; with config &quot; + config);  </div><div class="line">              activity.attach(appContext, this, getInstrumentation(), r.token,  </div><div class="line">                      r.ident, app, r.intent, r.activityInfo, title, r.parent,  </div><div class="line">                      r.embeddedID, r.lastNonConfigurationInstances, config);//这里将创建的contextimpl对象传给activity内部mBase变量  </div><div class="line"> </div><div class="line">           ....  </div><div class="line">      return activity;  </div><div class="line">  &#125;</div></pre></td></tr></table></figure></p>
+<p>   通过createBaseContextForActivity()函数创建contextimpl对象,然后通过attach()函数将创建的contextimpl对象赋值给activity的内部变量,对应第一步的mBase变量。接下来，查看创建contextimpl对象的地方,看createBaseContextForActivity()函数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">   private Context createBaseContextForActivity(ActivityClientRecord r, final Activity activity) &#123;</div><div class="line">  ...</div><div class="line">    ContextImpl appContext = ContextImpl.createActivityContext(</div><div class="line">            this, r.packageInfo, displayId, r.overrideConfig);</div><div class="line">    appContext.setOuterContext(activity);</div><div class="line">    Context baseContext = appContext;</div><div class="line"></div><div class="line">    final DisplayManagerGlobal dm = DisplayManagerGlobal.getInstance();</div><div class="line"></div><div class="line">    ...</div><div class="line">    if (pkgName != null &amp;&amp; !pkgName.isEmpty()</div><div class="line">            &amp;&amp; r.packageInfo.mPackageName.contains(pkgName)) &#123;</div><div class="line">        for (int id : dm.getDisplayIds()) &#123;</div><div class="line">            if (id != Display.DEFAULT_DISPLAY) &#123;</div><div class="line">                Display display =</div><div class="line">                        dm.getCompatibleDisplay(id, appContext.getDisplayAdjustments(id));</div><div class="line">                baseContext = appContext.createDisplayContext(display);</div><div class="line">                break;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    return baseContext;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>它调用到了ContextImpl.createActivityContext(<br>                this, r.packageInfo, displayId, r.overrideConfig);方法<br> frameworks/base/core/java/android/app/ContextImpl.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">static ContextImpl createActivityContext(ActivityThread mainThread,</div><div class="line">        LoadedApk packageInfo, int displayId, Configuration overrideConfiguration) &#123;</div><div class="line">    if (packageInfo == null) throw new IllegalArgumentException(&quot;packageInfo&quot;);</div><div class="line">    return new ContextImpl(null, mainThread, packageInfo, null, null, false,</div><div class="line">            null, overrideConfiguration, displayId, null);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>调用到ContextImpl方法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">private ContextImpl(ContextImpl container, ActivityThread mainThread,</div><div class="line">            LoadedApk packageInfo, IBinder activityToken, UserHandle user, boolean restricted,</div><div class="line">            Display display, Configuration overrideConfiguration, int createDisplayWithId,</div><div class="line">            String themePackageName) &#123;</div><div class="line">        ...</div><div class="line">        mContentResolver = new ApplicationContentResolver(this, mainThread, user);</div><div class="line">        ...</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>无关代码全部隐去，可以看到mContentResolver就是在这里被赋值的。这样，就得到了ContentResolver对象。</p>
+<h3 id="获取IContentProvider对象"><a href="#获取IContentProvider对象" class="headerlink" title="获取IContentProvider对象"></a>获取IContentProvider对象</h3><p>接下来，查看query方法。<br>frameworks/base/core/java/android/content/ContentResolver.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line">public final @Nullable Cursor query(@NonNull Uri uri, @Nullable String[] projection,</div><div class="line">        @Nullable String selection, @Nullable String[] selectionArgs,</div><div class="line">        @Nullable String sortOrder) &#123;</div><div class="line">    android.util.SeempLog.record_uri(13, uri);</div><div class="line">    return query(uri, projection, selection, selectionArgs, sortOrder, null);</div><div class="line">&#125;</div><div class="line"></div><div class="line">    public final @Nullable Cursor query(final @NonNull Uri uri, @Nullable String[] projection,</div><div class="line">        @Nullable String selection, @Nullable String[] selectionArgs,</div><div class="line">        @Nullable String sortOrder, @Nullable CancellationSignal cancellationSignal) &#123;</div><div class="line">    ...</div><div class="line">    IContentProvider unstableProvider = acquireUnstableProvider(uri);</div><div class="line">    if (unstableProvider == null) &#123;</div><div class="line">        return null;</div><div class="line">    &#125;</div><div class="line">    IContentProvider stableProvider = null;</div><div class="line">    Cursor qCursor = null;</div><div class="line">    try &#123;</div><div class="line">        ...</div><div class="line">        try &#123;</div><div class="line">            qCursor = unstableProvider.query(mPackageName, uri, projection,</div><div class="line">                    selection, selectionArgs, sortOrder, remoteCancellationSignal);//使用IContentProvider对象的query方法,最终会调用ContentProvider对象的query()方法 </div><div class="line">        &#125; catch (DeadObjectException e) &#123;</div><div class="line">            unstableProviderDied(unstableProvider);</div><div class="line">            stableProvider = acquireProvider(uri);</div><div class="line">            if (stableProvider == null) &#123;</div><div class="line">                return null;</div><div class="line">            &#125;</div><div class="line">            qCursor = stableProvider.query(mPackageName, uri, projection,</div><div class="line">                    selection, selectionArgs, sortOrder, remoteCancellationSignal);//使用IContentProvider对象的query方法,最终会调用ContentProvider对象的query()方法 </div><div class="line">        &#125;</div><div class="line">        if (qCursor == null) &#123;</div><div class="line">            return null;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        // Force query execution.  Might fail and throw a runtime exception here.</div><div class="line">        qCursor.getCount();</div><div class="line">            ...</div><div class="line">        CursorWrapperInner wrapper = new CursorWrapperInner(qCursor,</div><div class="line">                stableProvider != null ? stableProvider : acquireProvider(uri));</div><div class="line">        stableProvider = null;</div><div class="line">        qCursor = null;</div><div class="line">        return wrapper;</div><div class="line">    &#125; catch (RemoteException e) &#123;</div><div class="line">            ...</div><div class="line">        return null;</div><div class="line">    &#125; finally &#123;</div><div class="line">       ...</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>无论最终使用的是unstableProvider还是stableProvider，都是调用了IContentProvider对象的query方法。<br>在查看这个方法之前，先来关注一下unstableProvider和stableProvider的获取。<br>frameworks/base/core/java/android/content/ContentResolver.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">public final IContentProvider acquireUnstableProvider(Uri uri) &#123;</div><div class="line">    if (!SCHEME_CONTENT.equals(uri.getScheme())) &#123;</div><div class="line">        return null;</div><div class="line">    &#125;</div><div class="line">    String auth = uri.getAuthority();</div><div class="line">    if (auth != null) &#123;</div><div class="line">        return acquireUnstableProvider(mContext, uri.getAuthority());</div><div class="line">    &#125;</div><div class="line">    return null;</div><div class="line">&#125;</div><div class="line"></div><div class="line">    public final IContentProvider acquireProvider(Uri uri) &#123;</div><div class="line">    if (!SCHEME_CONTENT.equals(uri.getScheme())) &#123;</div><div class="line">        return null;</div><div class="line">    &#125;</div><div class="line">    final String auth = uri.getAuthority();</div><div class="line">    if (auth != null) &#123;</div><div class="line">        return acquireProvider(mContext, auth);</div><div class="line">    &#125;</div><div class="line">    return null;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这两个函数的返回值都是一个IContentProvider类型。<br>frameworks/base/core/java/android/app/ContextImpl.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">protected IContentProvider acquireProvider(Context context, String auth) &#123;</div><div class="line">    return mMainThread.acquireProvider(context,</div><div class="line">            ContentProvider.getAuthorityWithoutUserId(auth),</div><div class="line">            resolveUserIdFromAuthority(auth), true);</div><div class="line">&#125;</div><div class="line"></div><div class="line">        @Override</div><div class="line">protected IContentProvider acquireUnstableProvider(Context c, String auth) &#123;</div><div class="line">    return mMainThread.acquireProvider(c,</div><div class="line">            ContentProvider.getAuthorityWithoutUserId(auth),</div><div class="line">            resolveUserIdFromAuthority(auth), false);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>mMainThread是一个ActivityThread类型的对象，这两个方法最终都调用了它的acquireProvider方法。其中第二个参数ContentProvider.getAuthorityWithoutUserId(auth),获得的就是在AndroidManifest.xml文件中配置的android:authorities的值。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">public final IContentProvider acquireProvider(</div><div class="line">        Context c, String auth, int userId, boolean stable) &#123;</div><div class="line">    final IContentProvider provider = acquireExistingProvider(c, auth, userId, stable);</div><div class="line">    if (provider != null) &#123;</div><div class="line">        return provider;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    IActivityManager.ContentProviderHolder holder = null;</div><div class="line">    try &#123;</div><div class="line">        holder = ActivityManagerNative.getDefault().getContentProvider(</div><div class="line">                getApplicationThread(), auth, userId, stable);</div><div class="line">    &#125; catch (RemoteException ex) &#123;</div><div class="line">    &#125;</div><div class="line">    if (holder == null) &#123;</div><div class="line">        Slog.e(TAG, &quot;Failed to find provider info for &quot; + auth);</div><div class="line">        return null;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    holder = installProvider(c, holder, holder.info,</div><div class="line">            true /*noisy*/, holder.noReleaseNeeded, stable);</div><div class="line">    return holder.provider;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这里就是查找ContentProvider的精髓所在。</p>
+<ol>
+<li>首先，acquireExistingProvider(c, auth, userId, stable);这个函数检查本地是否已经存在这个要获取的IContentProvider。本地已经存在的IContentProvider保存在ActivityThread类的mProviderMap成员变量中，以ContentProvider对应的URI的authority为键值保存。如果本地已经存在了这个IContentProvider，直接返回它。当本地没有时，进入步骤2.</li>
+<li>获取ContentProviderHolder对象holder。通过ActivityManagerNative.getDefault().getContentProvider来获取holder。这其中经过Binder驱动进行进程间通信,会调用到ActivityManagerService中的getContentProvider()函数。具体过程可以查看<a href="http://blog.csdn.net/hehe26/article/details/51784355" target="_blank" rel="external">这篇</a>。ActivityManagerService会把所有的ContentProvider都实例化出来，并且缓存在一个map里面，所以我们就可以从ActivityManagerService远程得到一个ContentProvider对象。</li>
+<li>调用installProvider将这个IContentProvider保存在本地中，以便下次要使用这个IContentProvider时，直接就可以通过getExistingProvider()函数获取。</li>
+</ol>
+<p>获取到这个IContentProvider对象后，query等方法的最终调用就会指向MyContentProvider类中的方法了。</p>
+<h3 id="数据更新（ContentObserver）"><a href="#数据更新（ContentObserver）" class="headerlink" title="数据更新（ContentObserver）"></a>数据更新（ContentObserver）</h3><p>ContentProvider使用ContentObserver进行数据更新，其中应用到了观察者模式。<a href="https://ichrisking.github.io/2016/11/07/pattern-observer/" target="_blank" rel="external">Android中的设计模式之观察者模式</a><br>ContentProvider的数据更新机制划分为两个单元，第一个单元是监控数据变化的ContentObserver的注册过程，第二个单元是数据更新通知的发送过程。</p>
+<h4 id="ContentObserver的注册过程"><a href="#ContentObserver的注册过程" class="headerlink" title="ContentObserver的注册过程"></a>ContentObserver的注册过程</h4><p>在第二个程序的onCreate中，使用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">resolver.registerContentObserver(Uri.parse(&quot;content://com.cj.mycontentprovider/contact&quot;),  </div><div class="line">                true,new MyContentObserver(new Handler()));</div></pre></td></tr></table></figure></p>
+<p>注册一个自定义的ContentObserver(MyContentObserver)来监控MyContentProvider这个Content Provider中的数据变化.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">private class MyContentObserver extends ContentObserver&#123;  </div><div class="line"> </div><div class="line">       /** </div><div class="line">        * Creates a content observer. </div><div class="line">        * </div><div class="line">        * @param handler The handler to run &#123;@link #onChange&#125; on, or null if none. </div><div class="line">        */  </div><div class="line">       public MyContentObserver(Handler handler) &#123;  </div><div class="line">           super(handler);  </div><div class="line">       &#125;  </div><div class="line"> </div><div class="line">       @Override  </div><div class="line">       public void onChange(boolean selfChange) &#123;  </div><div class="line">           myAdapter.notifyDataSetChanged();  </div><div class="line"> </div><div class="line">       &#125;  </div><div class="line">   &#125;</div></pre></td></tr></table></figure></p>
+<p>从ContentObserver继承下来的子类必须要实现onChange函数。当这个ContentObserver子类负责监控的数据发生变化时，ContentService就会调用它的onChange函数来处理，参数selfChange表示这个变化是否是由自己引起的。在这个应用程序中，MyContentObserver继承了ContentObserver类，它负责监控的URI是”content://com.cj.mycontentprovider/contact”.当以这个URI为前缀的URI对应的数据发生改变时，ContentService都会调用这个MyContentObserver类的onChange函数来处理。在MyContentObserver类的onChange函数中，执行的操作就是重新获取MyContentProvider中的数据来更新界面上的联系人信息列表。</p>
+<p>在MyContentObserver类的构造函数中，有一个参数handler，它的类型为Handler，它是从MainActivity类的onCreate函数中创建并传过来的。这个handler是用来分发和处理消息用的。由于MainActivity类的onCreate函数是在应用程序的主线程中被调用的，因此，这个handler参数就是和应用程序主线程的消息循环关联在一起的。在后面我们分析数据更新通知的发送过程时，便会看到这个handler参数是如何使用的了。</p>
+<p>frameworks/base/core/java/android/content/ContentResolver.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">public final void registerContentObserver(@NonNull Uri uri, boolean notifyForDescendents,</div><div class="line">        @NonNull ContentObserver observer) &#123;</div><div class="line">    Preconditions.checkNotNull(uri, &quot;uri&quot;);</div><div class="line">    Preconditions.checkNotNull(observer, &quot;observer&quot;);</div><div class="line">    registerContentObserver(</div><div class="line">            ContentProvider.getUriWithoutUserId(uri),</div><div class="line">            notifyForDescendents,</div><div class="line">            observer,</div><div class="line">            ContentProvider.getUserIdFromUri(uri, UserHandle.myUserId()));</div><div class="line">&#125;</div><div class="line"></div><div class="line">/** @hide - designated user version */</div><div class="line">public final void registerContentObserver(Uri uri, boolean notifyForDescendents,</div><div class="line">        ContentObserver observer, int userHandle) &#123;</div><div class="line">    try &#123;</div><div class="line">        getContentService().registerContentObserver(uri, notifyForDescendents,</div><div class="line">                observer.getContentObserver(), userHandle);</div><div class="line">    &#125; catch (RemoteException e) &#123;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>当参数notifyForDescendents为true时，表示要监控所有以uri为前缀的URI对应的数据变化。上面函数做了三件事情，一是调用getContentService函数来获得前面已经启动起来了的ContentService服务，二是调用从参数传进来的ContentObserver对象observer的getContentObserver函数来获得一个Binder对象，三是通过调用这个ContentService远程接口的registerContentObserver函数来把这个Binder对象注册到ContentService中去。</p>
+<h5 id="getContentService"><a href="#getContentService" class="headerlink" title="getContentService"></a>getContentService</h5><p>frameworks/base/core/java/android/content/ContentResolver.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">public static IContentService getContentService() &#123;</div><div class="line">    if (sContentService != null) &#123;</div><div class="line">        return sContentService;</div><div class="line">    &#125;</div><div class="line">    IBinder b = ServiceManager.getService(CONTENT_SERVICE_NAME);</div><div class="line">    ...</div><div class="line">    sContentService = IContentService.Stub.asInterface(b);</div><div class="line">    ...</div><div class="line">    return sContentService;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p> 在ContentResolver类中，有一个静态成员变量sContentService，开始时它的值为null。当ContentResolver类的getContentService函数第一次被调用时，它便会通过ServiceManager类的getService函数来获得前面已经启动起来了的ContentService服务的远程接口，然后把它保存在sContentService变量中。这样，当下次ContentResolver类的getContentService函数再次被调用时，就可以直接把这个ContentService远程接口返回给调用者了</p>
+<h5 id="getContentObserver"><a href="#getContentObserver" class="headerlink" title="getContentObserver"></a>getContentObserver</h5><p>frameworks/base/core/java/android/database/ContentObserver.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">public IContentObserver getContentObserver() &#123;</div><div class="line">    synchronized (mLock) &#123;</div><div class="line">        if (mTransport == null) &#123;</div><div class="line">            mTransport = new Transport(this);</div><div class="line">        &#125;</div><div class="line">        return mTransport;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>ContentObserver类的getContentObserver函数返回的是一个成员变量mTransport，它的类型为ContentObserver的内部类Transport。ContentObserver类的成员变量mTransport是一个Binder对象，它是要传递给ContentService服务的，以便当ContentObserver所监控的数据发生变化时，ContentService服务可以通过这个Binder对象通知相应的ContentObserver它监控的数据发生变化了。</p>
+<h5 id="registerContentObserver"><a href="#registerContentObserver" class="headerlink" title="registerContentObserver"></a>registerContentObserver</h5><p>frameworks/base/services/core/java/com/android/server/content/ContentService.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">public void registerContentObserver(Uri uri, boolean notifyForDescendants,</div><div class="line">        IContentObserver observer, int userHandle) &#123;</div><div class="line">    ...</div><div class="line"></div><div class="line">    synchronized (mRootNode) &#123;</div><div class="line">        mRootNode.addObserverLocked(uri, observer, notifyForDescendants, mRootNode,</div><div class="line">                uid, pid, userHandle);</div><div class="line">        ...</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>它调用了ContentService类的成员变量mRootNode的addObserverLocked函数来注册这个ContentObserver对象observer。成员变量mRootNode的类型为ContentService在内部定义的一个类ObserverNode。</p>
+<h5 id="addObserverLocked"><a href="#addObserverLocked" class="headerlink" title="addObserverLocked"></a>addObserverLocked</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"> public void addObserverLocked(Uri uri, IContentObserver observer,</div><div class="line">        boolean notifyForDescendants, Object observersLock,</div><div class="line">        int uid, int pid, int userHandle) &#123;</div><div class="line">    addObserverLocked(uri, 0, observer, notifyForDescendants, observersLock,</div><div class="line">            uid, pid, userHandle);</div><div class="line">&#125;</div><div class="line"></div><div class="line">private void addObserverLocked(Uri uri, int index, IContentObserver observer,</div><div class="line">        boolean notifyForDescendants, Object observersLock,</div><div class="line">        int uid, int pid, int userHandle) &#123;</div><div class="line">    // If this is the leaf node add the observer</div><div class="line">    if (index == countUriSegments(uri)) &#123;</div><div class="line">        mObservers.add(new ObserverEntry(observer, notifyForDescendants, observersLock,</div><div class="line">                uid, pid, userHandle));</div><div class="line">        return;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    // Look to see if the proper child already exists</div><div class="line">    String segment = getUriSegment(uri, index);</div><div class="line">    if (segment == null) &#123;</div><div class="line">        throw new IllegalArgumentException(&quot;Invalid Uri (&quot; + uri + &quot;) used for observer&quot;);</div><div class="line">    &#125;</div><div class="line">    int N = mChildren.size();</div><div class="line">    for (int i = 0; i &lt; N; i++) &#123;</div><div class="line">        ObserverNode node = mChildren.get(i);</div><div class="line">        if (node.mName.equals(segment)) &#123;</div><div class="line">            node.addObserverLocked(uri, index + 1, observer, notifyForDescendants,</div><div class="line">                    observersLock, uid, pid, userHandle);</div><div class="line">            return;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    // No child found, create one</div><div class="line">    ObserverNode node = new ObserverNode(segment);</div><div class="line">    mChildren.add(node);</div><div class="line">    node.addObserverLocked(uri, index + 1, observer, notifyForDescendants,</div><div class="line">            observersLock, uid, pid, userHandle);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>可以看出，注册到ContentService中的ContentObserver按照树形来组织，树的节点类型为ObserverNode，而树的根节点就为ContentService类的成员变量mRootNode。<br>private final ObserverNode mRootNode = new ObserverNode(“”);<br>每一个ObserverNode节点都对应一个名字，它是从URI中解析出来的。<br>在这个应用程序例子中，uri为content://com.cj.mycontentprovider/contact，它最终解析成的树状结构为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">mRootNode(&quot;&quot;)</div><div class="line"></div><div class="line">    -- ObserverNode(&quot;com.cj.mycontentprovider&quot;)</div><div class="line"></div><div class="line">        --ObserverNode(&quot;contact&quot;) , which has a ContentObserver in mObservers</div></pre></td></tr></table></figure></p>
+<p>至此，ContentObserver的注册过程就完成了。</p>
+<h4 id="数据更新通知的发送过程"><a href="#数据更新通知的发送过程" class="headerlink" title="数据更新通知的发送过程"></a>数据更新通知的发送过程</h4><p>在第二个应用程序中，在添加联系人的界面田添加一个联系人时：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">ContentValues contentValues = new ContentValues();    </div><div class="line">            contentValues.put(&quot;name&quot;,name);    </div><div class="line">            contentValues.put(&quot;number&quot;,num);    </div><div class="line">            getContentResolver().insert(Uri.parse(&quot;content://com.cj.mycontentprovider/contact&quot;),contentValues);</div></pre></td></tr></table></figure></p>
+<p>会调用到第一个应用程序的MyContentProvider类的insert函数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public Uri insert(Uri uri, ContentValues values) &#123;  </div><div class="line">       Uri u = null;  </div><div class="line">       if(uriMatcher.match(uri) == CONTACT)&#123;  </div><div class="line">           SQLiteDatabase database = dbHelp.getWritableDatabase();  </div><div class="line"> </div><div class="line">           long d = database.insert(&quot;contact&quot;, &quot;_id&quot;, values);  </div><div class="line">           u = ContentUris.withAppendedId(uri,d);  </div><div class="line">           contentResolver.notifyChange(u,null);  </div><div class="line">       &#125;  </div><div class="line">       return u;  </div><div class="line"> </div><div class="line">   &#125;</div></pre></td></tr></table></figure></p>
+<p>从上面传来的参数uri的值为”content://com.cj.mycontentprovider/contact”。假设当这个函数把数据成功增加到SQLite数据库之后，返回来的id值为d，于是通过调用ContentUris.withAppendedId(uri,d);得到的newUri的值就为”content://com.cj.mycontentprovider/contact/d”。这时候就会调用下面语句来通知那些注册了监控”content://com.cj.mycontentprovider/contact/d”这个URI的ContentObserver，它监控的数据发生变化了：<br>contentResolver.notifyChange(u,null);<br>下面就根据源码来分析这个数据变化通知的发送过程：ContentResolver.notifyChange()<br>frameworks/base/core/java/android/content/ContentResolver.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">public void notifyChange(@NonNull Uri uri, @Nullable ContentObserver observer) &#123;</div><div class="line">    notifyChange(uri, observer, true /* sync to network */);</div><div class="line">&#125;</div><div class="line"></div><div class="line">public void notifyChange(@NonNull Uri uri, @Nullable ContentObserver observer,</div><div class="line">        boolean syncToNetwork) &#123;</div><div class="line">    Preconditions.checkNotNull(uri, &quot;uri&quot;);</div><div class="line">    notifyChange(</div><div class="line">            ContentProvider.getUriWithoutUserId(uri),</div><div class="line">            observer,</div><div class="line">            syncToNetwork,</div><div class="line">            ContentProvider.getUserIdFromUri(uri, UserHandle.myUserId()));</div><div class="line">&#125;</div><div class="line"></div><div class="line"> public void notifyChange(Uri uri, ContentObserver observer, boolean syncToNetwork,</div><div class="line">        int userHandle) &#123;</div><div class="line">    try &#123;</div><div class="line">        getContentService().notifyChange(</div><div class="line">                uri, observer == null ? null : observer.getContentObserver(),</div><div class="line">                observer != null &amp;&amp; observer.deliverSelfNotifications(), syncToNetwork,</div><div class="line">                userHandle);</div><div class="line">    &#125; catch (RemoteException e) &#123;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>调用了ContentService的远接程口来调用它的notifyChange()函数来发送数据更新通知。<br>frameworks/base/services/core/java/com/android/server/content/ContentService.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">public void notifyChange(Uri uri, IContentObserver observer,</div><div class="line">        ...</div><div class="line">    try &#123;</div><div class="line">        ArrayList&lt;ObserverCall&gt; calls = new ArrayList&lt;ObserverCall&gt;();</div><div class="line">        synchronized (mRootNode) &#123;</div><div class="line">            mRootNode.collectObserversLocked(uri, 0, observer, observerWantsSelfNotifications,</div><div class="line">                    userHandle, calls);</div><div class="line">        &#125;</div><div class="line">        final int numCalls = calls.size();</div><div class="line">        for (int i=0; i&lt;numCalls; i++) &#123;</div><div class="line">            ObserverCall oc = calls.get(i);</div><div class="line">            try &#123;</div><div class="line">                oc.mObserver.onChange(oc.mSelfChange, uri, userHandle);</div><div class="line">                ...</div><div class="line">                &#125;</div><div class="line">            &#125; catch (RemoteException ex) &#123;</div><div class="line">                ...</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">       ...</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这个函数主要做了两件事情，第一件事情是调用ContentService的成员变量mRootNode的collectObserverLocked()函数来收集那些注册了监控”content://com.cj.mycontentprovider/contact/d”这个URI的ContentObserver，第二件事情是分别调用了这些ContentObserver的onChange()函数来通知它们监控的数据发生变化了。</p>
+<p>可以看到，calls的类型，是一个ObserverCall的ArrayList，查看ObserverCall的定义<br>frameworks/base/services/core/java/com/android/server/content/ContentService.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">public static final class ObserverCall &#123;</div><div class="line">    final ObserverNode mNode;</div><div class="line">    final IContentObserver mObserver;</div><div class="line">    final boolean mSelfChange;</div><div class="line"></div><div class="line">    ObserverCall(ObserverNode node, IContentObserver observer, boolean selfChange) &#123;</div><div class="line">        mNode = node;</div><div class="line">        mObserver = observer;</div><div class="line">        mSelfChange = selfChange;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>其中包括一个成员 IContentObserver mObserver。这个就是注册了监控”content://com.cj.mycontentprovider/contact/d”这个URI的ContentObserver。<br>在本例当中，只有一个这样的ContentObserver，即在第二个应用程序中注册的MyContentObserver。</p>
+<p>接下来，会调用这个ContentObserver的onChange方法，通知数据更新事件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">oc.mObserver.onChange(oc.mSelfChange, uri, userHandle);</div></pre></td></tr></table></figure></p>
+<p>前面我们在分析ContentObserver的注册过程时，介绍到注册到ContentService服务中的mObserver是一个在ContentObserver内部定义的一个类Transport的对象的远程接口，于是这里调用这个接口的onChange()函数时，就会进入到ContentObserver的内部类Transport的onChange()函数中去。<br>frameworks/base/core/java/android/database/ContentObserver.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">private static final class Transport extends IContentObserver.Stub &#123;</div><div class="line">    private ContentObserver mContentObserver;</div><div class="line"></div><div class="line">    public Transport(ContentObserver contentObserver) &#123;</div><div class="line">        mContentObserver = contentObserver;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public void onChange(boolean selfChange, Uri uri, int userId) &#123;</div><div class="line">        ContentObserver contentObserver = mContentObserver;</div><div class="line">        if (contentObserver != null) &#123;</div><div class="line">            contentObserver.dispatchChange(selfChange, uri, userId);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public void releaseContentObserver() &#123;</div><div class="line">        mContentObserver = null;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>frameworks/base/core/java/android/database/ContentObserver.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">private void dispatchChange(boolean selfChange, Uri uri, int userId) &#123;</div><div class="line">    if (mHandler == null) &#123;</div><div class="line">        onChange(selfChange, uri, userId);</div><div class="line">    &#125; else &#123;</div><div class="line">        mHandler.post(new NotificationRunnable(selfChange, uri, userId));</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>在前面分析MyContentObserver的注册过程时，我们以第二个应用程序的主线程的消息循环创建了一个Handler，并且以这个Handler来创建了这个MyContentObserver，这个Handler就保存在MyContentObserver的父类ContentObserver的成员变量mHandler中。因此，这里的mHandler不为null，于是把这个数据更新通知封装成了一个消息，放到第二个应用程序的主线程中去处理，最终这个消息是由NotificationRunnable类的run()函数来处理的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">private final class NotificationRunnable implements Runnable &#123;</div><div class="line">    private final boolean mSelfChange;</div><div class="line">    private final Uri mUri;</div><div class="line">    private final int mUserId;</div><div class="line"></div><div class="line">    public NotificationRunnable(boolean selfChange, Uri uri, int userId) &#123;</div><div class="line">        mSelfChange = selfChange;</div><div class="line">        mUri = uri;</div><div class="line">        mUserId = userId;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public void run() &#123;</div><div class="line">        ContentObserver.this.onChange(mSelfChange, mUri, mUserId);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这个函数就直接调用ContentObserver的子类的onChange函数来处理这个数据更新通知了。在我们这个情景中，这个ContentObserver子类便是MyContentObserver了。<br>这里它要执行的操作便是更新界面上的ListView列表中的联系人信息了。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2017/01/12/ping-pong/">
+                    cjdns源码分析--SwitchPing的发送，接收与回复
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/12/21/pattern-proxy/">
+                    Android中的设计模式之代理模式
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目錄</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#ContentProvider简介"><span class="toc-number">1.</span> <span class="toc-text">ContentProvider简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#URI类简介"><span class="toc-number">2.</span> <span class="toc-text">URI类简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Android中的URI"><span class="toc-number">2.1.</span> <span class="toc-text">Android中的URI</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#UriMatcher"><span class="toc-number">2.2.</span> <span class="toc-text">UriMatcher</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ContentUris"><span class="toc-number">2.3.</span> <span class="toc-text">ContentUris</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#一个使用ContentProvider的例子"><span class="toc-number">3.</span> <span class="toc-text">一个使用ContentProvider的例子</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#写提供数据的应用"><span class="toc-number">3.1.</span> <span class="toc-text">写提供数据的应用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#声明这个ContentProvider"><span class="toc-number">3.2.</span> <span class="toc-text">声明这个ContentProvider</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#写使用数据的应用"><span class="toc-number">3.3.</span> <span class="toc-text">写使用数据的应用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#源码分析"><span class="toc-number">4.</span> <span class="toc-text">源码分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#获取ContentResoler对象"><span class="toc-number">4.1.</span> <span class="toc-text">获取ContentResoler对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#获取IContentProvider对象"><span class="toc-number">4.2.</span> <span class="toc-text">获取IContentProvider对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数据更新（ContentObserver）"><span class="toc-number">4.3.</span> <span class="toc-text">数据更新（ContentObserver）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#ContentObserver的注册过程"><span class="toc-number">4.3.1.</span> <span class="toc-text">ContentObserver的注册过程</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#getContentService"><span class="toc-number">4.3.1.1.</span> <span class="toc-text">getContentService</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#getContentObserver"><span class="toc-number">4.3.1.2.</span> <span class="toc-text">getContentObserver</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#registerContentObserver"><span class="toc-number">4.3.1.3.</span> <span class="toc-text">registerContentObserver</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#addObserverLocked"><span class="toc-number">4.3.1.4.</span> <span class="toc-text">addObserverLocked</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#数据更新通知的发送过程"><span class="toc-number">4.3.2.</span> <span class="toc-text">数据更新通知的发送过程</span></a></li></ol></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隱藏目錄"  title="點擊按鈕隱藏或者顯示文章目錄">
+
+    <script>
+        yiliaConfig.toc = ["隱藏目錄", "顯示目錄", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"Android中的ContentProvider,ContentResolver,ContentObserver　| IChrisKing　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <div id="comment-box" ></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2017/01/04/contentprovider/" data-title="Android中的ContentProvider,ContentResolver,ContentObserver" data-url="http://yoursite.com/2017/01/04/contentprovider/"></div>
+    <script>
+        var duoshuoQuery = {short_name:"ichrisking"};
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+            s.async = true; s.charset = 'UTF-8';
+            (d.head || d.body).appendChild(s);
+        }
+
+        
+    </script>
+    
+    <script> loadComment(); </script>
+
+</div>
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2017/01/12/ping-pong/" title="上一篇: cjdns源码分析--SwitchPing的发送，接收与回复">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2016/12/21/pattern-proxy/" title="下一篇: Android中的设计模式之代理模式">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/01/12/ping-pong/">cjdns源码分析--SwitchPing的发送，接收与回复</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/04/contentprovider/">Android中的ContentProvider,ContentResolver,ContentObserver</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/21/pattern-proxy/">Android中的设计模式之代理模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/20/pattern-decorator/">Android中的设计模式之装饰者模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/13/activity-launch-mode/">activity启动模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/12/bin-tree/">二叉搜索树</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/29/pattern-builder/">Android中的设计模式之建造模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/23/pattern-strategy/">Android中的设计模式之策略模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/22/pattern-prototype/">Android中的设计模式之原型模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/Search/">各种查找算法</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/pattern-adapter/">Android中的设计模式之适配器模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/17/pattern-factory/">Android中的设计模式之工厂模式系列</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/10/pattern-flyweight/">Android中的设计模式之享元模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/pattern-memento/">Android中的设计模式之备忘录模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/08/pattern-template-method/">Android中的设计模式之模板方法模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/07/pattern-observer/">Android中的设计模式之观察者模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/04/pattern-composite/">Android中的设计模式之组合模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/02/Sort/">各种排序算法</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/01/oneday-ShardPreferences/">ShardPreferences</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/31/oneday-AsyncTask/">AsyncTask</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/26/pattern-singleton/">Android中的设计模式之单例模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/10/oneday-listview/">如何优化listView</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/08/oneday-context/">Android中的context详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/27/android-parcelable/">activity之间传递数据的方法</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/26/oneday-handler/">android的Handler机制详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/22/oneday-activity-lifecycle/">Activity生命周期</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/22/pass-by-value-or-reference/">Java中的值传递和引用传递</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/22/oneday_BroadcastReceiver/">BroadcastReceiver</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/21/oneday_service/">Android中的Service</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/21/sunjdk/">如何安装sunjdk，并用它替代openjdk</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/19/mvp_in_android/">MVP in Android</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/19/java_synchronized/">Java并发</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/18/java_list_hashmap/">Java集合框架</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/09/java_basic/">Java基础知识</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/08/pattern-design/">设计模式概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/31/Binder/">Binder</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/24/Fragment/">Fragment</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/24/Android-TouchEvent/">Android事件分发机制</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/23/ANR-and-FC/">ANR与FC</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/23/Android-performance-optimization/">Android性能优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/23/how_to_use_locate_image_file_in_hexo/">如何在hexo中使用本地图片</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/23/reinstall-hexo-after-reinstall-OS/">重装系统后，修复hexo</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/22/Android_memory_leak/">Android内存泄漏</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/18/Android1_1/">Android基础知识</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/05/build_shadowsocks/">配置shadowsocks</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/24/change-hexo-theme-to-maupassant/">对我的Blog做了点改动</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/23/AnromOS_deploy/">Anrom日常发布方法</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/21/AnromOS_Web_Build/">AnromOS发布网站的搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/19/make_blog_with_hexo/">使用hexo搭建blog</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/08/rsync/">拷貝代碼利器rsync</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/31/add_jar_into_android_mk_file/">給Android系統應用加jar包</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/16/port22_Connection_refused/">port 22: Connection refused</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/01/SEAndroid/">SEAndroid in Android5.x</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/06/11/access_ssl_with_okhttp/">使用OkHttp访问ssl（https）网络</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/04/20/build_java_jar_based_on_android_code/">如何使用android源码来制作java的jar包</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/02/04/save_discarding_commits/">找回差點丟失的commit</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/01/16/build_new_project_in_work_zone/">如何爲辦公區新建一個項目</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/01/06/add_new_function_in_local_service/">爲android添加一個新的service函數</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/03/21/deny_connect_with_usb/">源碼中實現禁止手機鏈接usb</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/02/14/add_tomoyo_to_android_system/">移植TOMOYO的步驟</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/06/09/make_deamon_thead_in_android/">爲android編寫一個deamon進程</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2016-2017 Chris King
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、簡單且強大的網誌框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="簡而不減 Hexo 雙欄網誌主題  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到訪數"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本頁閱讀量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回頂部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看評論"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="轉到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+             categories: ".article-category a, a.tag-list-link", 
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
