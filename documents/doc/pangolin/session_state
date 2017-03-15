@@ -1,0 +1,75 @@
+= 引擎层session state =
+== 三种状态 ==
+NEW：
+RELATED:
+ESTABLISH：
+INVALID：
+
+== 如何维护session状态 ==
+=== 输入项 ===
+源ip
+目的ip
+源端口
+目的端口
+协议类型
+{{{
+struct PacketParser_Header {
+    uint8_t af;
+//    struct PacketParser_Header_Hash hash;
+    union {
+        uint8_t v6[16];
+        uint32_t v4;
+    } src, dst;
+    uint16_t srcPort_be;
+    uint16_t dstPort_be;
+    uint8_t protocol;
+    struct {
+        uint32_t flags;
+    } tcp;
+};
+}}}
+
+=== 输出项 ===
+
+{{{
+struct SessionState
+{
+    int state;
+    uint64_t timeOfLastPacket;
+    int reply
+    //uint32_t packetsNum;
+    //uint32_t packetsBytes;
+    bool minInit;
+};
+}}}
+
+=== struct Map_SessionStates sessionMap ===
+{{{
+#define Map_NAME SessionStates
+#define Map_ENABLE_HANDLES
+#define Map_KEY_TYPE struct PacketParser_Header*
+#define Map_VALUE_TYPE struct SessionState*
+#define Map_USE_HASH
+#define Map_USE_COMPARATOR
+}}}
+HASH的方法为，假设源为A，目的为B，比较AB地址大小，假设A<B，将 Aip+Aport+Bip+Bport 进行hash。[[br]]
+这样做，无论数据包是从A发往B，还是B发往A，都使用”小地址+大地址“来hash，就会对应到表中的同一条数据。
+
+=== 维护方法 ===
+==== UDP ====
+{{{
+假设，A地址<B地址，A向B发起UDP连接，第一个包到达时state为NEW，minInit为true。此后，如果：
+1. 先收到了A发的包，对比发现A地址<B地址，同时minInit为true，说明是发起者发的包，state依然为NEW。
+2. 先收到了B发的包，对比发现B地址>A地址，同时minInit为true，说明是响应者发出了响应包，state变为RELATED。（还是直接变为ESTABLISH？？？）
+}}}
+
+==== TCP ====
+{{{
+假设，A地址<B地址，A向B发起TCP连接，第一个包到达时state为NEW，minInit为true。此后，如果：
+1. 先收到了A发的包，对比发现A地址<B地址，同时minInit为true，说明是发起者发的包，state依然为NEW。
+2. 先收到了B发的包，对比发现B地址>A地址，同时minInit为true，说明是响应者发出了响应包，state变为RELATED，reply为1。
+此后，如果收到B发的包，就把reply+1
+当reply为3时，state变为ESTABLISH。
+}}}
+
+
