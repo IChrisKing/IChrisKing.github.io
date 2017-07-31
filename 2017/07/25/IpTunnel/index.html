@@ -21,7 +21,7 @@
 <meta property="og:url" content="http://yoursite.com/2017/07/25/IpTunnel/index.html">
 <meta property="og:site_name" content="IChrisKing">
 <meta property="og:description" content="“IpTunnel中主要是和离岸点相关的代码。结合最近的需求，分析一下源码，设计一下需求的实现方案”">
-<meta property="og:updated_time" content="2017-07-25T09:50:19.206Z">
+<meta property="og:updated_time" content="2017-07-27T03:26:27.823Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="cjdns源码分析--IpTunnel">
 <meta name="twitter:description" content="“IpTunnel中主要是和离岸点相关的代码。结合最近的需求，分析一下源码，设计一下需求的实现方案”">
@@ -414,7 +414,7 @@
 <p>至此，IpTunnel收到从Tun上和从其他点发来的包，并进行处理的过程分析完成。</p>
 <h2 id="需求描述"><a href="#需求描述" class="headerlink" title="需求描述"></a>需求描述</h2><p>假设有一个连接到离岸点上的普通点A，离岸点分配给它的ipv4地址是192.168.253.111.同时A是内网net中的一个点，内网地址192.168.2.111  这时，内网net中的另一个点B，内网地址为192.168.2.222.B将A设置为网关，想要通过A访问外网。以向外发包为例，这个包的src地址是192.168.2.222.这是一个内网地址。<br>当前实现中，当离岸点收到这个由B发出的，经由A点的数据包时，会进行一个对于ip地址的判断。对于离岸点来说，这个包是A发送过来的，离岸点会找到对应着A的conn，进行一次地址判断。判断中，会发现这个src地址和离岸点分配给A点的ipv4地址不符。然后离岸点会丢弃这个包。外网向B点回包过程的也会经历这个地址判断的过程，离岸点也会丢弃地址不符的包。<br>现在需要一个机制，能让A代理所有内网中的包。也就是A会向离岸点报告自己代理的内网的网段。当离岸点收到src或者dst为该内网网段地址的包时，离岸点知道这个包应该交给A处理。</p>
 <h2 id="方案设计"><a href="#方案设计" class="headerlink" title="方案设计"></a>方案设计</h2><h3 id="A点的conf中加入关于代理网段的信息"><a href="#A点的conf中加入关于代理网段的信息" class="headerlink" title="A点的conf中加入关于代理网段的信息"></a>A点的conf中加入关于代理网段的信息</h3><p>在A点的conf文件中加入代理网段的信息<br>同时，在读取conf的过程中，获取代理网段的信息，并调用IpTunnel中相应的方法，将代理网段的信息通知给离岸点。</p>
-<h3 id="IpTunnel-Connection增加字段"><a href="#IpTunnel-Connection增加字段" class="headerlink" title="IpTunnel_Connection增加字段"></a>IpTunnel_Connection增加字段</h3><p>增加一个bool型字段，标示当前连接是否使用了网段代理<br>增加一个网段的字段，类型待定</p>
+<h3 id="IpTunnel-Connection增加字段"><a href="#IpTunnel-Connection增加字段" class="headerlink" title="IpTunnel_Connection增加字段"></a>IpTunnel_Connection增加字段</h3><p>增加一个bool型字段useIntranet，标示当前连接是否使用了网段代理<br>增加一个ip地址地址字段和一个mask字段，共同标识内网网段信息</p>
 <h3 id="普通点标注自己是一个带有网段代理功能的点"><a href="#普通点标注自己是一个带有网段代理功能的点" class="headerlink" title="普通点标注自己是一个带有网段代理功能的点"></a>普通点标注自己是一个带有网段代理功能的点</h3><p>普通点修改自己和离岸点的IpTunnel_Connection，增加代理网段信息，并标注当前连接使用了网段代理功能</p>
 <h3 id="普通点通知离岸点，自己的代理网段"><a href="#普通点通知离岸点，自己的代理网段" class="headerlink" title="普通点通知离岸点，自己的代理网段"></a>普通点通知离岸点，自己的代理网段</h3><p>普通点将自己代理的网段信息发送给离岸点<br>离岸点将网段信息记录到该普通点对应的conn当中，并标注当前连接使用了网段代理功能</p>
 <h3 id="在ip地址合法性检查时，增加对代理网段的判断"><a href="#在ip地址合法性检查时，增加对代理网段的判断" class="headerlink" title="在ip地址合法性检查时，增加对代理网段的判断"></a>在ip地址合法性检查时，增加对代理网段的判断</h3><p>除了当前已经有的直接对比ip地址的操作之外，根据是否标注了使用网段代理功能，配合代理网段的值，查看当前包是否是一个代理网段的包，并找到可以处理这个包的普通点。</p>

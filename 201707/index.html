@@ -45,7 +45,7 @@ wiki的编写
 延长和peer的保活间隔时间
 
 1234567891011121314151617181920/** After t">
-<meta property="og:updated_time" content="2017-07-25T01:41:42.390Z">
+<meta property="og:updated_time" content="2017-07-31T01:49:24.104Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="2017-07">
 <meta name="twitter:description" content="07-03 Mon.1. notifycation功能的实现
@@ -459,6 +459,30 @@ wiki的编写
 </ul>
 <h2 id="07-25-Tue"><a href="#07-25-Tue" class="headerlink" title="07-25 Tue."></a>07-25 Tue.</h2><h3 id="1-自定义离岸的地址类型-1"><a href="#1-自定义离岸的地址类型-1" class="headerlink" title="1. 自定义离岸的地址类型"></a>1. 自定义离岸的地址类型</h3><ul>
 <li>编写设计，捋清逻辑</li>
+<li>写文档分析IpTunnel的运行逻辑</li>
+<li>写文档设计需求的实现逻辑</li>
+</ul>
+<h2 id="0726-Wed"><a href="#0726-Wed" class="headerlink" title="0726 Wed"></a>0726 Wed</h2><h3 id="1-自定义离岸的地址类型-2"><a href="#1-自定义离岸的地址类型-2" class="headerlink" title="1. 自定义离岸的地址类型"></a>1. 自定义离岸的地址类型</h3><ul>
+<li><p>实现conf文件中关于intraNet的配置项写法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&quot;ipTunnel&quot;:&#123;</div><div class="line">            &quot;useIntranet&quot;:1,</div><div class="line">			&quot;allowedConnections&quot;:[],</div><div class="line">			&quot;outgoingConnections&quot;:[</div><div class="line">				&#123;</div><div class="line">                    &quot;publicKey&quot;:&quot;wfzyzrc0q4g83y0dgzxx1l862u0lscucj75yw9q1ymbltzwh2fq0.k&quot;,</div><div class="line">                    &quot;intranetAddress&quot;:&quot;192.168.3.0&quot;</div><div class="line">					&quot;mask&quot;:&quot;255.255.255.0&quot;</div><div class="line">                &#125;</div><div class="line">			]</div><div class="line">		&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>实现Configurator中读取相应配置项的方法，考虑到兼容不支持intraNet的点，不能造成引擎崩溃</p>
+</li>
+<li>实现普通点将intraNet相关信息加入到conn中。</li>
+<li>重点实现了关于已知mask时，判断两个ip是否在同一网段的方法。</li>
+</ul>
+<h2 id="0727-Thur"><a href="#0727-Thur" class="headerlink" title="0727 Thur"></a>0727 Thur</h2><h3 id="1-自定义离岸的地址类型-3"><a href="#1-自定义离岸的地址类型-3" class="headerlink" title="1. 自定义离岸的地址类型"></a>1. 自定义离岸的地址类型</h3><ul>
+<li>把网段匹配的代码用到地址合法性检测中</li>
+<li>普通点在请求ipv4地址时，顺便把自己的intranet信息和mask信息发送给离岸点。</li>
+<li>离岸点收到普通点的信息后，将intranet和mask信息加入代表这条连接的conn中。</li>
+</ul>
+<h2 id="0728-Fri"><a href="#0728-Fri" class="headerlink" title="0728 Fri"></a>0728 Fri</h2><h3 id="1-自定义离岸的地址类型-4"><a href="#1-自定义离岸的地址类型-4" class="headerlink" title="1. 自定义离岸的地址类型"></a>1. 自定义离岸的地址类型</h3><ul>
+<li>增加log</li>
+<li>尝试搭建内网环境</li>
+<li>收到新需求，要使用路由表来处理路由匹配</li>
+</ul>
+<h2 id="0731-Mon"><a href="#0731-Mon" class="headerlink" title="0731 Mon"></a>0731 Mon</h2><h3 id="1-自定义离岸的地址类型-5"><a href="#1-自定义离岸的地址类型-5" class="headerlink" title="1. 自定义离岸的地址类型"></a>1. 自定义离岸的地址类型</h3><ul>
+<li>搭建内网环境</li>
 </ul>
 
       
