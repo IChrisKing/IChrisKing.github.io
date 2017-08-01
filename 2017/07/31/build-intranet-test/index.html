@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Chris King" />
+
+
+
+<meta name="description" content="为了验证代码的效果，需要搭建一个小型的网络。使用3个点：Linux主机，树莓派A，树莓派B。Linux主机一方面作为一个普通点，连接外界离岸点；另一方面作为离岸点，为树莓派A提供离岸功能。树莓派A作为普通点，连接Linux主机，将Linux主机作为离岸点。Linux主机和树莓派A都运行cjdns。树莓派B与树莓派A在同一个内网中，树莓派B不运行cjdns，验证树莓派B能否通过树莓派A连接Linu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="build_intranet_test">
+<meta property="og:url" content="http://yoursite.com/2017/07/31/build-intranet-test/index.html">
+<meta property="og:site_name" content="IChrisKing">
+<meta property="og:description" content="为了验证代码的效果，需要搭建一个小型的网络。使用3个点：Linux主机，树莓派A，树莓派B。Linux主机一方面作为一个普通点，连接外界离岸点；另一方面作为离岸点，为树莓派A提供离岸功能。树莓派A作为普通点，连接Linux主机，将Linux主机作为离岸点。Linux主机和树莓派A都运行cjdns。树莓派B与树莓派A在同一个内网中，树莓派B不运行cjdns，验证树莓派B能否通过树莓派A连接Linu">
+<meta property="og:image" content="http://yoursite.com/assets/img/build_intranet_test/network.png">
+<meta property="og:updated_time" content="2017-08-01T02:55:07.018Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="build_intranet_test">
+<meta name="twitter:description" content="为了验证代码的效果，需要搭建一个小型的网络。使用3个点：Linux主机，树莓派A，树莓派B。Linux主机一方面作为一个普通点，连接外界离岸点；另一方面作为离岸点，为树莓派A提供离岸功能。树莓派A作为普通点，连接Linux主机，将Linux主机作为离岸点。Linux主机和树莓派A都运行cjdns。树莓派B与树莓派A在同一个内网中，树莓派B不运行cjdns，验证树莓派B能否通过树莓派A连接Linu">
+<meta name="twitter:image" content="http://yoursite.com/assets/img/build_intranet_test/network.png">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="IChrisKing" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>build_intranet_test | IChrisKing</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: undefined
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Chris King</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">#IMNOTCHRISLEE</p>
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜單</li>
+                        <li>標籤</li>
+                        
+                        <li>友情鏈接</li>
+                        
+                        
+                        <li>關於我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主頁</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">標籤雲</a></li>
+                        
+                            <li><a href="/about/">關於我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="https://chrisking310@gmail.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="https://github.com/IChrisKing" title="GitHub"></a>
+                            
+                                <a class="fa 新浪博客" href="http://blog.sina.com.cn/u/1733434252" title="新浪博客"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-everyday/">Android_everyday</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android开发工程师/">Android开发工程师</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Anrom/">Anrom</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C-C/">C/C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SEAndroid/">SEAndroid</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SELinux/">SELinux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/anrom/">anrom</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cjdns/">cjdns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cjdns源码分析/">cjdns源码分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iptables/">iptables</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/network/">network</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/raspberry配置/">raspberry配置</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shadowsocks-vps/">shadowsocks/vps</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tool/">tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/填坑/">填坑</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/排序算法/">排序算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/查找算法/">查找算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/树莓派raspberry/">树莓派raspberry</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网络/">网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://anromos.github.io/">Anrom OS</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://github.com/AnromOS">Team GitHub</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">Android ROM 开发</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Chris King</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Chris King</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">#IMNOTCHRISLEE</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主頁</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">標籤雲</a></li>
+                
+                    <li><a href="/about/">關於我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="https://chrisking310@gmail.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/IChrisKing" title="GitHub"></a>
+                            
+                                <a class="fa 新浪博客" target="_blank" href="http://blog.sina.com.cn/u/1733434252" title="新浪博客"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="標籤" friends="友情鏈接" about="關於我"/>
+</nav>
+      <div class="body-wrap"><article id="post-build-intranet-test" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/07/31/build-intranet-test/" class="article-date">
+      <time datetime="2017-07-31T07:01:49.000Z" itemprop="datePublished">2017-07-31</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      build_intranet_test
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/network/">network</a><a class="article-category-link" href="/categories/network/cjdns/">cjdns</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cjdns/">cjdns</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/network/">network</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/网络/">网络</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h2 id="整体网络结构描述"><a href="#整体网络结构描述" class="headerlink" title="整体网络结构描述"></a>整体网络结构描述</h2><p><img src="/assets/img/build_intranet_test/network.png" alt="image"></p>
+<h3 id="两个网络"><a href="#两个网络" class="headerlink" title="两个网络"></a>两个网络</h3><h4 id="cjdns网络"><a href="#cjdns网络" class="headerlink" title="cjdns网络"></a>cjdns网络</h4><p>这个网络中包括两台主机：</p>
+<ol>
+<li>Linux主机</li>
+<li>树莓派A<br>这两个主机依靠cjdns网络连接，树莓派A将Linux主机作为离岸点</li>
+</ol>
+<h4 id="内网"><a href="#内网" class="headerlink" title="内网"></a>内网</h4><p>这个网络中包括两台主机：</p>
+<ol>
+<li>树莓派A</li>
+<li>树莓派B<br>这两个主机依靠内网连接，他们在同一个内网网段中</li>
+</ol>
+<h3 id="三个主机"><a href="#三个主机" class="headerlink" title="三个主机"></a>三个主机</h3><h4 id="Linux主机"><a href="#Linux主机" class="headerlink" title="Linux主机"></a>Linux主机</h4><ol>
+<li><p>作为普通点，连接一个离岸点，获取到一个离岸点分配的ipv4地址</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">tun0</div><div class="line">          Link encap:UNSPEC  HWaddr 00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00  </div><div class="line">          inet addr:192.168.253.23  P-t-P:192.168.253.23  Mask:255.255.255.255</div><div class="line">          inet6 addr: fbdb:b56d:fdcf:c2ae:5f0b:cdd:67b4:8f8b/8 Scope:Global</div><div class="line">          UP POINTOPOINT RUNNING NOARP MULTICAST  MTU:1304  Metric:1</div><div class="line">          RX packets:149768 errors:0 dropped:0 overruns:0 frame:0</div><div class="line">          TX packets:129763 errors:0 dropped:0 overruns:0 carrier:0</div><div class="line">          collisions:0 txqueuelen:500 </div><div class="line">          RX bytes:142615218 (142.6 MB)  TX bytes:14459194 (14.4 MB)</div></pre></td></tr></table></figure>
+</li>
+<li><p>作为离岸点，给树莓派A分配ipv4地址192.168.254.2</p>
+</li>
+</ol>
+<h4 id="树莓派A"><a href="#树莓派A" class="headerlink" title="树莓派A"></a>树莓派A</h4><ol>
+<li><p>作为cjdns网络中的普通点，将Linux主机设置为自己的离岸点，得到Linux主机分配给它的ipv4地址</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">tun0</div><div class="line">          Link encap:UNSPEC  HWaddr 00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00  </div><div class="line">          inet addr:192.168.254.2  P-t-P:192.168.254.2  Mask:255.255.255.255</div><div class="line">          inet6 addr: fb72:e349:2cd8:52e0:f9d0:e1bf:fb76:1def/8 Scope:Global</div><div class="line">          UP POINTOPOINT RUNNING NOARP MULTICAST  MTU:1304  Metric:1</div><div class="line">          RX packets:354 errors:0 dropped:0 overruns:0 frame:0</div><div class="line">          TX packets:911 errors:0 dropped:0 overruns:0 carrier:0</div><div class="line">          collisions:0 txqueuelen:500 </div><div class="line">          RX bytes:29736 (29.0 KiB)  TX bytes:67220 (65.6 KiB)</div></pre></td></tr></table></figure>
+</li>
+<li><p>作为与树莓派B在同一内网中的一台机器，有内网地址</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">eth0</div><div class="line">          Link encap:Ethernet  HWaddr b8:27:eb:39:af:74  </div><div class="line">          inet addr:169.254.132.110  Bcast:169.254.255.255  Mask:255.255.0.0</div><div class="line">          inet6 addr: fe80::aa6c:fd0c:f49d:f52b/64 Scope:Link</div><div class="line">          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1</div><div class="line">          RX packets:9844 errors:0 dropped:0 overruns:0 frame:0</div><div class="line">          TX packets:9965 errors:0 dropped:0 overruns:0 carrier:0</div><div class="line">          collisions:0 txqueuelen:1000 </div><div class="line">          RX bytes:2161122 (2.0 MiB)  TX bytes:2277527 (2.1 MiB)</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h4 id="树莓派B"><a href="#树莓派B" class="headerlink" title="树莓派B"></a>树莓派B</h4><p>作为内网内的机器，有内网地址<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">eth0</div><div class="line">          Link encap:Ethernet  HWaddr b8:27:eb:11:f7:78  </div><div class="line">          inet addr:169.254.106.46  Bcast:169.254.255.255  Mask:255.255.0.0</div><div class="line">          inet6 addr: fe80::7358:a873:c8d4:ed78/64 Scope:Link</div><div class="line">          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1</div><div class="line">          RX packets:9682 errors:0 dropped:0 overruns:0 frame:0</div><div class="line">          TX packets:9670 errors:0 dropped:0 overruns:0 carrier:0</div><div class="line">          collisions:0 txqueuelen:1000 </div><div class="line">          RX bytes:1965024 (1.8 MiB)  TX bytes:2315377 (2.2 MiB)</div></pre></td></tr></table></figure></p>
+<h2 id="cjdns配置"><a href="#cjdns配置" class="headerlink" title="cjdns配置"></a>cjdns配置</h2><h3 id="Linux主机的配置"><a href="#Linux主机的配置" class="headerlink" title="Linux主机的配置"></a>Linux主机的配置</h3><p>主要修改IpTunnel段的配置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">&quot;ipTunnel&quot;:&#123;</div><div class="line">          &quot;useIntranet&quot;:1,</div><div class="line">	&quot;allowedConnections&quot;:[</div><div class="line">              &#123;</div><div class="line">                  &quot;ip4Address&quot;:&quot;192.168.254.2&quot;,</div><div class="line">                  &quot;ip4Prefix&quot;:0,</div><div class="line">                  &quot;ip4Alloc&quot;:32,</div><div class="line">                  &quot;publicKey&quot;:&quot;by3bum947rtq4yfw97ffjw90rumnyzz6b9dw5hr5qnd2jcd8p110.k&quot;</div><div class="line">              &#125;</div><div class="line">          ],</div><div class="line">	&quot;outgoingConnections&quot;:[</div><div class="line">		&#123;</div><div class="line">                  &quot;publicKey&quot;:&quot;wfzyzrc0q4g83y0dgzxx1l862u0lscucj75yw9q1ymbltzwh2fq0.k&quot;,</div><div class="line">              &#125;</div><div class="line">	]</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>outgoingConnections段是Linux主机作为cjdns网络中的普通点，申请离岸时需要的信息。Linux主机的离岸点是”publicKey”为”wfzyzrc0q4g83y0dgzxx1l862u0lscucj75yw9q1ymbltzwh2fq0.k“的这个点。<br>allowedConnections段是Linux主机作为离岸点，为树莓派A分配ipv4地址时需要的信息。树莓派A将被分配到ipv4地址192.168.254.2。</p>
+<h3 id="树莓派A-1"><a href="#树莓派A-1" class="headerlink" title="树莓派A"></a>树莓派A</h3><p>主要修改IpTunnel端的配置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&quot;ipTunnel&quot;:&#123;</div><div class="line">        &quot;useIntranet&quot;:1,</div><div class="line">        &quot;allowedConnections&quot;:[],</div><div class="line">        &quot;outgoingConnections&quot;:[</div><div class="line">                &#123;</div><div class="line">                        &quot;publicKey&quot;:&quot;cy4cmzzry3yykwblnh402vmyt328pu9nm58rx4cbgnqllv6hvv70.k&quot;,</div><div class="line">                        &quot;intranetAddress&quot;:&quot;169.254.0.0&quot;</div><div class="line">                        &quot;mask&quot;:&quot;255.255.0.0&quot;</div><div class="line">                &#125;</div><div class="line">        ]</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>outgoingConnections段是树莓派作为cjdns网络中的普通点，申请离岸时需要的信息。树莓派A的离岸点就是Linux主机。</p>
+<h3 id="树莓派B-1"><a href="#树莓派B-1" class="headerlink" title="树莓派B"></a>树莓派B</h3><p>树莓派B不在cjdns网络中，不需要配置。</p>
+<h2 id="路由设置"><a href="#路由设置" class="headerlink" title="路由设置"></a>路由设置</h2><h3 id="Linux主机-1"><a href="#Linux主机-1" class="headerlink" title="Linux主机"></a>Linux主机</h3><p>需要在Linux主机上添加到169.254.0.0/16网络的路由信息，让前往这个网段的信息走cjdns网络（走tun0设备）。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo route add -net 169.254.0.0 netmask 255.255.0.0 dev tun0</div></pre></td></tr></table></figure></p>
+<p>列一下路由信息，看看设置效果<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line">jinwh@jinwh-office ~/anet/cjdns $ ip route list table main</div><div class="line">0.0.0.0/2 dev tun0  proto 52  scope link </div><div class="line">default via 192.168.2.1 dev enp3s0  proto static  metric 100 </div><div class="line">64.0.0.0/3 dev tun0  proto 52  scope link </div><div class="line">96.0.0.0/5 dev tun0  proto 52  scope link </div><div class="line">104.0.0.0/7 dev tun0  proto 52  scope link </div><div class="line">106.0.0.0/10 dev tun0  proto 52  scope link </div><div class="line">106.64.0.0/13 dev tun0  proto 52  scope link </div><div class="line">106.72.0.0/15 dev tun0  proto 52  scope link </div><div class="line">106.74.0.0/16 dev tun0  proto 52  scope link </div><div class="line">106.75.0.0/19 dev tun0  proto 52  scope link </div><div class="line">106.75.32.0/20 dev tun0  proto 52  scope link </div><div class="line">106.75.48.0/21 dev tun0  proto 52  scope link </div><div class="line">106.75.56.0/23 dev tun0  proto 52  scope link </div><div class="line">106.75.58.0/24 dev tun0  proto 52  scope link </div><div class="line">106.75.59.0/27 dev tun0  proto 52  scope link </div><div class="line">106.75.59.32/28 dev tun0  proto 52  scope link </div><div class="line">106.75.59.48/30 dev tun0  proto 52  scope link </div><div class="line">106.75.59.52 dev tun0  proto 52  scope link </div><div class="line">106.75.59.54/31 dev tun0  proto 52  scope link </div><div class="line">106.75.59.56/29 dev tun0  proto 52  scope link </div><div class="line">106.75.59.64/26 dev tun0  proto 52  scope link </div><div class="line">106.75.59.128/25 dev tun0  proto 52  scope link </div><div class="line">106.75.60.0/22 dev tun0  proto 52  scope link </div><div class="line">106.75.64.0/18 dev tun0  proto 52  scope link </div><div class="line">106.75.128.0/17 dev tun0  proto 52  scope link </div><div class="line">106.76.0.0/14 dev tun0  proto 52  scope link </div><div class="line">106.80.0.0/12 dev tun0  proto 52  scope link </div><div class="line">106.96.0.0/11 dev tun0  proto 52  scope link </div><div class="line">106.128.0.0/9 dev tun0  proto 52  scope link </div><div class="line">107.0.0.0/8 dev tun0  proto 52  scope link </div><div class="line">108.0.0.0/6 dev tun0  proto 52  scope link </div><div class="line">112.0.0.0/4 dev tun0  proto 52  scope link </div><div class="line">128.0.0.0/1 dev tun0  proto 52  scope link </div><div class="line">169.254.0.0/16 dev tun0  scope link </div><div class="line">172.17.0.0/16 dev docker0  proto kernel  scope link  src 172.17.0.1 linkdown </div><div class="line">192.168.2.0/24 dev enp3s0  proto kernel  scope link  src 192.168.2.43  metric 100</div></pre></td></tr></table></figure></p>
+<h3 id="树莓派A-2"><a href="#树莓派A-2" class="headerlink" title="树莓派A"></a>树莓派A</h3><p>打开路由转发功能<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"># Uncomment the next line to enable packet forwarding for IPv4</div><div class="line">net.ipv4.ip_forward=1</div><div class="line"></div><div class="line"># Uncomment the next line to enable packet forwarding for IPv6</div><div class="line">#  Enabling this option disables Stateless Address Autoconfiguration</div><div class="line">#  based on Router Advertisements for this host</div><div class="line">net.ipv6.conf.all.forwarding=1</div></pre></td></tr></table></figure></p>
+<h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><p>从Linux主机上ping树莓派B的内网地址169.254.106.46<br>数据包通过cjdns网络从Linux主机传递到树莓派A，然后通过路由转发，由连接cjdns的网卡传递到内网网卡，进而发送给树莓派B。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+
+
+    <nav id="article-nav">
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2017/07/25/IpTunnel/">
+                    cjdns源码分析--IpTunnel
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目錄</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#整体网络结构描述"><span class="toc-number">1.</span> <span class="toc-text">整体网络结构描述</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#两个网络"><span class="toc-number">1.1.</span> <span class="toc-text">两个网络</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#cjdns网络"><span class="toc-number">1.1.1.</span> <span class="toc-text">cjdns网络</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#内网"><span class="toc-number">1.1.2.</span> <span class="toc-text">内网</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三个主机"><span class="toc-number">1.2.</span> <span class="toc-text">三个主机</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Linux主机"><span class="toc-number">1.2.1.</span> <span class="toc-text">Linux主机</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#树莓派A"><span class="toc-number">1.2.2.</span> <span class="toc-text">树莓派A</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#树莓派B"><span class="toc-number">1.2.3.</span> <span class="toc-text">树莓派B</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#cjdns配置"><span class="toc-number">2.</span> <span class="toc-text">cjdns配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux主机的配置"><span class="toc-number">2.1.</span> <span class="toc-text">Linux主机的配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#树莓派A-1"><span class="toc-number">2.2.</span> <span class="toc-text">树莓派A</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#树莓派B-1"><span class="toc-number">2.3.</span> <span class="toc-text">树莓派B</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#路由设置"><span class="toc-number">3.</span> <span class="toc-text">路由设置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux主机-1"><span class="toc-number">3.1.</span> <span class="toc-text">Linux主机</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#树莓派A-2"><span class="toc-number">3.2.</span> <span class="toc-text">树莓派A</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实验"><span class="toc-number">4.</span> <span class="toc-text">实验</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隱藏目錄"  title="點擊按鈕隱藏或者顯示文章目錄">
+
+    <script>
+        yiliaConfig.toc = ["隱藏目錄", "顯示目錄", !!"false"];
+    </script>
+
+
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <div id="comment-box" ></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2017/07/31/build-intranet-test/" data-title="build_intranet_test" data-url="http://yoursite.com/2017/07/31/build-intranet-test/"></div>
+    <script>
+        var duoshuoQuery = {short_name:"ichrisking"};
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+            s.async = true; s.charset = 'UTF-8';
+            (d.head || d.body).appendChild(s);
+        }
+
+        
+    </script>
+    
+    <script> loadComment(); </script>
+
+</div>
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="回到主頁"><i class="fa fa-home"></i></a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2017/07/25/IpTunnel/" title="下一篇: cjdns源码分析--IpTunnel">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/07/31/build-intranet-test/">build_intranet_test</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/25/IpTunnel/">cjdns源码分析--IpTunnel</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/27/about-iptables/">iptables在anet项目中的运用</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/21/how-to-build-git-on-raspberry/">在树莓派上搭建私有git</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/15/raspberry-add-camera-dev/">树莓派摄像头没有/dev/video0设备节点的问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/12/ping-pong/">cjdns源码分析--SwitchPing的发送，接收与回复</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/04/contentprovider/">Android中的ContentProvider,ContentResolver,ContentObserver</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/21/pattern-proxy/">Android中的设计模式之代理模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/20/pattern-decorator/">Android中的设计模式之装饰者模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/13/activity-launch-mode/">activity启动模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/12/bin-tree/">二叉搜索树</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/29/pattern-builder/">Android中的设计模式之建造模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/23/pattern-strategy/">Android中的设计模式之策略模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/22/pattern-prototype/">Android中的设计模式之原型模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/Search/">各种查找算法</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/pattern-adapter/">Android中的设计模式之适配器模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/17/pattern-factory/">Android中的设计模式之工厂模式系列</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/10/pattern-flyweight/">Android中的设计模式之享元模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/pattern-memento/">Android中的设计模式之备忘录模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/08/pattern-template-method/">Android中的设计模式之模板方法模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/07/pattern-observer/">Android中的设计模式之观察者模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/04/pattern-composite/">Android中的设计模式之组合模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/02/Sort/">各种排序算法</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/01/oneday-ShardPreferences/">ShardPreferences</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/31/oneday-AsyncTask/">AsyncTask</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/26/pattern-singleton/">Android中的设计模式之单例模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/10/oneday-listview/">如何优化listView</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/08/oneday-context/">Android中的context详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/27/android-parcelable/">activity之间传递数据的方法</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/26/oneday-handler/">android的Handler机制详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/22/oneday-activity-lifecycle/">Activity生命周期</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/22/pass-by-value-or-reference/">Java中的值传递和引用传递</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/22/oneday_BroadcastReceiver/">BroadcastReceiver</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/21/oneday_service/">Android中的Service</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/21/sunjdk/">如何安装sunjdk，并用它替代openjdk</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/19/mvp_in_android/">MVP in Android</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/19/java_synchronized/">Java并发</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/18/java_list_hashmap/">Java集合框架</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/09/java_basic/">Java基础知识</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/08/pattern-design/">设计模式概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/31/Binder/">Binder</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/24/Fragment/">Fragment</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/24/Android-TouchEvent/">Android事件分发机制</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/23/ANR-and-FC/">ANR与FC</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/23/Android-performance-optimization/">Android性能优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/23/how_to_use_locate_image_file_in_hexo/">如何在hexo中使用本地图片</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/23/reinstall-hexo-after-reinstall-OS/">重装系统后，修复hexo</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/22/Android_memory_leak/">Android内存泄漏</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/18/Android1_1/">Android基础知识</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/05/build_shadowsocks/">配置shadowsocks</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/24/change-hexo-theme-to-maupassant/">对我的Blog做了点改动</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/23/AnromOS_deploy/">Anrom日常发布方法</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/21/AnromOS_Web_Build/">AnromOS发布网站的搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/19/make_blog_with_hexo/">使用hexo搭建blog</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/08/rsync/">拷貝代碼利器rsync</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/31/add_jar_into_android_mk_file/">給Android系統應用加jar包</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/16/port22_Connection_refused/">port 22: Connection refused</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/01/SEAndroid/">SEAndroid in Android5.x</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/06/11/access_ssl_with_okhttp/">使用OkHttp访问ssl（https）网络</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/04/20/build_java_jar_based_on_android_code/">如何使用android源码来制作java的jar包</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/02/04/save_discarding_commits/">找回差點丟失的commit</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/01/16/build_new_project_in_work_zone/">如何爲辦公區新建一個項目</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/01/06/add_new_function_in_local_service/">爲android添加一個新的service函數</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/03/21/deny_connect_with_usb/">源碼中實現禁止手機鏈接usb</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/02/14/add_tomoyo_to_android_system/">移植TOMOYO的步驟</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/06/09/make_deamon_thead_in_android/">爲android編寫一個deamon進程</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2016-2017 Chris King
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、簡單且強大的網誌框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="簡而不減 Hexo 雙欄網誌主題  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到訪數"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本頁閱讀量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回頂部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看評論"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="轉到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+             categories: ".article-category a, a.tag-list-link", 
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
