@@ -45,7 +45,7 @@ wiki的编写
 延长和peer的保活间隔时间
 
 1234567891011121314151617181920/** After t">
-<meta property="og:updated_time" content="2017-08-01T03:06:00.292Z">
+<meta property="og:updated_time" content="2017-08-02T03:35:48.606Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="2017-07">
 <meta name="twitter:description" content="07-03 Mon.1. notifycation功能的实现
@@ -488,9 +488,18 @@ wiki的编写
 </ul>
 <h2 id="0801-Tue"><a href="#0801-Tue" class="headerlink" title="0801 Tue."></a>0801 Tue.</h2><h3 id="1-自定义离岸的地址类型-6"><a href="#1-自定义离岸的地址类型-6" class="headerlink" title="1.  自定义离岸的地址类型"></a>1.  自定义离岸的地址类型</h3><ul>
 <li>完成搭建过程的blog</li>
-<li><h3 id="2-接入点snode状态监控"><a href="#2-接入点snode状态监控" class="headerlink" title="2. 接入点snode状态监控"></a>2. 接入点snode状态监控</h3></li>
+<li>新需求：使用理由表处理路由匹配</li>
+</ul>
+<h3 id="2-接入点snode状态监控"><a href="#2-接入点snode状态监控" class="headerlink" title="2. 接入点snode状态监控"></a>2. 接入点snode状态监控</h3><ul>
 <li>李大师发现snode有不时变成none的情况，需要监控一下接入点上snode的状态是否也出现了不稳定的情况</li>
 <li>在接入点上写个脚本，每隔几秒查询一下5个接入点docker的snode状态</li>
+<li>接入点更新了，重写了所有.cjdnsadmin文件</li>
+</ul>
+<h2 id="0802-Wed"><a href="#0802-Wed" class="headerlink" title="0802 Wed."></a>0802 Wed.</h2><h3 id="1-接入点cjdnsadmin"><a href="#1-接入点cjdnsadmin" class="headerlink" title="1. 接入点cjdnsadmin"></a>1. 接入点cjdnsadmin</h3><ul>
+<li>接入点.cjdnsadmin自动生成脚本在/root/sbu/debug/contrib/python/cjdnsadminmaker.py</li>
+</ul>
+<h3 id="2-自定义离岸的地址类型-1"><a href="#2-自定义离岸的地址类型-1" class="headerlink" title="2. 自定义离岸的地址类型"></a>2. 自定义离岸的地址类型</h3><ul>
+<li>分析RouteGen的运作流程</li>
 </ul>
 
       
@@ -548,24 +557,6 @@ wiki的编写
                 <a href="http://hexo.io/" target="_blank" title="快速、簡單且強大的網誌框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="簡而不減 Hexo 雙欄網誌主題  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
             </div>
         </div>
-        
-            <div class="visit">
-                
-                    <span id="busuanzi_container_site_pv" style='display:none'>
-                        <span id="site-visit" title="本站到訪數"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
-                        </span>
-                    </span>
-                
-                
-                    <span>| </span>
-                
-                
-                    <span id="busuanzi_container_page_pv" style='display:none'>
-                        <span id="page-visit"  title="本頁閱讀量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
-                        </span>
-                    </span>
-                
-            </div>
         
     </div>
 </footer>
