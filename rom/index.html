@@ -15,31 +15,28 @@
 
 
 
-<meta name="description" content="需求第一版ROM层定制需求初稿
-
-可支持安卓开机启动界面定制 * 
+<meta name="description" content="第一版ROM层定制需求初稿
+可支持安卓开机启动界面定制
 ROM层实时监控通话状态（呼出/呼入、接通/对方接通、挂断/对方挂断)、对双向通话过程进行录音并通过事件或者相关机制实时通知应用层
 ROM层实时监控短信的发送和接收（发送时间、消息内容、对方手机号），并通过事件或者相关机制实时通知应用层
-对手机安装有多张SIM卡的，可以在ROM层指定哪张SIM卡需要通话监控录音和短信监控，并暴露给">
+对手机安装有多张SIM卡的，可以在ROM层指定哪张SIM卡需要通话监控录音和短信监控，并暴露给应用层相关的">
 <meta property="og:type" content="website">
 <meta property="og:title" content="ROM">
 <meta property="og:url" content="http://yoursite.com/rom/index.html">
 <meta property="og:site_name" content="IChrisKing">
-<meta property="og:description" content="需求第一版ROM层定制需求初稿
-
-可支持安卓开机启动界面定制 * 
+<meta property="og:description" content="第一版ROM层定制需求初稿
+可支持安卓开机启动界面定制
 ROM层实时监控通话状态（呼出/呼入、接通/对方接通、挂断/对方挂断)、对双向通话过程进行录音并通过事件或者相关机制实时通知应用层
 ROM层实时监控短信的发送和接收（发送时间、消息内容、对方手机号），并通过事件或者相关机制实时通知应用层
-对手机安装有多张SIM卡的，可以在ROM层指定哪张SIM卡需要通话监控录音和短信监控，并暴露给">
-<meta property="og:updated_time" content="2017-08-10T03:10:26.096Z">
+对手机安装有多张SIM卡的，可以在ROM层指定哪张SIM卡需要通话监控录音和短信监控，并暴露给应用层相关的">
+<meta property="og:updated_time" content="2017-08-14T05:27:12.450Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ROM">
-<meta name="twitter:description" content="需求第一版ROM层定制需求初稿
-
-可支持安卓开机启动界面定制 * 
+<meta name="twitter:description" content="第一版ROM层定制需求初稿
+可支持安卓开机启动界面定制
 ROM层实时监控通话状态（呼出/呼入、接通/对方接通、挂断/对方挂断)、对双向通话过程进行录音并通过事件或者相关机制实时通知应用层
 ROM层实时监控短信的发送和接收（发送时间、消息内容、对方手机号），并通过事件或者相关机制实时通知应用层
-对手机安装有多张SIM卡的，可以在ROM层指定哪张SIM卡需要通话监控录音和短信监控，并暴露给">
+对手机安装有多张SIM卡的，可以在ROM层指定哪张SIM卡需要通话监控录音和短信监控，并暴露给应用层相关的">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -328,14 +325,130 @@ ROM层实时监控短信的发送和接收（发送时间、消息内容、对�
 
 
           
-        <h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><h3 id="第一版"><a href="#第一版" class="headerlink" title="第一版"></a>第一版</h3><p>ROM层定制需求初稿</p>
-<ol>
-<li>可支持安卓开机启动界面定制<br> * </li>
+        <h2 id="第一版"><a href="#第一版" class="headerlink" title="第一版"></a>第一版</h2><h3 id="ROM层定制需求初稿"><a href="#ROM层定制需求初稿" class="headerlink" title="ROM层定制需求初稿"></a>ROM层定制需求初稿</h3><ol>
+<li>可支持安卓开机启动界面定制</li>
 <li>ROM层实时监控通话状态（呼出/呼入、接通/对方接通、挂断/对方挂断)、对双向通话过程进行录音并通过事件或者相关机制实时通知应用层</li>
 <li>ROM层实时监控短信的发送和接收（发送时间、消息内容、对方手机号），并通过事件或者相关机制实时通知应用层</li>
 <li>对手机安装有多张SIM卡的，可以在ROM层指定哪张SIM卡需要通话监控录音和短信监控，并暴露给应用层相关的接口</li>
 <li>提供ROM层后台录音、录像、拍照的应用层接口，以通过应用驱动手机后台进行录音、录像、拍照操作</li>
 <li>从ROM层对手机存储卡建立独立的文件分区和文件系统，上述实现过程中涉及的文件可以存放到该分区文件系统中（如果可以的话同时进行加密保存），并确保该分区和文件系统对于android和usb连接设备不可见，但暴露相关私有API可以访问</li>
+</ol>
+<h3 id="需求分析"><a href="#需求分析" class="headerlink" title="需求分析"></a>需求分析</h3><table>
+<thead>
+<tr>
+<th>priority</th>
+<th>Task</th>
+<th>可行性</th>
+<th>Due Date</th>
+<th>Assignee</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>定制开机启动界面</td>
+<td>可行</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>2</td>
+<td>ROM层实时监控通话状态</td>
+<td>可行</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>3</td>
+<td>ROM层实时监控短信的发送和接收</td>
+<td>可行</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>4</td>
+<td>多张SIM卡的，在ROM层指定哪张SIM卡</td>
+<td>可行</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>5</td>
+<td>提供ROM层后台录音、录像、拍照的应用层接口</td>
+<td>？</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>6</td>
+<td>从ROM层对手机存储卡建立独立的加密文件分区</td>
+<td>可行</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>7</td>
+<td>软件形态？ROM 仅支持API？是否带开发应用程序</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>8</td>
+<td>目前已经有的条件 已经有在用的软件或者其他的应用</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>9</td>
+<td>业务流程</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>10</td>
+<td>数据格式标准，由底层定义还是已经有标准</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>11</td>
+<td>补充</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<h3 id="需要讨论的问题"><a href="#需要讨论的问题" class="headerlink" title="需要讨论的问题"></a>需要讨论的问题</h3><ol>
+<li>目前的状态：是否已有上层应用/上层应用设计</li>
+<li>API与上层通信的数据格式，倾向于由ROM来定义，上层配合开发。</li>
+<li>是否需要我们开发应用程序</li>
+</ol>
+<h3 id="需求点"><a href="#需求点" class="headerlink" title="需求点"></a>需求点</h3><ol>
+<li>替换的开机启动界面</li>
+<li>通话是否录音如何决定：<ul>
+<li>上层设置某些号码要录音</li>
+<li>通话时手动点击  录音  按钮</li>
+</ul>
+</li>
+<li>录音相关的哪些事件要通知应用层</li>
+<li>哪些短信/短信相关事件需要通知应用层</li>
+<li>有没有其他短信相关操作，比如把短信加密放到独立文件分区，然后把原短信删除之类的。</li>
+<li>拍照开始的触发条件，拍照终止的触发条件</li>
+<li>拍照相关事件是否需要通知应用层</li>
+<li>录像开始的触发条件，录像终止的触发条件</li>
+<li>录像相关事件是否需要通知应用层</li>
+<li>SIM卡指定的方式</li>
+<li>独立文件分区的交互方式<ul>
+<li>上层应用对独立文件分区文件的操作API：浏览，修改，新增，删除，复制，</li>
+<li>独立文件分区的层级结构设计：比如按文件类型？按日期？按号码？（这些应该由应用层来完成）</li>
+</ul>
+</li>
+<li>补充</li>
 </ol>
 
       
