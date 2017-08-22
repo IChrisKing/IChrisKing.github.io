@@ -39,7 +39,7 @@
 接入点更新了，重写了所有.cjdnsadmin文件
 
 0802 Wed.1.">
-<meta property="og:updated_time" content="2017-08-17T06:00:21.336Z">
+<meta property="og:updated_time" content="2017-08-22T01:37:59.208Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="201708">
 <meta name="twitter:description" content="0801 Tue.1.  自定义离岸的地址类型
@@ -431,7 +431,36 @@
 <li>写代码</li>
 </ul>
 <h3 id="3-自定义离岸地址和内网inbound的验证"><a href="#3-自定义离岸地址和内网inbound的验证" class="headerlink" title="3. 自定义离岸地址和内网inbound的验证"></a>3. 自定义离岸地址和内网inbound的验证</h3><ul>
-<li>seabird的局域网验证</li>
+<li>局域网验证</li>
+<li>发现在离岸点需要手动配置一条路由</li>
+</ul>
+<h2 id="0818-Fri"><a href="#0818-Fri" class="headerlink" title="0818 Fri."></a>0818 Fri.</h2><h3 id="1-自定义链地址和内网inbound的验证"><a href="#1-自定义链地址和内网inbound的验证" class="headerlink" title="1. 自定义链地址和内网inbound的验证"></a>1. 自定义链地址和内网inbound的验证</h3><ul>
+<li>查找需要手动配置路由的原因</li>
+<li>验证inbound设路由是否起效</li>
+</ul>
+<h3 id="2-离岸点的特殊处理"><a href="#2-离岸点的特殊处理" class="headerlink" title="2. 离岸点的特殊处理"></a>2. 离岸点的特殊处理</h3><ul>
+<li><p>新需求：</p>
+<ul>
+<li>allowConnetctions中加入ipv4/ipv6字段，用来给离岸点设ipv4</li>
+<li>针对每个conn的prefixes，加入到系统路由中</li>
+</ul>
+</li>
+<li><p>写设计文档，更新到RouteGen文档中</p>
+</li>
+</ul>
+<h2 id="0821-Mon"><a href="#0821-Mon" class="headerlink" title="0821 Mon."></a>0821 Mon.</h2><h3 id="1-回退代码"><a href="#1-回退代码" class="headerlink" title="1. 回退代码"></a>1. 回退代码</h3><ul>
+<li>因为设置ip的方法不可行，所以取消一下需求，需要回退代码<ul>
+<li>allowConnetctions中加入ipv4/ipv6字段，用来给离岸点设ipv4</li>
+<li>针对每个conn的prefixes，加入到系统路由中</li>
+</ul>
+</li>
+</ul>
+<h2 id="0822-Tue"><a href="#0822-Tue" class="headerlink" title="0822 Tue."></a>0822 Tue.</h2><h3 id="1-验证routegen相关功能，递交"><a href="#1-验证routegen相关功能，递交" class="headerlink" title="1. 验证routegen相关功能，递交"></a>1. 验证routegen相关功能，递交</h3><ul>
+<li>将目前的代码编译一个引擎，进行小范围功能验证</li>
+<li>递交代码</li>
+</ul>
+<h3 id="2-android-block-uid"><a href="#2-android-block-uid" class="headerlink" title="2. android block uid"></a>2. android block uid</h3><ul>
+<li>目前只有uid add的相关函数，需要增加uid del 和uid list</li>
 </ul>
 
       
