@@ -39,7 +39,7 @@
 接入点更新了，重写了所有.cjdnsadmin文件
 
 0802 Wed.1.">
-<meta property="og:updated_time" content="2017-08-28T02:50:33.483Z">
+<meta property="og:updated_time" content="2017-08-29T08:33:48.308Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="201708">
 <meta name="twitter:description" content="0801 Tue.1.  自定义离岸的地址类型
@@ -498,6 +498,41 @@
 <li>看源码</li>
 <li>写分析文档</li>
 </ul>
+<h2 id="0829-Tue"><a href="#0829-Tue" class="headerlink" title="0829 Tue."></a>0829 Tue.</h2><h3 id="1-snode"><a href="#1-snode" class="headerlink" title="1. snode"></a>1. snode</h3><ul>
+<li>看源码</li>
+<li>写分析文档</li>
+</ul>
+<h3 id="2-rom-2"><a href="#2-rom-2" class="headerlink" title="2. rom"></a>2. rom</h3><ul>
+<li>收到需求v1.1</li>
+</ul>
+<h3 id="3-通知peer的验证情况"><a href="#3-通知peer的验证情况" class="headerlink" title="3. 通知peer的验证情况"></a>3. 通知peer的验证情况</h3><ul>
+<li>重构原有代码，拆分notification以支持多种不同内容的通知</li>
+</ul>
+<p>需求：当peer第一次过来，建立一个新的session的时候，会进行一次CryptoAuth_decrypt验证。现在需要将1.验证结果 2.peer的pubkey 3. passwordHash 通过notification，通知应用层。</p>
+<p>分析：这是一个一次性的通知，应用层监听notification端口，等待引擎通知这个消息。</p>
+<ol>
+<li>notification发送的地点：handleUnexpectedIncoming中<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">if (CryptoAuth_decrypt(ep-&gt;caSession, msg)) &#123;</div><div class="line">     // If the first message is a dud, drop all state for this peer.</div><div class="line">     // probably some random crap that wandered in the socket.</div><div class="line">     Allocator_free(epAlloc);</div><div class="line">     return NULL;</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>这个判断后面。这个判断的结果就是验证结果</p>
+<ol>
+<li><p>需要通知的信息：</p>
+<ul>
+<li>验证结果caResult：上面那个判断的结果  1（true）：0（false）</li>
+<li>pubkey：Peer-&gt;CryptoAuth_Session-&gt;uint8_t herPublicKey[32]</li>
+<li>passwordHash:Peer-&gt;CryptoAuth_Session-&gt;CryptoAuth_Session_pvt-&gt;CryptoAuth_pvt-&gt;CryptoAuth_User-&gt;uint8_t passwordHash[CryptoHeader_Challenge_KEYSIZE];</li>
+<li>streamId</li>
+<li>time</li>
+</ul>
+</li>
+<li><p>caResult的获得<br>CryptoAuth_decrypt(ep-&gt;caSession, msg);</p>
+</li>
+<li><p>pubkey的获得</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">String* Key_stringify(uint8_t key[32], struct Allocator* alloc)</div><div class="line">Dict_putStringC(d, &quot;pubkey&quot;,</div><div class="line">                      Key_stringify(ep-&gt;caSession-&gt;herPublicKey, alloc), alloc);</div></pre></td></tr></table></figure>
+</li>
+<li><p>passwordHash的获得</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">String* String_new(const char* bytes, struct Allocator* allocator);</div><div class="line">    String* target = String_newBinary(addr, 16, qp-&gt;alloc);</div></pre></td></tr></table></figure></li>
+</ol>
 
       
     </div>
