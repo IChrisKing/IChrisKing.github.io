@@ -15,16 +15,16 @@
 
 
 
-<meta name="description" content="rsync是一個好用的拷貝命令，適合遠程備份，我把它用在了從公司的機器往家裏的機器複製rom代碼">
+<meta name="description" content="基于魔趣android7.x系统。记录编译相关的内容。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="拷貝代碼利器rsync">
-<meta property="og:url" content="http://yoursite.com/2016/06/08/rsync/index.html">
+<meta property="og:title" content="Android7.0Rom编译相关">
+<meta property="og:url" content="http://yoursite.com/2017/08/25/rom7.0-build/index.html">
 <meta property="og:site_name" content="IChrisKing">
-<meta property="og:description" content="rsync是一個好用的拷貝命令，適合遠程備份，我把它用在了從公司的機器往家裏的機器複製rom代碼">
-<meta property="og:updated_time" content="2016-09-01T01:42:17.462Z">
+<meta property="og:description" content="基于魔趣android7.x系统。记录编译相关的内容。">
+<meta property="og:updated_time" content="2017-08-29T02:32:46.818Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="拷貝代碼利器rsync">
-<meta name="twitter:description" content="rsync是一個好用的拷貝命令，適合遠程備份，我把它用在了從公司的機器往家裏的機器複製rom代碼">
+<meta name="twitter:title" content="Android7.0Rom编译相关">
+<meta name="twitter:description" content="基于魔趣android7.x系统。记录编译相关的内容。">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -56,7 +56,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>拷貝代碼利器rsync | IChrisKing</title>
+<title>Android7.0Rom编译相关 | IChrisKing</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -258,11 +258,11 @@
     </div>
     <link class="menu-list" tags="標籤" friends="友情鏈接" about="關於我"/>
 </nav>
-      <div class="body-wrap"><article id="post-rsync" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-rom7.0-build" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/06/08/rsync/" class="article-date">
-      <time datetime="2016-06-08T01:53:50.000Z" itemprop="datePublished">2016-06-08</time>
+      <a href="/2017/08/25/rom7.0-build/" class="article-date">
+      <time datetime="2017-08-25T02:21:40.000Z" itemprop="datePublished">2017-08-25</time>
 </a>
 
 
@@ -277,7 +277,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      拷貝代碼利器rsync
+      Android7.0Rom编译相关
     </h1>
   
 
@@ -286,13 +286,13 @@
       <div class="article-info article-info-post">
         
     <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/Linux/">Linux</a>
+    <a class="article-category-link" href="/categories/Anrom/">Anrom</a><a class="article-category-link" href="/categories/Anrom/rom7-0/">rom7.0</a>
     </div>
 
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/tool/">tool</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Anrom/">Anrom</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -302,84 +302,43 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h2 id="使用原因"><a href="#使用原因" class="headerlink" title="使用原因"></a>使用原因</h2><p>图形界面复制 或者cp 或者scp 都会遇到链接文件拷贝不正确，权限改变的问题，还慢。</p>
-<p>果断使用rsync</p>
-<h2 id="安裝rsync"><a href="#安裝rsync" class="headerlink" title="安裝rsync"></a>安裝rsync</h2><p>sudo apt-get install rsync</p>
-<p>安装完成以后，直接可以用了</p>
-<h2 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h2><p>这次代码拷贝过程中，主要用到了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">rsync -rlp ./anrom-6.0/system/core/  --progress chris@chris-dell:anrom-6.0/system/core/</div><div class="line">rsync -rlu ./anrom-6.0/prebuilts/ --size-only --progress --include=*/.git chris@chris-dell:anrom-6.0/prebuilts/</div></pre></td></tr></table></figure></p>
-<p>其中，r表示文件夹拷贝，l表示保持链接文件，p表示保持权限</p>
-<h2 id="rsync命令格式"><a href="#rsync命令格式" class="headerlink" title="rsync命令格式"></a>rsync命令格式</h2><p>Rsync的命令格式可以为以下六种：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">　　rsync [OPTION]... SRC DEST</div><div class="line">　　rsync [OPTION]... SRC [USER@]HOST:DEST</div><div class="line">　　rsync [OPTION]... [USER@]HOST:SRC DEST</div><div class="line">　　rsync [OPTION]... [USER@]HOST::SRC DEST</div><div class="line">　　rsync [OPTION]... SRC [USER@]HOST::DEST</div><div class="line">　　rsync [OPTION]... rsync://[USER@]HOST[:PORT]/SRC [DEST]</div></pre></td></tr></table></figure></p>
-<p>　　对应于以上六种命令格式，rsync有六种不同的工作模式：</p>
-<ol>
-<li>拷贝本地文件。当SRC和DES路径信息都不包含有单个冒号”:”分隔符时就启动这种工作模式。如：rsync -a /data /backup</li>
-<li>使用一个远程shell程序(如rsh、ssh)来实现将本地机器的内容拷贝到远程机器。当DST路径地址包含单个冒号”:”分隔符时启动该模式。如：rsync -avz *.c foo:src</li>
-<li>使用一个远程shell程序(如rsh、ssh)来实现将远程机器的内容拷贝到本地机器。当SRC地址路径包含单个冒号”:”分隔符时启动该模式。如：rsync -avz foo:src/bar /data</li>
-<li>从远程rsync服务器中拷贝文件到本地机。当SRC路径信息包含”::”分隔符时启动该模式。如：rsync -av root@172.16.78.192::www /databack</li>
-<li>从本地机器拷贝文件到远程rsync服务器中。当DST路径信息包含”::”分隔符时启动该模式。如：rsync -av /databack root@172.16.78.192::www</li>
-<li>列远程机的文件列表。这类似于rsync传输，不过只要在命令中省略掉本地机信息即可。如：rsync -v rsync://172.16.78.192/www</li>
+        <h2 id="踩过的坑"><a href="#踩过的坑" class="headerlink" title="踩过的坑"></a>踩过的坑</h2><h3 id="？？？"><a href="#？？？" class="headerlink" title="？？？"></a>？？？</h3><p>错误描述<br>没记下来<br>解决方法<br>执行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">art/runtime/interpreter/mterp/rebuild.sh</div></pre></td></tr></table></figure></p>
+<h3 id="Cannot-allocate-memory"><a href="#Cannot-allocate-memory" class="headerlink" title="Cannot allocate memory"></a>Cannot allocate memory</h3><p>错误描述<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">ninja: fatal: fork: Cannot allocate memory</div><div class="line">build/core/ninja.mk:151: recipe for target &apos;ninja_wrapper&apos; failed</div><div class="line">make: *** [ninja_wrapper] Error 1</div></pre></td></tr></table></figure></p>
+<p>解决方法</p>
+<h4 id="第一种解决方法：内存不够用了，首先执行free，查看内存使用状况"><a href="#第一种解决方法：内存不够用了，首先执行free，查看内存使用状况" class="headerlink" title="第一种解决方法：内存不够用了，首先执行free，查看内存使用状况"></a>第一种解决方法：内存不够用了，首先执行free，查看内存使用状况</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">              total        used        free      shared  buff/cache   available</div><div class="line">Mem:       16382208     9798008      314756      734804     6269444     5714252</div><div class="line">Swap:       8098808      276960     7821848</div></pre></td></tr></table></figure>
+<p>如果本身硬件内存够大，优先考虑降低内存使用量，运行top，shift+m，按照内存排序，把内存使用量大的进程看情况杀掉一些。</p>
+<ul>
+<li>清除buff/cache<br>执行free后发现buff/cache异常的高，占了快一半的内存。<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">echo 3 &gt; /proc/sys/vm/drop_caches</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="第二种方法，修改JACK-SERVER-VM-ARGUMENTS"><a href="#第二种方法，修改JACK-SERVER-VM-ARGUMENTS" class="headerlink" title="第二种方法，修改JACK_SERVER_VM_ARGUMENTS"></a>第二种方法，修改JACK_SERVER_VM_ARGUMENTS</h4><ol>
+<li>第一种解决方法，这种起作用了<br>编辑~/.profile  增加<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">export JACK_SERVER_VM_ARGUMENTS=&quot;-Dfile.encoding=UTF-8 -XX:+TieredCompilation -Xmx4g&quot;</div></pre></td></tr></table></figure>
+</li>
 </ol>
-<h2 id="rsync命令參數"><a href="#rsync命令參數" class="headerlink" title="rsync命令參數"></a>rsync命令參數</h2><p>rsync参数的具体解释如下：</p>
-<p>-v, –verbose 详细模式输出</p>
-<p>-q, –quiet 精简输出模式</p>
-<p>-c, –checksum 打开校验开关，强制对文件传输进行校验</p>
-<p>-a, –archive 归档模式，表示以递归方式传输文件，并保持所有文件属性，等于-rlptgoD</p>
-<p>-r, –recursive 对子目录以递归模式处理</p>
-<p>-R, –relative 使用相对路径信息</p>
-<p>-b, –backup 创建备份，也就是对于目的已经存在有同样的文件名时，将老的文件重新命名为~filename。可以使用–suffix选项来指定不同的备份文件前缀。</p>
-<p>–backup-dir 将备份文件(如~filename)存放在在目录下。</p>
-<p>-suffix=SUFFIX 定义备份文件前缀</p>
-<p>-u, –update 仅仅进行更新，也就是跳过所有已经存在于DST，并且文件时间晚于要备份的文件。(不覆盖更新的文件)</p>
-<p>-l, –links 保留软链结</p>
-<p>-L, –copy-links 想对待常规文件一样处理软链结</p>
-<p>–copy-unsafe-links 仅仅拷贝指向SRC路径目录树以外的链结</p>
-<p>–safe-links 忽略指向SRC路径目录树以外的链结</p>
-<p>-H, –hard-links 保留硬链结</p>
-<p>-p, –perms 保持文件权限</p>
-<p>-o, –owner 保持文件属主信息</p>
-<p>-g, –group 保持文件属组信息</p>
-<p>-D, –devices 保持设备文件信息</p>
-<p>-t, –times 保持文件时间信息</p>
-<p>-S, –sparse 对稀疏文件进行特殊处理以节省DST的空间</p>
-<p>-n, –dry-run现实哪些文件将被传输</p>
-<p>-W, –whole-file 拷贝文件，不进行增量检测</p>
-<p>-x, –one-file-system 不要跨越文件系统边界</p>
-<p>-B, –block-size=SIZE 检验算法使用的块尺寸，默认是700字节</p>
-<p>-e, –rsh=COMMAND 指定使用rsh、ssh方式进行数据同步</p>
-<p>–rsync-path=PATH 指定远程服务器上的rsync命令所在路径信息</p>
-<p>-C, –cvs-exclude 使用和CVS一样的方法自动忽略文件，用来排除那些不希望传输的文件</p>
-<p>–existing 仅仅更新那些已经存在于DST的文件，而不备份那些新创建的文件</p>
-<p>–delete 删除那些DST中SRC没有的文件</p>
-<p>–delete-excluded 同样删除接收端那些被该选项指定排除的文件</p>
-<p>–delete-after 传输结束以后再删除</p>
-<p>–ignore-errors 及时出现IO错误也进行删除</p>
-<p>–max-delete=NUM 最多删除NUM个文件</p>
-<p>–partial 保留那些因故没有完全传输的文件，以是加快随后的再次传输</p>
-<p>–force 强制删除目录，即使不为空</p>
-<p>–numeric-ids 不将数字的用户和组ID匹配为用户名和组名</p>
-<p>–timeout=TIME IP超时时间，单位为秒</p>
-<p>-I, –ignore-times 不跳过那些有同样的时间和长度的文件</p>
-<p>–size-only 当决定是否要备份文件时，仅仅察看文件大小而不考虑文件时间</p>
-<p>–modify-window=NUM 决定文件是否时间相同时使用的时间戳窗口，默认为0</p>
-<p>-T –temp-dir=DIR 在DIR中创建临时文件</p>
-<p>–compare-dest=DIR 同样比较DIR中的文件来决定是否需要备份</p>
-<p>-P 等同于 –partial</p>
-<p>–progress 显示备份过程</p>
-<p>-z, –compress 对备份的文件在传输时进行压缩处理</p>
-<p>–exclude=PATTERN 指定排除不需要传输的文件模式</p>
-<p>–include=PATTERN 指定不排除而需要传输的文件模式</p>
-<p>–exclude-from=FILE 排除FILE中指定模式的文件</p>
-<p>–include-from=FILE 不排除FILE指定模式匹配的文件</p>
-<p>–version 打印版本信息</p>
-<p>–address 绑定到特定的地址</p>
-<p>–config=FILE 指定其他的配置文件，不使用默认的rsyncd.conf文件</p>
-<p>–port=PORT 指定其他的rsync服务端口</p>
-<p>–blocking-io 对远程shell使用阻塞IO</p>
-<p>-stats 给出某些文件的传输状态</p>
-<p>–progress 在传输时现实传输过程</p>
-<p>–log-format=formAT 指定日志文件格式</p>
-<p>–password-file=FILE 从FILE中得到密码</p>
-<p>–bwlimit=KBPS 限制I/O带宽，KBytes per second</p>
-<p>-h, –help 显示帮助信息</p>
+<p>运行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">jack-admin kill-server </div><div class="line">jack-admin start-server</div><div class="line">source ~/.profile</div></pre></td></tr></table></figure></p>
+<p>然后再编译</p>
+<ol>
+<li>修改vim prebuilts/sdk/tools/jack-admin<br>将<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">JACK_SERVER_COMMAND=&quot;java -XX:MaxJavaStackTraceDepth=-1 -Djava.io.tmpdir=$TMPDIR $JACK_SERVER_VM_ARGUMENTS -cp $LAUNCHER_JAR $LAUNCHER_NAME&quot;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>改成<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">JACK_SERVER_COMMAND=&quot;java -XX:MaxJavaStackTraceDepth=-1 -Djava.io.tmpdir=$TMPDIR $JACK_SERVER_VM_ARGUMENTS -Xmx8g -cp $LAUNCHER_JAR $LAUNCHER_NAME&quot;</div></pre></td></tr></table></figure></p>
+<p>运行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">jack-admin kill-server </div><div class="line">jack-admin start-server</div></pre></td></tr></table></figure></p>
+<p>然后再编译</p>
+<h4 id="第三种方法：修改swap大小"><a href="#第三种方法：修改swap大小" class="headerlink" title="第三种方法：修改swap大小"></a>第三种方法：修改swap大小</h4><pre><code>1.创建交换分区的文件:增加1G大小的交换分区，则命令写法如下，其中的 count 等于想要的块大小。
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"># dd if=/dev/zero of=/home/swapfile bs=1M count=1024</div></pre></td></tr></table></figure>
+
+2.设置交换分区文件:
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"># mkswap /home/swapfile  #建立swap的文件系统</div></pre></td></tr></table></figure>
+
+3.立即启用交换分区文件:
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"># swapon /home/swapfile   #启用swap文件</div></pre></td></tr></table></figure>
+
+4.使系统开机时自启用，在文件/etc/fstab中添加一行：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/home/swapfile swap swap defaults 0 0</div></pre></td></tr></table></figure>
+</code></pre><h3 id="subcommand-failed"><a href="#subcommand-failed" class="headerlink" title="subcommand failed"></a>subcommand failed</h3><p>错误描述：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">/bin/bash: xmllint: 未找到命令</div><div class="line">.........</div><div class="line">[ 32% 1076/3288] Building with Jack: /home/...mework_intermediates/with-local/classes.dex</div><div class="line">ninja: build stopped: subcommand failed.</div><div class="line">build/core/ninja.mk:151: recipe for target &apos;ninja_wrapper&apos; failed</div><div class="line">make: *** [ninja_wrapper] Error 1</div></pre></td></tr></table></figure></p>
+<p>解决方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo apt-get install libxml2-utils</div></pre></td></tr></table></figure></p>
+<h3 id="Oracle-JDK-7-is-NOT-installed"><a href="#Oracle-JDK-7-is-NOT-installed" class="headerlink" title="Oracle JDK 7 is NOT installed."></a>Oracle JDK 7 is NOT installed.</h3><p>错误描述<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">Oracle JDK 7 is NOT installed.</div><div class="line">dpkg: 处理软件包 oracle-java7-installer (--configure)时出错：</div><div class="line"> 子进程 已安装 post-installation 脚本 返回错误状态 1</div><div class="line">正在设置 libxml2-utils (2.9.3+dfsg1-1ubuntu0.2) ...</div><div class="line">在处理时有错误发生：</div><div class="line"> oracle-java7-installer</div><div class="line">E: Sub-process /usr/bin/dpkg returned an error code (1)</div></pre></td></tr></table></figure></p>
+<p>解决方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">sudo update-alternatives --config java</div><div class="line">有 2 个候选项可用于替换 java (提供 /usr/bin/java)。</div><div class="line"></div><div class="line">  选择       路径                                          优先级  状态</div><div class="line">------------------------------------------------------------</div><div class="line">  0            /usr/lib/jvm/java-8-oracle/jre/bin/java          1081      自动模式</div><div class="line">  1            /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java   1081      手动模式</div><div class="line">* 2            /usr/lib/jvm/java-8-oracle/jre/bin/java          1081      手动模式</div><div class="line"></div><div class="line">要维持当前值[*]请按&lt;回车键&gt;，或者键入选择的编号：1</div><div class="line">update-alternatives: 使用 /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java 来在手动模式中提供 /usr/bin/java (java)</div></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -392,15 +351,15 @@
     <nav id="article-nav">
         
             <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2016/07/19/make_blog_with_hexo/">
-                    使用hexo搭建blog
+                <a href="/2017/08/28/cjdns-SuperNode/">
+                    cjdns_SuperNode
                 </a>
             </div>
         
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2016/05/31/add_jar_into_android_mk_file/">
-                    給Android系統應用加jar包
+                <a href="/2017/08/02/cjdns_RouteGen/">
+                    cjdns源码分析--RouteGen
                 </a>
             </div>
         
@@ -412,7 +371,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目錄</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#使用原因"><span class="toc-number">1.</span> <span class="toc-text">使用原因</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安裝rsync"><span class="toc-number">2.</span> <span class="toc-text">安裝rsync</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用方法"><span class="toc-number">3.</span> <span class="toc-text">使用方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#rsync命令格式"><span class="toc-number">4.</span> <span class="toc-text">rsync命令格式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#rsync命令參數"><span class="toc-number">5.</span> <span class="toc-text">rsync命令參數</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#踩过的坑"><span class="toc-number">1.</span> <span class="toc-text">踩过的坑</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#？？？"><span class="toc-number">1.1.</span> <span class="toc-text">？？？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Cannot-allocate-memory"><span class="toc-number">1.2.</span> <span class="toc-text">Cannot allocate memory</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#第一种解决方法：内存不够用了，首先执行free，查看内存使用状况"><span class="toc-number">1.2.1.</span> <span class="toc-text">第一种解决方法：内存不够用了，首先执行free，查看内存使用状况</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#第二种方法，修改JACK-SERVER-VM-ARGUMENTS"><span class="toc-number">1.2.2.</span> <span class="toc-text">第二种方法，修改JACK_SERVER_VM_ARGUMENTS</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#第三种方法：修改swap大小"><span class="toc-number">1.2.3.</span> <span class="toc-text">第三种方法：修改swap大小</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#subcommand-failed"><span class="toc-number">1.3.</span> <span class="toc-text">subcommand failed</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Oracle-JDK-7-is-NOT-installed"><span class="toc-number">1.4.</span> <span class="toc-text">Oracle JDK 7 is NOT installed.</span></a></li></ol></li></ol>
         
     </div>
     <style>
@@ -439,7 +398,7 @@
     
       <div class="duoshuo" id="comments">
     <div id="comment-box" ></div>
-    <div class="ds-thread" id="ds-thread" data-thread-key="2016/06/08/rsync/" data-title="拷貝代碼利器rsync" data-url="http://yoursite.com/2016/06/08/rsync/"></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2017/08/25/rom7.0-build/" data-title="Android7.0Rom编译相关" data-url="http://yoursite.com/2017/08/25/rom7.0-build/"></div>
     <script>
         var duoshuoQuery = {short_name:"ichrisking"};
         var loadComment = function(){
@@ -462,7 +421,7 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2016/07/19/make_blog_with_hexo/" title="上一篇: 使用hexo搭建blog">
+            <a href="/2017/08/28/cjdns-SuperNode/" title="上一篇: cjdns_SuperNode">
                 <i class="fa fa-angle-left"></i>
             </a>
         
@@ -470,7 +429,7 @@
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2016/05/31/add_jar_into_android_mk_file/" title="下一篇: 給Android系統應用加jar包">
+            <a href="/2017/08/02/cjdns_RouteGen/" title="下一篇: cjdns源码分析--RouteGen">
                 <i class="fa fa-angle-right"></i>
             </a>
         

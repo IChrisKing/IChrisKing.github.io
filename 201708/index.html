@@ -39,7 +39,7 @@
 接入点更新了，重写了所有.cjdnsadmin文件
 
 0802 Wed.1.">
-<meta property="og:updated_time" content="2017-08-29T08:33:48.308Z">
+<meta property="og:updated_time" content="2017-08-30T08:36:03.561Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="201708">
 <meta name="twitter:description" content="0801 Tue.1.  自定义离岸的地址类型
@@ -531,8 +531,16 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">String* Key_stringify(uint8_t key[32], struct Allocator* alloc)</div><div class="line">Dict_putStringC(d, &quot;pubkey&quot;,</div><div class="line">                      Key_stringify(ep-&gt;caSession-&gt;herPublicKey, alloc), alloc);</div></pre></td></tr></table></figure>
 </li>
 <li><p>passwordHash的获得</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">String* String_new(const char* bytes, struct Allocator* allocator);</div><div class="line">    String* target = String_newBinary(addr, 16, qp-&gt;alloc);</div></pre></td></tr></table></figure></li>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">String* String_new(const char* bytes, struct Allocator* allocator);</div><div class="line">    String* target = String_newBinary(addr, 16, qp-&gt;alloc);</div></pre></td></tr></table></figure>
+</li>
 </ol>
+<h2 id="0830-Wed"><a href="#0830-Wed" class="headerlink" title="0830 Wed."></a>0830 Wed.</h2><h3 id="1-通知peer的验证情况"><a href="#1-通知peer的验证情况" class="headerlink" title="1. 通知peer的验证情况"></a>1. 通知peer的验证情况</h3><ul>
+<li>写代码，调试代码，测试效果</li>
+<li>更新wiki文档</li>
+</ul>
+<h3 id="2-rom-3"><a href="#2-rom-3" class="headerlink" title="2. rom"></a>2. rom</h3><ul>
+<li>看下文档，大概找一下修改位置</li>
+</ul>
 
       
     </div>
