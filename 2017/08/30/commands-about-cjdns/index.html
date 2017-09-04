@@ -15,21 +15,16 @@
 
 
 
-<meta name="description" content="介绍了适配器模式。然后以android中的ListAdapter为例，介绍了适配器模式在android中的运用。">
+<meta name="description" content="一些在cjdns开发过程中的命令。主要包括一些特殊点的命令；普通点的通用命令；linux上的命令；git使用的命令">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Android中的设计模式之适配器模式">
-<meta property="og:url" content="http://yoursite.com/2016/11/21/pattern-adapter/index.html">
+<meta property="og:title" content="记录一些在开发cjdns过程中用到的命令">
+<meta property="og:url" content="http://yoursite.com/2017/08/30/commands-about-cjdns/index.html">
 <meta property="og:site_name" content="IChrisKing">
-<meta property="og:description" content="介绍了适配器模式。然后以android中的ListAdapter为例，介绍了适配器模式在android中的运用。">
-<meta property="og:image" content="http://yoursite.com/assets/img/adapter_pattern/adapter_class.png">
-<meta property="og:image" content="http://yoursite.com/assets/img/adapter_pattern/adapter_object.png">
-<meta property="og:image" content="http://yoursite.com/assets/img/adapter_pattern/adapter_empty.png">
-<meta property="og:image" content="http://yoursite.com/assets/img/adapter_pattern/adapter_android.png">
-<meta property="og:updated_time" content="2016-12-14T03:45:39.841Z">
+<meta property="og:description" content="一些在cjdns开发过程中的命令。主要包括一些特殊点的命令；普通点的通用命令；linux上的命令；git使用的命令">
+<meta property="og:updated_time" content="2017-08-31T01:22:50.561Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Android中的设计模式之适配器模式">
-<meta name="twitter:description" content="介绍了适配器模式。然后以android中的ListAdapter为例，介绍了适配器模式在android中的运用。">
-<meta name="twitter:image" content="http://yoursite.com/assets/img/adapter_pattern/adapter_class.png">
+<meta name="twitter:title" content="记录一些在开发cjdns过程中用到的命令">
+<meta name="twitter:description" content="一些在cjdns开发过程中的命令。主要包括一些特殊点的命令；普通点的通用命令；linux上的命令；git使用的命令">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -61,7 +56,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>Android中的设计模式之适配器模式 | IChrisKing</title>
+<title>记录一些在开发cjdns过程中用到的命令 | IChrisKing</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -263,11 +258,11 @@
     </div>
     <link class="menu-list" tags="標籤" friends="友情鏈接" about="關於我"/>
 </nav>
-      <div class="body-wrap"><article id="post-pattern-adapter" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-commands-about-cjdns" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/11/21/pattern-adapter/" class="article-date">
-      <time datetime="2016-11-21T11:03:26.000Z" itemprop="datePublished">2016-11-21</time>
+      <a href="/2017/08/30/commands-about-cjdns/" class="article-date">
+      <time datetime="2017-08-30T13:15:28.000Z" itemprop="datePublished">2017-08-30</time>
 </a>
 
 
@@ -282,7 +277,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Android中的设计模式之适配器模式
+      记录一些在开发cjdns过程中用到的命令
     </h1>
   
 
@@ -291,13 +286,13 @@
       <div class="article-info article-info-post">
         
     <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/设计模式/">设计模式</a><a class="article-category-link" href="/categories/设计模式/Java/">Java</a>
+    <a class="article-category-link" href="/categories/cjdns/">cjdns</a><a class="article-category-link" href="/categories/cjdns/cjdns源码分析/">cjdns源码分析</a>
     </div>
 
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C-C/">C/C++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cjdns/">cjdns</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cjdns源码分析/">cjdns源码分析</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -307,35 +302,40 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>适配器模式把一个类的接口变换成客户端所期待的另一种接口，从而使原本因接口不匹配而无法在一起工作的两个类能够在一起工作。</p>
-<h3 id="模式中的角色"><a href="#模式中的角色" class="headerlink" title="模式中的角色"></a>模式中的角色</h3><p>需要适配的类（Adaptee）：需要适配的类。</p>
-<p>适配器（Adapter）：通过包装一个需要适配的对象，把原接口转换成目标接口。</p>
-<p>目标接口（Target）：客户所期待的接口。可以是具体的或抽象的类，也可以是接口。</p>
-<h3 id="类的适配器模式"><a href="#类的适配器模式" class="headerlink" title="类的适配器模式"></a>类的适配器模式</h3><p>类的适配器模式把适配的类的API转换成为目标类的API。</p>
-<p><img src="/assets/img/adapter_pattern/adapter_class.png" alt="image"><br>在上图中可以看出，Adaptee类并没有sampleOperation2()方法，而客户端则期待这个方法。为使客户端能够使用Adaptee类，提供一个中间环节，即类Adapter，把Adaptee的API与Target类的API衔接起来。Adapter与Adaptee是继承关系，这决定了这个适配器模式是类的：</p>
-<p>　　模式所涉及的角色有：</p>
-<p>　　●　　目标(Target)角色：这就是所期待得到的接口。注意：由于这里讨论的是类适配器模式，因此目标不可以是类。</p>
-<p>　　●　　源(Adapee)角色：现在需要适配的接口。</p>
-<p>　　●　　适配器(Adaper)角色：适配器类是本模式的核心。适配器把源接口转换成目标接口。显然，这一角色不可以是接口，而必须是具体类。</p>
-<p><a href="http://www.cnblogs.com/java-my-life/archive/2012/04/13/2442795.html" target="_blank" rel="external">源代码</a></p>
-<h3 id="对象的适配器模式"><a href="#对象的适配器模式" class="headerlink" title="对象的适配器模式"></a>对象的适配器模式</h3><p>与类的适配器模式一样，对象的适配器模式把被适配的类的API转换成为目标类的API，与类的适配器模式不同的是，对象的适配器模式不是使用继承关系连接到Adaptee类，而是使用委派关系连接到Adaptee类。</p>
-<p><img src="/assets/img/adapter_pattern/adapter_object.png" alt="image"></p>
-<p>　　从上图可以看出，Adaptee类并没有sampleOperation2()方法，而客户端则期待这个方法。为使客户端能够使用Adaptee类，需要提供一个包装(Wrapper)类Adapter。这个包装类包装了一个Adaptee的实例，从而此包装类能够把Adaptee的API与Target类的API衔接起来。Adapter与Adaptee是委派关系，这决定了适配器模式是对象的。</p>
-<h3 id="缺省适配模式"><a href="#缺省适配模式" class="headerlink" title="缺省适配模式"></a>缺省适配模式</h3><p>在很多情况下，必须让一个具体类实现某一个接口，但是这个类又用不到接口所规定的所有的方法。通常的处理方法是，这个具体类要实现所有的方法，那些有用的方法要有实现，那些没有用的方法也要有空的、平庸的实现。</p>
-<p>　　这些空的方法是一种浪费，有时也是一种混乱。除非看过这些空方法的代码，程序员可能会以为这些方法不是空的。即便他知道其中有一些方法是空的，也不一定知道哪些方法是空的，哪些方法不是空的，除非看过这些方法的源代码或是文档。</p>
-<p>　　缺省适配模式可以很好的处理这一情况。可以设计一个抽象的适配器类实现接口，此抽象类要给接口所要求的每一种方法都提供一个空的方法。此抽象类可以使它的具体子类免于被迫实现空的方法。</p>
-<p><img src="/assets/img/adapter_pattern/adapter_empty.png" alt="image"></p>
-<p>可以看到，接口AbstractService要求定义三个方法，分别是serviceOperation1()、serviceOperation2()、serviceOperation3()；而抽象适配器类ServiceAdapter则为这三种方法都提供了平庸的实现。因此，任何继承自抽象类ServiceAdapter的具体类都可以选择它所需要的方法实现，而不必理会其他的不需要的方法。</p>
-<p>　　适配器模式的用意是要改变源的接口，以便于目标接口相容。缺省适配的用意稍有不同，它是为了方便建立一个不平庸的适配器类而提供的一种平庸实现。</p>
-<p>　　在任何时候，如果不准备实现一个接口的所有方法时，就可以使用“缺省适配模式”制造一个抽象类，给出所有方法的平庸的具体实现。这样，从这个抽象类再继承下去的子类就不必实现所有的方法了。</p>
-<h2 id="Android中的适配器模式"><a href="#Android中的适配器模式" class="headerlink" title="Android中的适配器模式"></a>Android中的适配器模式</h2><p><img src="/assets/img/adapter_pattern/adapter_android.png" alt="image"><br>以ListView为例，它需要的目标接口就是ListAdapter，继承自Adapter，其中包含一些基本方法，getCount,getView,getItem，getItemId等。</p>
-<p>数据源包括List<t>,Cursor等，为了兼容这些不同类型的数据源，需要定义不同的适配器：ArrayAdapter，CursorAdapter。这些adapter间接继承自ListAdapter，满足了ListView的需求。将数据以合适的方式提供给目标。</t></p>
-<p>以ArrayAdapter为例，查看一下源代码：</p>
-<h3 id="Adapter"><a href="#Adapter" class="headerlink" title="Adapter"></a>Adapter</h3><p>frameworks/base/core/java/android/widget/Adapter.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">public interface Adapter &#123;</div><div class="line">    .....</div><div class="line">    </div><div class="line">    int getCount();   </div><div class="line"></div><div class="line">    Object getItem(int position);</div><div class="line"></div><div class="line">    long getItemId(int position);</div><div class="line">    </div><div class="line">    .......</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h3 id="ListAdapter"><a href="#ListAdapter" class="headerlink" title="ListAdapter"></a>ListAdapter</h3><p>/frameworks/base/core/java/android/widget/ListAdapter.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">public interface ListAdapter extends Adapter &#123;</div><div class="line">......</div><div class="line">    boolean isEnabled(int position);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h3 id="BaseAdapter"><a href="#BaseAdapter" class="headerlink" title="BaseAdapter"></a>BaseAdapter</h3><p>/frameworks/base/core/java/android/widget/BaseAdapter.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">public abstract class BaseAdapter implements ListAdapter, SpinnerAdapter &#123;</div><div class="line">    ......</div><div class="line">    </div><div class="line">    public void notifyDataSetChanged() &#123;</div><div class="line">        mDataSetObservable.notifyChanged();</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    ......</div><div class="line">    </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h3 id="ArrayAdapter"><a href="#ArrayAdapter" class="headerlink" title="ArrayAdapter"></a>ArrayAdapter</h3><p>/frameworks/base/core/java/android/widget/ArrayAdapter.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">public class ArrayAdapter&lt;T&gt; extends BaseAdapter implements Filterable, ThemedSpinnerAdapter &#123;</div><div class="line">....</div><div class="line">private List&lt;T&gt; mObjects;</div><div class="line">.....</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public void notifyDataSetChanged() &#123;</div><div class="line">        super.notifyDataSetChanged();</div><div class="line">        mNotifyOnChange = true;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    .....</div><div class="line">    </div><div class="line">        public int getCount() &#123;</div><div class="line">        return mObjects.size();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public T getItem(int position) &#123;</div><div class="line">        return mObjects.get(position);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public long getItemId(int position) &#123;</div><div class="line">        return position;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    ......</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-
+        <h2 id="sbu服务器相关"><a href="#sbu服务器相关" class="headerlink" title="sbu服务器相关"></a>sbu服务器相关</h2><h3 id="sbu的配置文件位置"><a href="#sbu的配置文件位置" class="headerlink" title="sbu的配置文件位置"></a>sbu的配置文件位置</h3><p>/usr/local/etc/atomic/anet.conf</p>
+<h3 id="获取当前snode上所有点的信息"><a href="#获取当前snode上所有点的信息" class="headerlink" title="获取当前snode上所有点的信息"></a>获取当前snode上所有点的信息</h3><p>wget sbu.snode.v6:3333/walk</p>
+<h3 id="snode上查看log"><a href="#snode上查看log" class="headerlink" title="snode上查看log"></a>snode上查看log</h3><p>pm2 log</p>
+<h3 id="inbound上进入docker"><a href="#inbound上进入docker" class="headerlink" title="inbound上进入docker"></a>inbound上进入docker</h3><p>docker exec -it sbu-gate4 bash</p>
+<h3 id="pubkey-to-ipv6"><a href="#pubkey-to-ipv6" class="headerlink" title="pubkey to ipv6"></a>pubkey to ipv6</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">fb6e:761d:51da:3031:a71e:6218:6f8:ed0a 1.out.sbu(agora)</div><div class="line">3twlvg8p14hb119z2gmydrlq53gc0lkx5gsdvggq2u6bzfsgd500.k 1.out.sbu(agora)</div><div class="line"></div><div class="line">fb49:7da2:524e:eb46:75f4:129e:6446:995d 2.out.sbu</div><div class="line">wfzyzrc0q4g83y0dgzxx1l862u0lscucj75yw9q1ymbltzwh2fq0.k 2.out.sbu</div><div class="line"></div><div class="line">&quot;publicKey&quot;: &quot;cy4cmzzry3yykwblnh402vmyt328pu9nm58rx4cbgnqllv6hvv70.k&quot;,</div><div class="line">    &quot;ipv6&quot;: &quot;fbdb:b56d:fdcf:c2ae:5f0b:cdd:67b4:8f8b&quot;,</div><div class="line"></div><div class="line">1snny3pqz9b76xnf3n94dfuq9ujkkc81pc0xlvurc9xs7fqcdug0.k</div><div class="line">./contrib/python/pktoip6 xf57qwhzt7slpds8d8vk73x8tjf9wuuq5cywckzthszu2hp7dx30.k</div><div class="line">ping6 fba5:4434:0bd5:80c0:f75b:2e36:6476:2bb3</div><div class="line">ping6 fb25:dac7:9613:f0b8:b4c2:5d37:8289:1a3f</div><div class="line">jsm2k9hk46lqq19pwgpwrf001lz2g6xczphmqzu0vzyl2u323k20.k ---&gt;</div><div class="line">fbdb:dac3:9237:3853:b3e4:4b83:9c4b:9a11</div><div class="line">ttdfvp3jh6hk7jwjc1uz9g5l5nhnkuxn2gvhm7434nynhqxc9cc0.k ---&gt;</div><div class="line">fb7f:e922:7783:4f2f:632c:fc24:f8d7:7379</div><div class="line">tjty232tvrwudh5r2zycnx0q6ks4mcn7ujnxcnkcbb6x7rjwrp80.k ---&gt;</div><div class="line">fbc3:c307:6cef:9a19:ce06:209d:d314:c99e</div></pre></td></tr></table></figure>
+<h2 id="普通点相关"><a href="#普通点相关" class="headerlink" title="普通点相关"></a>普通点相关</h2><h3 id="手动获取ipv4地址"><a href="#手动获取ipv4地址" class="headerlink" title="手动获取ipv4地址"></a>手动获取ipv4地址</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">curl -i -X POST -H &quot;&apos;Content-type&apos;:&apos;application/json&apos;,&apos;charset&apos;:&apos;utf-8&apos;&quot; -d &apos;&#123;&quot;mypub&quot;:cy4cmzzry3yykwblnh402vmyt328pu9nm58rx4cbgnqllv6hvv70.k&quot;,&quot;serverpub&quot;:&quot;wfzyzrc0q4g83y0dgzxx1l862u0lscucj75yw9q1ymbltzwh2fq0.k&quot;&#125;&apos; http://[fb49:7da2:524e:eb46:75f4:129e:6446:995d]:8888/anet/info/go2ext</div></pre></td></tr></table></figure>
+<h3 id="make-脚本"><a href="#make-脚本" class="headerlink" title="make 脚本"></a>make 脚本</h3><p>node_build/make.js</p>
+<ul>
+<li>不做test<br><code>NO_TEST=1 ./do</code></li>
+</ul>
+<h3 id="导出log到文件"><a href="#导出log到文件" class="headerlink" title="导出log到文件"></a>导出log到文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">/tools/cjdnslog &amp;&gt; /tmp/1.log &amp;</div><div class="line"> grep -r ControlHandler /tmp/1.log</div><div class="line"></div><div class="line">D:\anet\cjdroute\cjdroute.exe --nobg &lt; D:\anet\cjdroute\anet.conf 2&gt; d:\anet\a.log</div></pre></td></tr></table></figure>
+<h3 id="ping替代"><a href="#ping替代" class="headerlink" title="ping替代"></a>ping替代</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./tool/search -c 100 xx:xx:xx:xx:xx</div></pre></td></tr></table></figure>
+<p>可以增加找到对方的概率</p>
+<h3 id="cjdnslog调试"><a href="#cjdnslog调试" class="headerlink" title="cjdnslog调试"></a>cjdnslog调试</h3><p>./tools/cjdnslog<br>如果看不到log，并报错，检查一下两个文件：</p>
+<ul>
+<li><p>~/.cjdnsadmin<br>其中的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">        &quot;addr&quot;:&quot;127.0.0.1&quot;,</div><div class="line">        &quot;port&quot;:11234,</div><div class="line">        &quot;password&quot;: &quot;NONE&quot;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>配置文件，其中的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&quot;admin&quot;: &#123;</div><div class="line">    &quot;bind&quot;: &quot;127.0.0.1:11234&quot;,</div><div class="line">    &quot;password&quot;: &quot;NONE&quot;</div><div class="line">&#125;,</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="gdb调试"><a href="#gdb调试" class="headerlink" title="gdb调试"></a>gdb调试</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">gdb ./cjroute</div><div class="line">set follow-fork-mode child</div><div class="line">b xxx.c:32</div><div class="line">run --nobg &lt; ../anet.conf</div></pre></td></tr></table></figure>
+<p>其中<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">set follow-fork-mode child</div></pre></td></tr></table></figure></p>
+<p>即在fork处调试从父进程进到子进程中，父进程不受影响</p>
+<h3 id="gdb调试某个test"><a href="#gdb调试某个test" class="headerlink" title="gdb调试某个test"></a>gdb调试某个test</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">./do</div><div class="line">./build_linux/test_testcjdroute_c </div><div class="line">./build_linux/test_testcjdroute_c all</div><div class="line">./build_linux/test_testcjdroute_c Beacon_test</div><div class="line">vi node_build/make.js </div><div class="line"> rm -rf build_linux/</div><div class="line">./do</div><div class="line">gdb ./build_linux/test_testcjdroute_c Beacon_test</div><div class="line"></div><div class="line"></div><div class="line"> gdb ./build_linux/test_testcjdroute_c Beacon_test</div><div class="line">(gdb) r Beacon_test</div><div class="line">(gdb) quit</div><div class="line"></div><div class="line">Quit anyway? (y or n) y</div></pre></td></tr></table></figure>
+<h3 id="查看dict"><a href="#查看dict" class="headerlink" title="查看dict"></a>查看dict</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">print r.val.as.list[0].elem.as.dictionary.val.as.string-&gt;bytes</div></pre></td></tr></table></figure>
+<h3 id="编译subnode"><a href="#编译subnode" class="headerlink" title="编译subnode"></a>编译subnode</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">SUBNODE=1 ./do</div></pre></td></tr></table></figure>
+<h2 id="linux通用"><a href="#linux通用" class="headerlink" title="linux通用"></a>linux通用</h2><h3 id="tcpdump"><a href="#tcpdump" class="headerlink" title="tcpdump"></a>tcpdump</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">sudo tcpdump -i enp3s0 -n udp and port 51338</div><div class="line"></div><div class="line">tcpdump -i anet -s 0 -w /tmp/tcpdump</div><div class="line">tcpdump -r /tmp/tcpdump -X</div></pre></td></tr></table></figure>
+<h3 id="加默认路由"><a href="#加默认路由" class="headerlink" title="加默认路由"></a>加默认路由</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">jinwh@jinwh-office ~/anet/cjdns $ route -n</div><div class="line">Kernel IP routing table</div><div class="line">Destination     Gateway         Genmask         Flags Metric Ref    Use Iface</div><div class="line">0.0.0.0         192.168.2.1     0.0.0.0         UG    100    0        0 enp3s0</div><div class="line">169.254.0.0     0.0.0.0         255.255.0.0     U     1000   0        0 enp3s0</div><div class="line">192.168.2.0     0.0.0.0         255.255.255.0   U     100    0        0 enp3s0</div><div class="line">jinwh@jinwh-office ~/anet/cjdns $ sudo route add default dev anet</div><div class="line"></div><div class="line">jinwh@jinwh-office ~/anet/cjdns $ route -n</div><div class="line">Kernel IP routing table</div><div class="line">Destination     Gateway         Genmask         Flags Metric Ref    Use Iface</div><div class="line">0.0.0.0         0.0.0.0         0.0.0.0         U     0      0        0 anet</div><div class="line">0.0.0.0         192.168.2.1     0.0.0.0         UG    100    0        0 enp3s0</div><div class="line">169.254.0.0     0.0.0.0         255.255.0.0     U     1000   0        0 enp3s0</div><div class="line">192.168.2.0     0.0.0.0         255.255.255.0   U     100    0        0 enp3s0</div></pre></td></tr></table></figure>
+<h3 id="路由相关"><a href="#路由相关" class="headerlink" title="路由相关"></a>路由相关</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">ip rule list</div><div class="line">ip route list local</div><div class="line">ip route list table main</div><div class="line">ip route list default</div></pre></td></tr></table></figure>
+<h3 id="周期性运行命令"><a href="#周期性运行命令" class="headerlink" title="周期性运行命令"></a>周期性运行命令</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">watch -n 1 ./tools/peerStats</div></pre></td></tr></table></figure>
+<h3 id="查看崩溃时内存"><a href="#查看崩溃时内存" class="headerlink" title="查看崩溃时内存"></a>查看崩溃时内存</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line">sudo -i</div><div class="line">cd /var/crash/0</div><div class="line">ls -lart</div><div class="line"></div><div class="line">-rw-r--r-- 1 root root   610304 4月  13 13:57 335-0-0-6-1492063031-jinwh-office--home-jinwh-anet-cjdns-cjdroute.core</div><div class="line">-rw-r--r-- 1 root root   610304 4月  13 13:57 334-0-0-6-1492063032-jinwh-office--home-jinwh-anet-cjdns-cjdroute.core</div><div class="line"></div><div class="line">gdb --core=./334-0-0-6-1492063032-jinwh-office--home-jinwh-anet-cjdns-cjdroute.core ~jinwh/anet/cjdns/cjdroute</div><div class="line"></div><div class="line">(gdb) bt</div><div class="line"></div><div class="line">查看内存</div><div class="line">(gdb) x /100x 0x55b90cc671c8</div><div class="line">0x55b90cc671c8:	0x0ac4a00e	0x000055b9	0x0000013e	0x00000001</div><div class="line">0x55b90cc671d8:	0x0cc672a0	0x000055b9	0x00000000	0x00000000</div><div class="line">0x55b90cc671e8:	0x00000000	0x00000000	0x00000000	0x00000000</div><div class="line">0x55b90cc671f8:	0x00000000	0x00000000	0x00000000	0x00000000</div><div class="line">0x55b90cc67208:	0x0cc44038	0x000055b9	0x00000118	0x00000000</div><div class="line">0x55b90cc67218:	0x00000000	0x00000000	0x5eb86584	0x1127f585</div><div class="line">0x55b90cc67228:	0x5eb86584	0x1127f585	0x4674e040	0x81122a77</div><div class="line">0x55b90cc67238:	0x5eb86584	0x1127f585	0x00000000	0x00000000</div><div class="line">0x55b90cc67248:	0x00000051	0x00000000	0x0ac4952c	0x000055b9</div><div class="line">0x55b90cc67258:	0x000000cc	0x00007fbb	0x00000040	0x00000000</div><div class="line">0x55b90cc67268:	0x0cc671a0	0x000055b9	0x5eb86584	0x1127f585</div><div class="line">0x55b90cc67278:	0x00000002	0x00000000	0x0cc672c8	0x000055b9</div><div class="line">0x55b90cc67288:	0x5eb86584	0x1127f585	0xeeeeeeee	0xeeeeeeee</div><div class="line">0x55b90cc67298:	0x00000041	0x00000000	0x0ac4952c	0x000055b9</div><div class="line">0x55b90cc672a8:	0x000000cd	0x00007fbb	0x00000038	0x00000000</div><div class="line">0x55b90cc672b8:	0x0cc67250	0x000055b9	0x5eb86584	0x1127f585</div><div class="line">0x55b90cc672c8:	0x0cc81358	0x000055b9	0x0cc81638	0x000055b9</div><div class="line">0x55b90cc672d8:	0x00000051	0x00000000	0x0ac3efe3	0x000055b9</div><div class="line">0x55b90cc672e8:	0x0000001f	0x00007fbb	0x00000038	0x00000000</div><div class="line">0x55b90cc672f8:	0x0cc817f0	0x000055b9	0x5eb86584	0x1127f585</div><div class="line">0x55b90cc67308:	0x00594e41	0xeeeeeeee	0x5eb86584	0x1127f585</div><div class="line">0x55b90cc67318:	0xeeeeeeee	0xeeeeeeee	0x00000050	0x00000000</div><div class="line">0x55b90cc67328:	0x000000b1	0x00000000	0x0ac40e2d	0x000055b9</div><div class="line">0x55b90cc67338:	0x00000054	0x00000000	0x000000a0	0x00000000</div><div class="line">0x55b90cc67348:	0x00000000	0x00000000	0x5eb86584	0x1127f585</div></pre></td></tr></table></figure>
+<h2 id="git相关"><a href="#git相关" class="headerlink" title="git相关"></a>git相关</h2><h3 id="合代码"><a href="#合代码" class="headerlink" title="合代码"></a>合代码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">git stash </div><div class="line">git pull</div><div class="line">git stash pop</div></pre></td></tr></table></figure>
       
     </div>
     
@@ -346,16 +346,10 @@
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2016/11/21/Search/">
-                    各种查找算法
-                </a>
-            </div>
-        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2016/11/17/pattern-factory/">
-                    Android中的设计模式之工厂模式系列
+                <a href="/2017/08/30/rom7-0-phone/">
+                    rom7.0-phone
                 </a>
             </div>
         
@@ -367,7 +361,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目錄</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#简介"><span class="toc-number">1.</span> <span class="toc-text">简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#模式中的角色"><span class="toc-number">1.1.</span> <span class="toc-text">模式中的角色</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#类的适配器模式"><span class="toc-number">1.2.</span> <span class="toc-text">类的适配器模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#对象的适配器模式"><span class="toc-number">1.3.</span> <span class="toc-text">对象的适配器模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#缺省适配模式"><span class="toc-number">1.4.</span> <span class="toc-text">缺省适配模式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Android中的适配器模式"><span class="toc-number">2.</span> <span class="toc-text">Android中的适配器模式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Adapter"><span class="toc-number">2.1.</span> <span class="toc-text">Adapter</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ListAdapter"><span class="toc-number">2.2.</span> <span class="toc-text">ListAdapter</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BaseAdapter"><span class="toc-number">2.3.</span> <span class="toc-text">BaseAdapter</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ArrayAdapter"><span class="toc-number">2.4.</span> <span class="toc-text">ArrayAdapter</span></a></li></ol></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#sbu服务器相关"><span class="toc-number">1.</span> <span class="toc-text">sbu服务器相关</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#sbu的配置文件位置"><span class="toc-number">1.1.</span> <span class="toc-text">sbu的配置文件位置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#获取当前snode上所有点的信息"><span class="toc-number">1.2.</span> <span class="toc-text">获取当前snode上所有点的信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#snode上查看log"><span class="toc-number">1.3.</span> <span class="toc-text">snode上查看log</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#inbound上进入docker"><span class="toc-number">1.4.</span> <span class="toc-text">inbound上进入docker</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#pubkey-to-ipv6"><span class="toc-number">1.5.</span> <span class="toc-text">pubkey to ipv6</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#普通点相关"><span class="toc-number">2.</span> <span class="toc-text">普通点相关</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#手动获取ipv4地址"><span class="toc-number">2.1.</span> <span class="toc-text">手动获取ipv4地址</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#make-脚本"><span class="toc-number">2.2.</span> <span class="toc-text">make 脚本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#导出log到文件"><span class="toc-number">2.3.</span> <span class="toc-text">导出log到文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ping替代"><span class="toc-number">2.4.</span> <span class="toc-text">ping替代</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#cjdnslog调试"><span class="toc-number">2.5.</span> <span class="toc-text">cjdnslog调试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#gdb调试"><span class="toc-number">2.6.</span> <span class="toc-text">gdb调试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#gdb调试某个test"><span class="toc-number">2.7.</span> <span class="toc-text">gdb调试某个test</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查看dict"><span class="toc-number">2.8.</span> <span class="toc-text">查看dict</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#编译subnode"><span class="toc-number">2.9.</span> <span class="toc-text">编译subnode</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#linux通用"><span class="toc-number">3.</span> <span class="toc-text">linux通用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#tcpdump"><span class="toc-number">3.1.</span> <span class="toc-text">tcpdump</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#加默认路由"><span class="toc-number">3.2.</span> <span class="toc-text">加默认路由</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#路由相关"><span class="toc-number">3.3.</span> <span class="toc-text">路由相关</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#周期性运行命令"><span class="toc-number">3.4.</span> <span class="toc-text">周期性运行命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查看崩溃时内存"><span class="toc-number">3.5.</span> <span class="toc-text">查看崩溃时内存</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git相关"><span class="toc-number">4.</span> <span class="toc-text">git相关</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#合代码"><span class="toc-number">4.1.</span> <span class="toc-text">合代码</span></a></li></ol></li></ol>
         
     </div>
     <style>
@@ -394,7 +388,7 @@
     
       <div class="duoshuo" id="comments">
     <div id="comment-box" ></div>
-    <div class="ds-thread" id="ds-thread" data-thread-key="2016/11/21/pattern-adapter/" data-title="Android中的设计模式之适配器模式" data-url="http://yoursite.com/2016/11/21/pattern-adapter/"></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2017/08/30/commands-about-cjdns/" data-title="记录一些在开发cjdns过程中用到的命令" data-url="http://yoursite.com/2017/08/30/commands-about-cjdns/"></div>
     <script>
         var duoshuoQuery = {short_name:"ichrisking"};
         var loadComment = function(){
@@ -417,15 +411,13 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2016/11/21/Search/" title="上一篇: 各种查找算法">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主頁"><i class="fa fa-home"></i></a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2016/11/17/pattern-factory/" title="下一篇: Android中的设计模式之工厂模式系列">
+            <a href="/2017/08/30/rom7-0-phone/" title="下一篇: rom7.0-phone">
                 <i class="fa fa-angle-right"></i>
             </a>
         
