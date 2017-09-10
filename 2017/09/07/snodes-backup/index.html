@@ -15,16 +15,16 @@
 
 
 
-<meta name="description" content="本地修改commit之後沒有及時push，然後執行了repo sync操作，導致本地修改被覆蓋，引起discarding commits時的補救方法">
+<meta name="description" content="“多个snode互相备份”">
 <meta property="og:type" content="article">
-<meta property="og:title" content="找回差點丟失的commit">
-<meta property="og:url" content="http://yoursite.com/2015/02/04/save_discarding_commits/index.html">
+<meta property="og:title" content="多个snode互相备份">
+<meta property="og:url" content="http://yoursite.com/2017/09/07/snodes-backup/index.html">
 <meta property="og:site_name" content="IChrisKing">
-<meta property="og:description" content="本地修改commit之後沒有及時push，然後執行了repo sync操作，導致本地修改被覆蓋，引起discarding commits時的補救方法">
-<meta property="og:updated_time" content="2016-09-07T08:43:09.110Z">
+<meta property="og:description" content="“多个snode互相备份”">
+<meta property="og:updated_time" content="2017-09-07T09:36:42.690Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="找回差點丟失的commit">
-<meta name="twitter:description" content="本地修改commit之後沒有及時push，然後執行了repo sync操作，導致本地修改被覆蓋，引起discarding commits時的補救方法">
+<meta name="twitter:title" content="多个snode互相备份">
+<meta name="twitter:description" content="“多个snode互相备份”">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -56,7 +56,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>找回差點丟失的commit | IChrisKing</title>
+<title>多个snode互相备份 | IChrisKing</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -258,11 +258,11 @@
     </div>
     <link class="menu-list" tags="標籤" friends="友情鏈接" about="關於我"/>
 </nav>
-      <div class="body-wrap"><article id="post-save_discarding_commits" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-snodes-backup" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2015/02/04/save_discarding_commits/" class="article-date">
-      <time datetime="2015-02-04T03:23:40.000Z" itemprop="datePublished">2015-02-04</time>
+      <a href="/2017/09/07/snodes-backup/" class="article-date">
+      <time datetime="2017-09-07T02:10:23.000Z" itemprop="datePublished">2017-09-07</time>
 </a>
 
 
@@ -277,7 +277,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      找回差點丟失的commit
+      多个snode互相备份
     </h1>
   
 
@@ -286,13 +286,13 @@
       <div class="article-info article-info-post">
         
     <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/Linux/">Linux</a>
+    <a class="article-category-link" href="/categories/cjdns/">cjdns</a><a class="article-category-link" href="/categories/cjdns/cjdns源码分析/">cjdns源码分析</a>
     </div>
 
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/填坑/">填坑</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C-C/">C/C++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cjdns/">cjdns</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cjdns源码分析/">cjdns源码分析</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -302,17 +302,47 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h2 id="git-reflog"><a href="#git-reflog" class="headerlink" title="git reflog"></a><code>git reflog</code></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">612952f HEAD@&#123;0&#125;: checkout: moving from 612952fbfad9e480d5cd3486034399644393c253 to anrom-4.0</div><div class="line">612952f HEAD@&#123;1&#125;: checkout: moving from a873309d7579ccceff13a1881bbc23740d62fe83 to 612952fbfad9e480d5cd3486034399644393c253</div><div class="line">a873309 HEAD@&#123;2&#125;: commit: add new functions to install packages in different zone  --這一條就是差點丟失的commit，編號a873309</div><div class="line">612952f HEAD@&#123;3&#125;: merge 612952fbfad9e480d5cd3486034399644393c253: Fast-forward</div></pre></td></tr></table></figure>
-<p>在其中找到被discarding的commit，他對應的id是a873309，後面會用到</p>
-<h2 id="git-branch-tmp-a873309"><a href="#git-branch-tmp-a873309" class="headerlink" title="git branch tmp a873309"></a><code>git branch tmp a873309</code></h2><h2 id="git-branch-av"><a href="#git-branch-av" class="headerlink" title="git branch -av"></a><code>git branch -av</code></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">* anrom-4.0               612952f fix destory activity save downloadinfo sttus</div><div class="line">  tmp                     a873309 add new functions to install packages in different zone</div><div class="line">  remotes/anrom/anrom-4.0 612952f fix destory activity save downloadinfo sttus</div><div class="line">  remotes/m/anrom-4.0     -&gt; anrom/anrom-4.0</div></pre></td></tr></table></figure>
-<h2 id="git-checkout-tmp"><a href="#git-checkout-tmp" class="headerlink" title="git checkout tmp"></a><code>git checkout tmp</code></h2><p>切换到分支 ‘tmp’</p>
-<h2 id="git-remote-v"><a href="#git-remote-v" class="headerlink" title="git remote -v"></a><code>git remote -v</code></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">anrom http://anrom.ancode.org:81/p/anrom/packages/apps/AnromMarket (fetch)</div><div class="line">anrom http://anrom.ancode.org:81/p/anrom/packages/apps/AnromMarket (push)</div><div class="line">point ssh://chris@anrom.ancode.org:29418/anrom/packages/apps/AnromMarket.git (fetch)</div><div class="line">point ssh://chris@anrom.ancode.org:29418/anrom/packages/apps/AnromMarket.git (push)</div></pre></td></tr></table></figure>
-<h2 id="git-log"><a href="#git-log" class="headerlink" title="git log"></a><code>git log</code></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">commit a873309d7579ccceff13a1881bbc23740d62fe83</div><div class="line">Author: Chris King</div><div class="line">Date:   Fri Jan 30 18:26:38 2015 +0800</div><div class="line"></div><div class="line">    add new functions to install packages in different zone</div><div class="line">    </div><div class="line">    Change-Id: If42919eebd83723f8b3bff54a715c5ec2d49eb5a</div><div class="line"></div><div class="line">commit 612952fbfad9e480d5cd3486034399644393c253</div><div class="line">Author: NancyZhang &lt;1049754324@qq.com&gt;</div><div class="line">Date:   Tue Dec 30 10:43:14 2014 +0800</div><div class="line"></div><div class="line">    fix destory activity save downloadinfo sttus</div></pre></td></tr></table></figure>
-<h2 id="git-checkout-anrom-4-0"><a href="#git-checkout-anrom-4-0" class="headerlink" title="git checkout anrom-4.0"></a><code>git checkout anrom-4.0</code></h2><h2 id="git-cherry-pick-a873309d7579ccceff13a1881bbc23740d62fe83"><a href="#git-cherry-pick-a873309d7579ccceff13a1881bbc23740d62fe83" class="headerlink" title="git cherry-pick  a873309d7579ccceff13a1881bbc23740d62fe83"></a><code>git cherry-pick  a873309d7579ccceff13a1881bbc23740d62fe83</code></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">[anrom-4.0 bf79eec] add new functions to install packages in different zone</div><div class="line"> 6 个文件被修改，插入 390 行(+)，删除 194 行(-)</div><div class="line"> create mode 100644 src/org/ancode/anrommarket/InstallTask.java</div><div class="line"> create mode 100644 src/org/ancode/anrommarket/Installer.java</div><div class="line"> create mode 100644 src/org/ancode/anrommarket/PackageInstallObserver.java</div></pre></td></tr></table></figure>
-<h2 id="git-branch-D-tmp"><a href="#git-branch-D-tmp" class="headerlink" title="git branch -D tmp"></a><code>git branch -D tmp</code></h2><p>已删除 分支 tmp（曾为 a873309）</p>
-<h2 id="git-branch-av-1"><a href="#git-branch-av-1" class="headerlink" title="git branch -av"></a><code>git branch -av</code></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">* anrom-4.0               bf79eec add new functions to install packages in different zone</div><div class="line">  remotes/anrom/anrom-4.0 612952f fix destory activity save downloadinfo sttus</div><div class="line">  remotes/m/anrom-4.0     -&gt; anrom/anrom-4.0</div></pre></td></tr></table></figure>
-<h2 id="git-status"><a href="#git-status" class="headerlink" title="git status"></a><code>git status</code></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"># 位于分支 anrom-4.0</div><div class="line">无须提交（干净的工作区）</div></pre></td></tr></table></figure>
-<h2 id="git-push-point-HEAD-refs-for-anrom-4-0"><a href="#git-push-point-HEAD-refs-for-anrom-4-0" class="headerlink" title="git push point HEAD:refs/for/anrom-4.0"></a><code>git push point HEAD:refs/for/anrom-4.0</code></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">Counting objects: 22, done.</div><div class="line">Delta compression using up to 8 threads.</div><div class="line">Compressing objects: 100% (11/11), done.</div><div class="line">Writing objects: 100% (13/13), 5.36 KiB, done.</div><div class="line">Total 13 (delta 6), reused 0 (delta 0)</div><div class="line">remote: Resolving deltas: 100% (6/6)</div><div class="line">remote: Processing changes: new: 1, refs: 1, done    </div><div class="line">remote: </div><div class="line">remote: New Changes:</div><div class="line">remote:   http://anrom.ancode.org:81/4818</div><div class="line">remote: </div><div class="line">To ssh://chris@anrom.ancode.org:29418/anrom/packages/apps/AnromMarket.git</div><div class="line"> * [new branch]      HEAD -&gt; refs/for/anrom-4.0</div></pre></td></tr></table></figure>
+        <h2 id="snode建立过程"><a href="#snode建立过程" class="headerlink" title="snode建立过程"></a>snode建立过程</h2><h3 id="安装postgresql数据库"><a href="#安装postgresql数据库" class="headerlink" title="安装postgresql数据库"></a>安装postgresql数据库</h3><ol>
+<li><p>按照readme中的指示</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">npm install</div><div class="line">cp ./config.example.js ./config.js</div></pre></td></tr></table></figure>
+</li>
+<li><p>安装和启动postgresql数据库</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sudo apt-get install postgresql</div><div class="line">sudo /etc/init.d/postgresql start</div></pre></td></tr></table></figure>
+</li>
+<li><p>initdb初始化数据库<br>initdb.sql<br>这些命令一定要以root身份执行，光sudo是不行的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">su</div><div class="line">sudo -u postgres psql &lt; ./initdb.sql</div><div class="line">echo &apos;drop database cjdnsnode;&apos; | cat - ./initdb.sql | sudo -u postgres psql</div></pre></td></tr></table></figure>
+</li>
+<li><p>开启server<br>以普通用户身份运行。如果使用了pm2进行管理，就不需要手动开启server了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">node server.js</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>如果报错为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">error: no pg_hba.conf entry for host &quot;192.168.2.43&quot;, user &quot;cjdnsnode_user&quot;, database &quot;cjdnsnode&quot;, SSL off</div><div class="line">   	at Connection.parseE (/home/jinwh/anet/cjdnsnode/node_modules/pg/lib/connection.js:569:11)</div><div class="line">   	at Connection.parseMessage (/home/jinwh/anet/cjdnsnode/node_modules/pg/lib/connection.js:396:17)</div><div class="line">   	at Socket.&lt;anonymous&gt; (/home/jinwh/anet/cjdnsnode/node_modules/pg/lib/connection.js:132:22)</div><div class="line">   	at emitOne (events.js:96:13)</div><div class="line">   	at Socket.emit (events.js:188:7)</div><div class="line">   	at readableAddChunk (_stream_readable.js:172:18)</div><div class="line">   	at Socket.Readable.push (_stream_readable.js:130:10)</div><div class="line">   	at TCP.onread (net.js:542:20)</div></pre></td></tr></table></figure></p>
+<p>说明postgresql数据库没有允许连到<code>host &quot;192.168.2.43&quot;, user &quot;cjdnsnode_user&quot;, database &quot;cjdnsnode&quot;</code><br>依次排除:</p>
+<pre><code>* 首先是host，查看pg_hba.conf，发现没有192.168.2.43的记录，所以增加一条：
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">host    all             all             192.168.2.43/24         md5</div></pre></td></tr></table></figure>
+<p>位置是：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"># IPv4 local connections:</div><div class="line">host    all             all             127.0.0.1/32            md5</div><div class="line">host    all             all             192.168.2.43/24         md5</div></pre></td></tr></table></figure></p>
+<pre><code>* user和database，查看initdb.sql，对比user和database
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">CREATE USER cjdnsnode_user WITH PASSWORD &apos;cjdnsnode_passwd&apos;;</div></pre></td></tr></table></figure>
+</code></pre><h3 id="配置pm2"><a href="#配置pm2" class="headerlink" title="配置pm2"></a>配置pm2</h3><ol>
+<li><p>安装pm2</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install -g pm2</div></pre></td></tr></table></figure>
+</li>
+<li><p>pm2-cjdnsnode.json</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  &quot;name&quot; : &quot;cjdnsnode&quot;,</div><div class="line">  &quot;script&quot; : &quot;server.js&quot;,</div><div class="line">  &quot;watch&quot;:false,</div><div class="line">  &quot;ignore_watch&quot;:[&quot;static/*&quot;,&quot;.git&quot;,&quot;files&quot;],</div><div class="line">  &quot;cwd&quot; : &quot;/root/project/cjdnsnode&quot;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>启动pm2</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pm2 start pm2-cjdnsnode.json</div></pre></td></tr></table></figure>
+</li>
+<li><p>查看pm2状态</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"># pm2 status</div><div class="line">┌───────────┬────┬──────┬──────┬────────┬─────────┬────────┬─────┬───────────┬──────┬──────────┐</div><div class="line">│ App name  │ id │ mode │ pid  │ status │ restart │ uptime │ cpu │ mem       │ user │ watching │</div><div class="line">├───────────┼────┼──────┼──────┼────────┼─────────┼────────┼─────┼───────────┼──────┼──────────┤</div><div class="line">│ cjdnsnode │ 0  │ fork │ 7195 │ online │ 10      │ 8s     │ 0%  │ 37.9 MB   │ root │ disabled │</div><div class="line">└───────────┴────┴──────┴──────┴────────┴─────────┴────────┴─────┴───────────┴──────┴──────────┘</div><div class="line"> Use `pm2 show &lt;id|name&gt;` to get more details about an app</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="运行-pm2-log"><a href="#运行-pm2-log" class="headerlink" title="运行 pm2 log"></a>运行 pm2 log</h3><p>查看log</p>
+<h4 id="错误1"><a href="#错误1" class="headerlink" title="错误1"></a>错误1</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">0|cjdnsnod | /home/jinwh/anet/cjdnsnode/node_modules/cjdnsadmin/index.js:196</div><div class="line">0|cjdnsnod |             if (err) &#123; throw err; &#125;</div><div class="line">0|cjdnsnod |                        ^</div><div class="line">0|cjdnsnod | Error: timeout after 10000ms</div><div class="line">0|cjdnsnod |     at Timeout._onTimeout (/home/jinwh/anet/cjdnsnode/node_modules/cjdnsadmin/index.js:27:18)</div><div class="line">0|cjdnsnod |     at ontimeout (timers.js:469:11)</div><div class="line">0|cjdnsnod |     at tryOnTimeout (timers.js:304:5)</div><div class="line">0|cjdnsnod |     at Timer.listOnTimeout (timers.js:264:5)</div></pre></td></tr></table></figure>
+<p>当前用户下没有配置.cjdnsadmin</p>
+<h4 id="错误2"><a href="#错误2" class="headerlink" title="错误2"></a>错误2</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">0|cjdnsnod | /home/jinwh/anet/cjdnsnode/node_modules/cjdnsadmin/index.js:149</div><div class="line">0|cjdnsnod |                     Object.keys(ret.availableFunctions).forEach(function (funcName) &#123;</div><div class="line">0|cjdnsnod |                            ^</div><div class="line">0|cjdnsnod | TypeError: Cannot convert undefined or null to object</div><div class="line">0|cjdnsnod |     at /home/jinwh/anet/cjdnsnode/node_modules/cjdnsadmin/index.js:149:28</div><div class="line">0|cjdnsnod |     at Object.callback (/home/jinwh/anet/cjdnsnode/node_modules/nthen/lib/nthen.js:14:22)</div><div class="line">0|cjdnsnod |     at Socket.&lt;anonymous&gt; (/home/jinwh/anet/cjdnsnode/node_modules/cjdnsadmin/index.js:191:17)</div><div class="line">0|cjdnsnod |     at emitTwo (events.js:106:13)</div><div class="line">0|cjdnsnod |     at Socket.emit (events.js:191:7)</div><div class="line">0|cjdnsnod |     at UDP.onMessage (dgram.js:532:8)</div></pre></td></tr></table></figure>
+<p>引擎分支不同，应该使用fb-clean</p>
+
       
     </div>
     
@@ -323,16 +353,10 @@
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2015/04/20/build_java_jar_based_on_android_code/">
-                    如何使用android源码来制作java的jar包
-                </a>
-            </div>
-        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2015/01/16/build_new_project_in_work_zone/">
-                    如何爲辦公區新建一個項目
+                <a href="/2017/09/05/cjdns-cryptoauth/">
+                    cjdns源码分析--CryptoAuth
                 </a>
             </div>
         
@@ -344,7 +368,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目錄</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#git-reflog"><span class="toc-number">1.</span> <span class="toc-text">git reflog</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git-branch-tmp-a873309"><span class="toc-number">2.</span> <span class="toc-text">git branch tmp a873309</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git-branch-av"><span class="toc-number">3.</span> <span class="toc-text">git branch -av</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git-checkout-tmp"><span class="toc-number">4.</span> <span class="toc-text">git checkout tmp</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git-remote-v"><span class="toc-number">5.</span> <span class="toc-text">git remote -v</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git-log"><span class="toc-number">6.</span> <span class="toc-text">git log</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git-checkout-anrom-4-0"><span class="toc-number">7.</span> <span class="toc-text">git checkout anrom-4.0</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git-cherry-pick-a873309d7579ccceff13a1881bbc23740d62fe83"><span class="toc-number">8.</span> <span class="toc-text">git cherry-pick  a873309d7579ccceff13a1881bbc23740d62fe83</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git-branch-D-tmp"><span class="toc-number">9.</span> <span class="toc-text">git branch -D tmp</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git-branch-av-1"><span class="toc-number">10.</span> <span class="toc-text">git branch -av</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git-status"><span class="toc-number">11.</span> <span class="toc-text">git status</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git-push-point-HEAD-refs-for-anrom-4-0"><span class="toc-number">12.</span> <span class="toc-text">git push point HEAD:refs/for/anrom-4.0</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#snode建立过程"><span class="toc-number">1.</span> <span class="toc-text">snode建立过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#安装postgresql数据库"><span class="toc-number">1.1.</span> <span class="toc-text">安装postgresql数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置pm2"><span class="toc-number">1.2.</span> <span class="toc-text">配置pm2</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#运行-pm2-log"><span class="toc-number">1.3.</span> <span class="toc-text">运行 pm2 log</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#错误1"><span class="toc-number">1.3.1.</span> <span class="toc-text">错误1</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#错误2"><span class="toc-number">1.3.2.</span> <span class="toc-text">错误2</span></a></li></ol></li></ol></li></ol>
         
     </div>
     <style>
@@ -371,7 +395,7 @@
     
       <div class="duoshuo" id="comments">
     <div id="comment-box" ></div>
-    <div class="ds-thread" id="ds-thread" data-thread-key="2015/02/04/save_discarding_commits/" data-title="找回差點丟失的commit" data-url="http://yoursite.com/2015/02/04/save_discarding_commits/"></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2017/09/07/snodes-backup/" data-title="多个snode互相备份" data-url="http://yoursite.com/2017/09/07/snodes-backup/"></div>
     <script>
         var duoshuoQuery = {short_name:"ichrisking"};
         var loadComment = function(){
@@ -394,15 +418,13 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2015/04/20/build_java_jar_based_on_android_code/" title="上一篇: 如何使用android源码来制作java的jar包">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主頁"><i class="fa fa-home"></i></a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2015/01/16/build_new_project_in_work_zone/" title="下一篇: 如何爲辦公區新建一個項目">
+            <a href="/2017/09/05/cjdns-cryptoauth/" title="下一篇: cjdns源码分析--CryptoAuth">
                 <i class="fa fa-angle-right"></i>
             </a>
         
