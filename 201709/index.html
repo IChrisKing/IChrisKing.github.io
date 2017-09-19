@@ -55,7 +55,7 @@ notification中增加action字段
 新需求：
 notification中增加action字段
 增加api：rm_pass_">
-<meta property="og:updated_time" content="2017-09-11T01:40:19.703Z">
+<meta property="og:updated_time" content="2017-09-18T10:22:58.024Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="201709">
 <meta name="twitter:description" content="0901 Fri.1. 通知peer的验证情况
@@ -434,16 +434,214 @@ notification中增加action字段
 <li>dell编译通过</li>
 </ul>
 <h2 id="0911-Mon"><a href="#0911-Mon" class="headerlink" title="0911 Mon."></a>0911 Mon.</h2><h3 id="1-snode-4"><a href="#1-snode-4" class="headerlink" title="1. snode"></a>1. snode</h3><ul>
+<li>未来计划：关于备份数据<ul>
 <li>postgresql基本语句</li>
 <li>数据库清除重建</li>
 <li>如何对比数据库</li>
+</ul>
+</li>
+<li>本周计划：关于网络连通性，稳定性<ul>
+<li>配peer，主点从点备份</li>
+<li>配connectTo，把两个snode连起来</li>
+<li>普通点连到从点，从点怎么把数据发到主点</li>
+<li>普通点如何ping到主点</li>
+<li>普通点，主点，从点互相ping通</li>
+<li>从点关闭cjdnsnode功能后，如何将主点设为snode</li>
+<li>从点关闭cjdnsnode功能后，普通点如何将主点设为snode</li>
+<li>从点关闭cjdnsnode功能后，普通点如何ping到主点和从点</li>
+</ul>
+</li>
 </ul>
 <h3 id="2-rom-2"><a href="#2-rom-2" class="headerlink" title="2. rom"></a>2. rom</h3><ul>
 <li>找电话状态相关代码</li>
 </ul>
 <h3 id="3-通知peer的验证情况-1"><a href="#3-通知peer的验证情况-1" class="headerlink" title="3.  通知peer的验证情况"></a>3.  通知peer的验证情况</h3><ul>
 <li>和app确认代码是否有效</li>
-<li>准备递交代码</li>
+<li>递交代码</li>
+</ul>
+<h2 id="0912-Tue"><a href="#0912-Tue" class="headerlink" title="0912 Tue."></a>0912 Tue.</h2><h3 id="1-snode-5"><a href="#1-snode-5" class="headerlink" title="1. snode"></a>1. snode</h3><ul>
+<li>网络结构：<ul>
+<li>主点connectTo配从点</li>
+<li>主点supernode配自己</li>
+<li>从点connectTo配主点</li>
+<li>从点supernode配主点和自己</li>
+<li>普通点connectTo配从点</li>
+<li>普通点supernode配从点</li>
+</ul>
+</li>
+<li><p>找到以下原因</p>
+<ul>
+<li><p>从点关闭cjdnsnode功能后，如何将主点设为snode</p>
+<ul>
+<li>在引擎代码中，当一个点在conf中将自己设为snode时，它不会再发起向peer询问snode的操作。从而造成，如果snode点上的cjdnsnode程序没在运行，则这个点一直找不到snode</li>
+</ul>
+</li>
+<li><p>从点关闭cjdnsnode功能后，普通点如何将主点设为snode</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-mac引擎"><a href="#2-mac引擎" class="headerlink" title="2. mac引擎"></a>2. mac引擎</h3><ul>
+<li>部分mac电脑上出现调用查询snode状态的接口造成引擎崩溃</li>
+<li>需要在mac上进行复杂的调试环境搭建</li>
+<li>app端表示，不是查询snode接口，可能是设置规则接口## 0912 Tue. ##<h3 id="1-snode-6"><a href="#1-snode-6" class="headerlink" title="1. snode"></a>1. snode</h3></li>
+<li>网络结构：<ul>
+<li>主点connectTo配从点</li>
+<li>主点supernode配自己</li>
+<li>从点connectTo配主点</li>
+<li>从点supernode配主点和自己</li>
+<li>普通点connectTo配从点</li>
+<li>普通点supernode配从点</li>
+</ul>
+</li>
+<li><p>找到以下原因</p>
+<ul>
+<li><p>从点关闭cjdnsnode功能后，如何将主点设为snode</p>
+<ul>
+<li>在引擎代码中，当一个点在conf中将自己设为snode时，它不会再发起向peer询问snode的操作。从而造成，如果snode点上的cjdnsnode程序没在运行，则这个点一直找不到snode</li>
+</ul>
+</li>
+<li><p>从点关闭cjdnsnode功能后，普通点如何将主点设为snode</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-mac引擎-1"><a href="#2-mac引擎-1" class="headerlink" title="2. mac引擎"></a>2. mac引擎</h3><ul>
+<li>部分mac电脑上出现调用查询snode状态的接口造成引擎崩溃</li>
+<li>需要在mac上进行复杂的调试环境搭建</li>
+<li>app端表示，不是查询snode接口，可能是设置规则接口</li>
+</ul>
+<h2 id="0913-Wed"><a href="#0913-Wed" class="headerlink" title="0913 Wed."></a>0913 Wed.</h2><h3 id="1-snode-7"><a href="#1-snode-7" class="headerlink" title="1. snode"></a>1. snode</h3><ul>
+<li>由于snode直接相连会导致互相ping不通，所以，修改网络结构</li>
+<li>网络结构：<ul>
+<li>主点connectTo不配</li>
+<li>主点supernode配自己</li>
+<li>从点connectTo不配</li>
+<li>从点supernode配自己</li>
+<li>普通点connectTo配主点和从点</li>
+<li>普通点supernode不配</li>
+</ul>
+</li>
+<li>按照上面的网络结构，整个网络已连通。</li>
+<li>后续测试操作<ol>
+<li>目前普通点将从点设为snode</li>
+<li>断掉从点snode进程</li>
+<li>一段时间后，普通点将主点设为了snode，从点snode为空</li>
+<li>此时从点ping主点,可以ping通</li>
+</ol>
+</li>
+</ul>
+<h3 id="2-mac引擎-2"><a href="#2-mac引擎-2" class="headerlink" title="2. mac引擎"></a>2. mac引擎</h3><ul>
+<li>app端表示，不是查询snode接口，可能是设置规则接口</li>
+<li>确定是什么接口，通过tools来拿core dump</li>
+<li>app端没有进一步反馈</li>
+</ul>
+<h3 id="3-rom"><a href="#3-rom" class="headerlink" title="3. rom"></a>3. rom</h3><ul>
+<li>在github上创建两个代码项目<ul>
+<li>android_packages_services_Telecomm<ul>
+<li>android_packages_apps_Dialer</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>寻找快速编译的方法(未完成)<ul>
+<li>编译模块指令</li>
+<li>不再编译ota</li>
+</ul>
+</li>
+<li>录音音频流获取的代码</li>
+</ul>
+<h2 id="0914-Tur"><a href="#0914-Tur" class="headerlink" title="0914 Tur."></a>0914 Tur.</h2><h3 id="1-snode-8"><a href="#1-snode-8" class="headerlink" title="1. snode"></a>1. snode</h3><ul>
+<li><p>修改引擎代码，达到：</p>
+<ol>
+<li>snode在cjdnsnode进程down之后，可以通过询问peer的方法，找到其他super node，并设为自己的activeSnode</li>
+<li>snode的cjdnsnode进程up之后，将自己设为activeSnode。</li>
+</ol>
+</li>
+<li><p>组建网络</p>
+<ul>
+<li>组建较为复杂的网络，比如，snode的conf中不配supernode；snode的邻居将snode配成supernode。</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-rom-3"><a href="#2-rom-3" class="headerlink" title="2. rom"></a>2. rom</h3><ul>
+<li>维护github上的代码项目</li>
+<li>维护github.sbu上的tickets</li>
+<li>寻找快速编译的方法<ul>
+<li>编译模块指令</li>
+<li>不再编译ota</li>
+</ul>
+</li>
+<li>录音音频流获取的代码<ul>
+<li>AudioRecorder</li>
+</ul>
+</li>
+</ul>
+<h2 id="0915-Fri"><a href="#0915-Fri" class="headerlink" title="0915 Fri."></a>0915 Fri.</h2><h3 id="1-snode-9"><a href="#1-snode-9" class="headerlink" title="1. snode"></a>1. snode</h3><ul>
+<li>修改引擎代码，达到：<ol>
+<li>snode在cjdnsnode进程down之后，可以通过询问peer的方法，找到其他super node，并设为自己的activeSnode</li>
+<li>snode的cjdnsnode进程up之后，将自己设为activeSnode。</li>
+</ol>
+</li>
+<li>写文档记录修改原因和snode获取判断的逻辑</li>
+<li>使用docker建立网络</li>
+</ul>
+<h3 id="2-rom-4"><a href="#2-rom-4" class="headerlink" title="2. rom"></a>2. rom</h3><ul>
+<li>根据电话state自动录音</li>
+<li>录音音频流获取的代码（后续）<ul>
+<li>AudioRecorder</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-mac引擎-3"><a href="#2-mac引擎-3" class="headerlink" title="2. mac引擎"></a>2. mac引擎</h3><ul>
+<li>app端表示，是设置规则接口</li>
+<li>建议app端先测试，确定是什么接口<ul>
+<li>通过tools写规则</li>
+<li>直接将规则写入conf中</li>
+</ul>
+</li>
+<li>后续引擎测试方法<ul>
+<li>直接将规则写入Configerator.c</li>
+</ul>
+</li>
+</ul>
+<h2 id="0918-Mon"><a href="#0918-Mon" class="headerlink" title="0918 Mon."></a>0918 Mon.</h2><h3 id="1-snode-10"><a href="#1-snode-10" class="headerlink" title="1. snode"></a>1. snode</h3><ul>
+<li>修改引擎代码，达到：<ol>
+<li>snode在cjdnsnode进程down之后，可以通过询问peer的方法，找到其他super node，并设为自己的activeSnode</li>
+<li>snode的cjdnsnode进程up之后，将自己设为activeSnode。</li>
+</ol>
+</li>
+<li>写文档记录修改原因和snode获取判断的逻辑</li>
+<li>使用docker建立网络</li>
+<li>理清snode和cadidatenode的更新删除逻辑</li>
+</ul>
+<h3 id="2-rom-5"><a href="#2-rom-5" class="headerlink" title="2. rom"></a>2. rom</h3><ul>
+<li>根据电话state自动录音</li>
+<li>本地保存</li>
+<li>找到多次start callrecorder和 stop callrecorder失败的原因</li>
+</ul>
+<h3 id="2-mac引擎-4"><a href="#2-mac引擎-4" class="headerlink" title="2. mac引擎"></a>2. mac引擎</h3><ul>
+<li>经过测试，问题应该出在session建立获取的一系列过程中</li>
+<li><p>后续引擎测试方法</p>
+<ul>
+<li>gdb调试</li>
+<li>core分析</li>
+<li>代码加log</li>
+<li>hashmap test测试</li>
+</ul>
+</li>
+<li><p>后续测试发现，问题出在删除session的过程中</p>
+<ul>
+<li><p>崩溃时发现，hashmap的count为1，但buckets为空，具体信息如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div></pre></td><td class="code"><pre><div class="line">xj:/Applications/Atomic.app/Contents/MacOS$ sudo lldb -p 30381 /Users/xj/test1/cjdns_ja/cjdroute</div><div class="line">Warning: program arguments are ignored when attaching.</div><div class="line">(lldb) process attach --pid 30381</div><div class="line">Process 30381 stopped</div><div class="line">* thread #1: tid = 0x1b8aa, 0x00007fff9c384eca libsystem_kernel.dylib`kevent + 10, queue = &apos;com.apple.main-thread&apos;, stop reason = signal SIGSTOP</div><div class="line">    frame #0: 0x00007fff9c384eca libsystem_kernel.dylib`kevent + 10</div><div class="line">libsystem_kernel.dylib`kevent:</div><div class="line">-&gt;  0x7fff9c384eca &lt;+10&gt;: jae    0x7fff9c384ed4            ; &lt;+20&gt;</div><div class="line">    0x7fff9c384ecc &lt;+12&gt;: movq   %rax, %rdi</div><div class="line">    0x7fff9c384ecf &lt;+15&gt;: jmp    0x7fff9c37e7cd            ; cerror_nocancel</div><div class="line">    0x7fff9c384ed4 &lt;+20&gt;: retq   </div><div class="line"></div><div class="line">Executable module set to &quot;/Users/xj/test1/cjdns_ja/cjdroute&quot;.</div><div class="line">Architecture set to: x86_64h-apple-macosx.</div><div class="line">(lldb) c</div><div class="line">Process 30381 resuming</div><div class="line">(lldb) </div><div class="line">error: Process is running.  Use &apos;process interrupt&apos; to pause execution.</div><div class="line">(lldb) </div><div class="line">error: Process is running.  Use &apos;process interrupt&apos; to pause execution.</div><div class="line">cjdroute was compiled with optimization - stepping may behave oddly; variables may not be available.</div><div class="line">Process 30381 stopped</div><div class="line">* thread #1: tid = 0x1b8aa, 0x0000000101846443 cjdroute`check_timeout(delElem=&lt;unavailable&gt;) + 67 at SessionState.c:116, queue = &apos;com.apple.main-thread&apos;, stop reason = EXC_BAD_ACCESS (code=1, address=0x8)</div><div class="line">    frame #0: 0x0000000101846443 cjdroute`check_timeout(delElem=&lt;unavailable&gt;) + 67 at SessionState.c:116 [opt]</div><div class="line">   113  </div><div class="line">   114      struct SessionState* sessionState = Hashmap_get(map,hkey);</div><div class="line">   115      long lastPkt = (long)sessionState-&gt;timeOfLastPacket;</div><div class="line">-&gt; 116      if ((long)now - lastPkt &gt; TIMEOUT_SECONDS)</div><div class="line">   117      &#123;</div><div class="line">   118          delSessionState(sessionState,map,hkey);</div><div class="line">   119      &#125;</div><div class="line">(lldb) p sessionState</div><div class="line">error: Couldn&apos;t materialize: couldn&apos;t get the value of variable sessionState: no location, value may have been optimized out</div><div class="line">error: errored out in DoExecute, couldn&apos;t PrepareToExecuteJITExpression</div><div class="line">(lldb) p hkey</div><div class="line">(HashmapKey *) $0 = 0x00007fd908c1cea8</div><div class="line">(lldb) p map</div><div class="line">(Hashmap_hash *) $1 = 0x00007fd90a011a00</div><div class="line">(lldb) p *map</div><div class="line">(Hashmap_hash) $2 = &#123;</div><div class="line">  count = 1</div><div class="line">  hash_value = 0x0000000101849cd0 (cjdroute`PacketParserHeader_hash at SessionState.h:63)</div><div class="line">  key_compare = 0x0000000101849e40 (cjdroute`PacketParserHeader_compare at SessionState.h:93)</div><div class="line">  free_value = 0x0000000101843270 (cjdroute`no_op at Hashmap.c:172)</div><div class="line">  free_key = 0x0000000101843270 (cjdroute`no_op at Hashmap.c:172)</div><div class="line">  buckets = &#123;&#125;</div><div class="line">&#125;</div><div class="line">(lldb) p *map-&gt;buckets</div><div class="line">(Hashmap_bucket) $3 = &#123;</div><div class="line">  entries = 0x0000000000000000</div><div class="line">  used = 0</div><div class="line">  total = 0</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>因为某些未知的原因，时间轮的删除操作涉及到了一些尚未正确添加的项目。这个现象比较像是添加未完成就触发了删除操作。或者在添加时就没有正确添加内容。</p>
+</li>
+</ul>
+</li>
+<li><p>暂时的处理方法：在删除时增加session是否为空的判断。</p>
+</li>
+<li>通过添加policy的方法，测试到policy时可以起作用的。所以，崩溃原因倾向于map的添加和删除操作重叠了。</li>
 </ul>
 
       
