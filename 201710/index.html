@@ -15,13 +15,17 @@
 
 
 
+<meta name="description" content="1009 Mon.1. policy ICMP 通知应用端验证ICMP效果  2. 接入点authorizedPasswords 同用户名多密码支持 需求描述 authorizedPasswords中，使用多组用户名密码对，其中用户名是相同的，密码是不同的。需要支持一个轮询，遍历所有密码，直到找到验证通过的密码或尝试所有用户名密码对   分析 在代码中确认一下使用用户名和密码验证的机制中，用户名h">
 <meta property="og:type" content="website">
-<meta property="og:title" content="IChrisKing">
-<meta property="og:url" content="http://yoursite.com/tags/SELinux/index.html">
+<meta property="og:title" content="201710">
+<meta property="og:url" content="http://yoursite.com/201710/index.html">
 <meta property="og:site_name" content="IChrisKing">
+<meta property="og:description" content="1009 Mon.1. policy ICMP 通知应用端验证ICMP效果  2. 接入点authorizedPasswords 同用户名多密码支持 需求描述 authorizedPasswords中，使用多组用户名密码对，其中用户名是相同的，密码是不同的。需要支持一个轮询，遍历所有密码，直到找到验证通过的密码或尝试所有用户名密码对   分析 在代码中确认一下使用用户名和密码验证的机制中，用户名h">
 <meta property="og:locale" content="zh-Hant-TW">
+<meta property="og:updated_time" content="2017-10-11T05:00:09.179Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="IChrisKing">
+<meta name="twitter:title" content="201710">
+<meta name="twitter:description" content="1009 Mon.1. policy ICMP 通知应用端验证ICMP效果  2. 接入点authorizedPasswords 同用户名多密码支持 需求描述 authorizedPasswords中，使用多组用户名密码对，其中用户名是相同的，密码是不同的。需要支持一个轮询，遍历所有密码，直到找到验证通过的密码或尝试所有用户名密码对   分析 在代码中确认一下使用用户名和密码验证的机制中，用户名h">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -53,7 +57,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>Tag: SELinux | IChrisKing</title>
+<title>201710 | IChrisKing</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -65,7 +69,7 @@
         isHome: false,
         isPost: false,
         isArchive: false,
-        isTag: true,
+        isTag: false,
         isCategory: false,
         fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
         scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
@@ -255,60 +259,206 @@
     </div>
     <link class="menu-list" tags="標籤" friends="友情鏈接" about="關於我"/>
 </nav>
-      <div class="body-wrap">
+      <div class="body-wrap"><article id="page-undefined" class="article article-type-page" itemscope itemprop="blogPost">
   
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2015" class="archive-year">2015</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-          <div class="article-meta">
-              <a href="/2015/12/01/SEAndroid/" class="archive-article-date">
-      <time datetime="2015-12-01T08:39:15.000Z" itemprop="datePublished">12-01</time>
+    <div class="article-meta">
+      <a href="/201710/index.html" class="article-date">
+      <time datetime="2017-10-09T01:47:16.000Z" itemprop="datePublished">2017-10-09</time>
 </a>
 
 
-        </div>
-         
+    </div>
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/12/01/SEAndroid/">SEAndroid in Android5.x</a>
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      201710
     </h1>
   
 
-        <div class="article-info info-on-archive">
-          
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/SEAndroid/">SEAndroid</a>
-    </div>
+      </header>
+      
+      <div class="article-info article-info-post">
+        
 
-
-          
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SEAndroid/">SEAndroid</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SELinux/">SELinux</a></li></ul>
-    </div>
-
-        </div>
+        
         <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              <style>
+    .article-meta { display: none; }
+    #container .article .article-title { padding-right: 0; }
+    .article-header {
+        padding: 0;
+        padding-top: 26px;
+        border-left: none;
+        text-align: center;
+    }
+    .article-header:hover { border-left: none; }
+    .article-title { font-size: 1.6em }
+    .article-entry hr { margin: 0;}
+    .article-meta,
+    #container .article-info-post.article-info { display: none;}
+    #container .article .article-title { padding: 0; }
+</style>
 
+
+          
+        <h2 id="1009-Mon"><a href="#1009-Mon" class="headerlink" title="1009 Mon."></a>1009 Mon.</h2><h3 id="1-policy-ICMP"><a href="#1-policy-ICMP" class="headerlink" title="1. policy ICMP"></a>1. policy ICMP</h3><ul>
+<li>通知应用端验证ICMP效果</li>
+</ul>
+<h3 id="2-接入点authorizedPasswords-同用户名多密码支持"><a href="#2-接入点authorizedPasswords-同用户名多密码支持" class="headerlink" title="2. 接入点authorizedPasswords 同用户名多密码支持"></a>2. 接入点authorizedPasswords 同用户名多密码支持</h3><ul>
+<li>需求描述<ul>
+<li>authorizedPasswords中，使用多组用户名密码对，其中用户名是相同的，密码是不同的。需要支持一个轮询，遍历所有密码，直到找到验证通过的密码或尝试所有用户名密码对</li>
+</ul>
+</li>
+<li>分析<ul>
+<li>在代码中确认一下使用用户名和密码验证的机制中，用户名hash验证和密码hash验证的优先级</li>
+<li>在代码中确认验证失败后，能否得知自己失败了，并触发验证下一个的动作</li>
+<li>埋一些标识性log来查看验证到哪一条用户名密码对了</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-接入点对于peers离线的notification"><a href="#3-接入点对于peers离线的notification" class="headerlink" title="3. 接入点对于peers离线的notification"></a>3. 接入点对于peers离线的notification</h3><ul>
+<li>需求描述<ul>
+<li>接入点需要感知到普通点的UNRESPONSIVE事件，并且发送notification通知应用层</li>
+</ul>
+</li>
+<li>分析<ul>
+<li>在代码中确认，当前notification是不是仅支持普通点的peers状态上报</li>
+<li>看一下普通点和接入点peers状态是不是用outgoing在区别</li>
+<li>确认一下上报的数据内容包括什么</li>
+</ul>
+</li>
+</ul>
+<h3 id="4-rom"><a href="#4-rom" class="headerlink" title="4. rom"></a>4. rom</h3><ul>
+<li>解决json不支持中文的问题<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">import java.io.OutputStreamWriter;</div><div class="line">import java.io.BufferedWriter;</div><div class="line"></div><div class="line">                OutputStreamWriter write = new OutputStreamWriter(new FileOutputStream(file),&quot;UTF-8&quot;);</div><div class="line">                BufferedWriter writer=new BufferedWriter(write);</div><div class="line">                //PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(filePathAndName)));</div><div class="line">                //PrintWriter writer = new PrintWriter(new FileWriter(filePathAndName));</div><div class="line">                writer.write(smsJson.toString());</div><div class="line">                writer.close();</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="1010-Tue"><a href="#1010-Tue" class="headerlink" title="1010 Tue."></a>1010 Tue.</h2><h3 id="1-policy-ICMP-1"><a href="#1-policy-ICMP-1" class="headerlink" title="1. policy ICMP"></a>1. policy ICMP</h3><ul>
+<li>通知应用端验证ICMP效果</li>
+</ul>
+<h3 id="2-接入点authorizedPasswords-同用户名多密码支持-1"><a href="#2-接入点authorizedPasswords-同用户名多密码支持-1" class="headerlink" title="2. 接入点authorizedPasswords 同用户名多密码支持"></a>2. 接入点authorizedPasswords 同用户名多密码支持</h3><ul>
+<li>需求描述<ul>
+<li>authorizedPasswords中，使用多组用户名密码对，其中用户名是相同的，密码是不同的。需要支持一个轮询，遍历所有密码，直到找到验证通过的密码或尝试所有用户名密码对</li>
+</ul>
+</li>
+<li>分析<ul>
+<li>在代码中确认一下使用用户名和密码验证的机制中，用户名hash验证和密码hash验证的优先级</li>
+<li>在代码中确认验证失败后，能否得知自己失败了，并触发验证下一个的动作</li>
+<li>埋一些标识性log来查看验证到哪一条用户名密码对了</li>
+</ul>
+</li>
+<li>实现方法<ul>
+<li>只使用密码验证，用户名作为一个标志性的数据，不再用来验证</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-接入点对于peers离线的notification-1"><a href="#3-接入点对于peers离线的notification-1" class="headerlink" title="3. 接入点对于peers离线的notification"></a>3. 接入点对于peers离线的notification</h3><ul>
+<li>需求描述<ul>
+<li>接入点需要感知到普通点的UNRESPONSIVE事件，并且发送notification通知应用层</li>
+</ul>
+</li>
+<li>分析<ul>
+<li>在代码中确认，当前notification是不是仅支持普通点的peers状态上报</li>
+<li>看一下普通点和接入点peers状态是不是用outgoing在区别</li>
+<li>确认一下上报的数据内容包括什么</li>
+</ul>
+</li>
+<li>实现方法<ul>
+<li>重构notification，按照不同的通知类型来对应不同的函数，将通知类型标签内置到函数当中</li>
+<li>修改peers通知，增加公钥字段，来标识peer。</li>
+</ul>
+</li>
+</ul>
+<h3 id="4-内网代理功能验证"><a href="#4-内网代理功能验证" class="headerlink" title="4. 内网代理功能验证"></a>4. 内网代理功能验证</h3><ul>
+<li>在使用docker的情况下，验证内网代理功能</li>
+</ul>
+<h2 id="1011-Wed"><a href="#1011-Wed" class="headerlink" title="1011 Wed."></a>1011 Wed.</h2><h3 id="1-policy-ICMP-2"><a href="#1-policy-ICMP-2" class="headerlink" title="1. policy ICMP"></a>1. policy ICMP</h3><ul>
+<li>通知应用端验证ICMP效果</li>
+</ul>
+<h3 id="2-接入点authorizedPasswords-同用户名多密码支持-2"><a href="#2-接入点authorizedPasswords-同用户名多密码支持-2" class="headerlink" title="2. 接入点authorizedPasswords 同用户名多密码支持"></a>2. 接入点authorizedPasswords 同用户名多密码支持</h3><ul>
+<li>需求描述<ul>
+<li>authorizedPasswords中，使用多组用户名密码对，其中用户名是相同的，密码是不同的。需要支持一个轮询，遍历所有密码，直到找到验证通过的密码或尝试所有用户名密码对</li>
+</ul>
+</li>
+<li>实现方法<ul>
+<li>只使用密码验证，用户名作为一个标志性的数据，不再用来验证</li>
+</ul>
+</li>
+<li>通知应用端验证效果</li>
+</ul>
+<h3 id="3-接入点对于peers离线的notification-2"><a href="#3-接入点对于peers离线的notification-2" class="headerlink" title="3. 接入点对于peers离线的notification"></a>3. 接入点对于peers离线的notification</h3><ul>
+<li>需求描述<ul>
+<li>接入点需要感知到普通点的UNRESPONSIVE事件，并且发送notification通知应用层</li>
+</ul>
+</li>
+<li>实现方法<ul>
+<li>重构notification，按照不同的通知类型来对应不同的函数，将通知类型标签内置到函数当中</li>
+<li>修改peers通知，增加公钥字段，来标识peer。</li>
+</ul>
+</li>
+<li>通知应用端验证效果</li>
+</ul>
+<h3 id="4-内网代理功能验证-1"><a href="#4-内网代理功能验证-1" class="headerlink" title="4. 内网代理功能验证"></a>4. 内网代理功能验证</h3><ul>
+<li>在使用docker的情况下，验证内网代理功能</li>
+<li>等待组网完成</li>
+<li>看一下设置系统route表的代码</li>
+</ul>
+<h3 id="5-修改blog中关于内网代理的文章中的错误"><a href="#5-修改blog中关于内网代理的文章中的错误" class="headerlink" title="5. 修改blog中关于内网代理的文章中的错误"></a>5. 修改blog中关于内网代理的文章中的错误</h3>
+      
+    </div>
+    
+  </div>
+  
     
 
+
+  
+</article>
+
+
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <div id="comment-box" ></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="201710/index.html" data-title="201710" data-url="http://yoursite.com/201710/index.html"></div>
+    <script>
+        var duoshuoQuery = {short_name:"ichrisking"};
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+            s.async = true; s.charset = 'UTF-8';
+            (d.head || d.body).appendChild(s);
+        }
+
+        
+    </script>
+    
+    <script> loadComment(); </script>
+
+</div>
+    
+
+
+
+
+
+    <script>
+        
+    </script>
 </div>
       <footer id="footer">
     <div class="outer">
