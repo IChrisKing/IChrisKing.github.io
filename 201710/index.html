@@ -22,7 +22,7 @@
 <meta property="og:site_name" content="IChrisKing">
 <meta property="og:description" content="1009 Mon.1. policy ICMP 通知应用端验证ICMP效果  2. 接入点authorizedPasswords 同用户名多密码支持 需求描述 authorizedPasswords中，使用多组用户名密码对，其中用户名是相同的，密码是不同的。需要支持一个轮询，遍历所有密码，直到找到验证通过的密码或尝试所有用户名密码对   分析 在代码中确认一下使用用户名和密码验证的机制中，用户名h">
 <meta property="og:locale" content="zh-Hant-TW">
-<meta property="og:updated_time" content="2017-10-11T07:27:47.221Z">
+<meta property="og:updated_time" content="2017-10-12T02:02:22.841Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="201710">
 <meta name="twitter:description" content="1009 Mon.1. policy ICMP 通知应用端验证ICMP效果  2. 接入点authorizedPasswords 同用户名多密码支持 需求描述 authorizedPasswords中，使用多组用户名密码对，其中用户名是相同的，密码是不同的。需要支持一个轮询，遍历所有密码，直到找到验证通过的密码或尝试所有用户名密码对   分析 在代码中确认一下使用用户名和密码验证的机制中，用户名h">
@@ -424,9 +424,37 @@
 <h3 id="5-rom"><a href="#5-rom" class="headerlink" title="5. rom"></a>5. rom</h3><ul>
 <li>短信的手机号码部分，出现+86和空格这样的东西，怎么处理掉</li>
 </ul>
-<h3 id="5-修改blog中关于内网代理的文章中的错误"><a href="#5-修改blog中关于内网代理的文章中的错误" class="headerlink" title="5. 修改blog中关于内网代理的文章中的错误"></a>5. 修改blog中关于内网代理的文章中的错误</h3><ul>
+<h3 id="6-修改blog中关于内网代理的文章中的错误"><a href="#6-修改blog中关于内网代理的文章中的错误" class="headerlink" title="6. 修改blog中关于内网代理的文章中的错误"></a>6. 修改blog中关于内网代理的文章中的错误</h3><ul>
 <li>将原来写在普通点的内网代理配置放到离岸点。这也是目前项目中真正的实现方法</li>
 <li>放到离岸点的原因是：普通点上报不可信，防止有恶意点。另外离岸点统一下发便于管理。</li>
+</ul>
+<h3 id="7-树莓派摄像头"><a href="#7-树莓派摄像头" class="headerlink" title="7. 树莓派摄像头"></a>7. 树莓派摄像头</h3><ul>
+<li>使用树莓派和motion，建立动态捕捉，自动录像的功能</li>
+<li>开机自启动</li>
+<li>通过sbu和nginx，转发到V6地址上作为实时监控</li>
+</ul>
+<h2 id="1012-Tur"><a href="#1012-Tur" class="headerlink" title="1012 Tur."></a>1012 Tur.</h2><h3 id="1-policy-ICMP-3"><a href="#1-policy-ICMP-3" class="headerlink" title="1. policy ICMP"></a>1. policy ICMP</h3><ul>
+<li>通知应用端验证ICMP效果</li>
+</ul>
+<h3 id="2-接入点authorizedPasswords-同用户名多密码支持-3"><a href="#2-接入点authorizedPasswords-同用户名多密码支持-3" class="headerlink" title="2. 接入点authorizedPasswords 同用户名多密码支持"></a>2. 接入点authorizedPasswords 同用户名多密码支持</h3><ul>
+<li>通知应用端验证效果</li>
+<li>一些提示<ul>
+<li>不同用户相同密码是可以的</li>
+<li>相同用户不同密码也是可以的</li>
+<li>ipv6重复也是可以的</li>
+<li>ipv6可以用来作限制条件</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-接入点对于peers离线的notification-3"><a href="#3-接入点对于peers离线的notification-3" class="headerlink" title="3. 接入点对于peers离线的notification"></a>3. 接入点对于peers离线的notification</h3><ul>
+<li>通知应用端验证效果</li>
+</ul>
+<h3 id="4-rom-1"><a href="#4-rom-1" class="headerlink" title="4. rom"></a>4. rom</h3><ul>
+<li>短信的手机号码部分，出现+86和空格这样的东西，怎么处理掉</li>
+</ul>
+<h3 id="5-树莓派"><a href="#5-树莓派" class="headerlink" title="5. 树莓派"></a>5. 树莓派</h3><ul>
+<li>打开部分拍照功能</li>
+<li>录制结束，把文件递交到公司pc</li>
 </ul>
 
       
