@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Chris King" />
+
+
+
+<meta name="description" content="1101 WED.1. snodeList snodeList的流程与问题(有修改)  首先，当前使用的Snode要稳定下来。 将当前使用的snode加入到snodeList当中。 询问所有peer，让peer返回snodeList 将收到的snodeList中的数据放到自己的snodeList当中。具体加入方法是： 当snodeList不为空时，取出一个snode。 这个snode是否时当前正在">
+<meta property="og:type" content="website">
+<meta property="og:title" content="201711">
+<meta property="og:url" content="http://yoursite.com/201711/index.html">
+<meta property="og:site_name" content="IChrisKing">
+<meta property="og:description" content="1101 WED.1. snodeList snodeList的流程与问题(有修改)  首先，当前使用的Snode要稳定下来。 将当前使用的snode加入到snodeList当中。 询问所有peer，让peer返回snodeList 将收到的snodeList中的数据放到自己的snodeList当中。具体加入方法是： 当snodeList不为空时，取出一个snode。 这个snode是否时当前正在">
+<meta property="og:locale" content="zh-Hant-TW">
+<meta property="og:updated_time" content="2017-11-03T11:04:43.322Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="201711">
+<meta name="twitter:description" content="1101 WED.1. snodeList snodeList的流程与问题(有修改)  首先，当前使用的Snode要稳定下来。 将当前使用的snode加入到snodeList当中。 询问所有peer，让peer返回snodeList 将收到的snodeList中的数据放到自己的snodeList当中。具体加入方法是： 当snodeList不为空时，取出一个snode。 这个snode是否时当前正在">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="IChrisKing" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>201711 | IChrisKing</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: false,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: undefined
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Chris King</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">#IMNOTCHRISLEE</p>
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜單</li>
+                        <li>標籤</li>
+                        
+                        <li>友情鏈接</li>
+                        
+                        
+                        <li>關於我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主頁</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">標籤雲</a></li>
+                        
+                            <li><a href="/about/">關於我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="https://chrisking310@gmail.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="https://github.com/IChrisKing" title="GitHub"></a>
+                            
+                                <a class="fa 新浪博客" href="http://blog.sina.com.cn/u/1733434252" title="新浪博客"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-everyday/">Android_everyday</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android开发工程师/">Android开发工程师</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Anrom/">Anrom</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C-C/">C/C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SEAndroid/">SEAndroid</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SELinux/">SELinux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/anrom/">anrom</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cjdns/">cjdns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cjdns源码分析/">cjdns源码分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iptables/">iptables</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/life/">life</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/music/">music</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/network/">network</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/raspberry配置/">raspberry配置</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shadowsocks-vps/">shadowsocks/vps</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tool/">tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/填坑/">填坑</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/排序算法/">排序算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/查找算法/">查找算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/树莓派raspberry/">树莓派raspberry</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网络/">网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://anromos.github.io/">Anrom OS</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://github.com/AnromOS">Team GitHub</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">Android ROM 开发</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Chris King</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Chris King</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">#IMNOTCHRISLEE</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主頁</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">標籤雲</a></li>
+                
+                    <li><a href="/about/">關於我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="https://chrisking310@gmail.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/IChrisKing" title="GitHub"></a>
+                            
+                                <a class="fa 新浪博客" target="_blank" href="http://blog.sina.com.cn/u/1733434252" title="新浪博客"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="標籤" friends="友情鏈接" about="關於我"/>
+</nav>
+      <div class="body-wrap"><article id="page-undefined" class="article article-type-page" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/201711/index.html" class="article-date">
+      <time datetime="2017-11-03T01:23:02.000Z" itemprop="datePublished">2017-11-03</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      201711
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              <style>
+    .article-meta { display: none; }
+    #container .article .article-title { padding-right: 0; }
+    .article-header {
+        padding: 0;
+        padding-top: 26px;
+        border-left: none;
+        text-align: center;
+    }
+    .article-header:hover { border-left: none; }
+    .article-title { font-size: 1.6em }
+    .article-entry hr { margin: 0;}
+    .article-meta,
+    #container .article-info-post.article-info { display: none;}
+    #container .article .article-title { padding: 0; }
+</style>
+
+
+          
+        <h2 id="1101-WED"><a href="#1101-WED" class="headerlink" title="1101 WED."></a>1101 WED.</h2><h3 id="1-snodeList"><a href="#1-snodeList" class="headerlink" title="1. snodeList"></a>1. snodeList</h3><ul>
+<li><p>snodeList的流程与问题(有修改)</p>
+<ul>
+<li>首先，当前使用的Snode要稳定下来。</li>
+<li>将当前使用的snode加入到snodeList当中。</li>
+<li>询问所有peer，让peer返回snodeList</li>
+<li>将收到的snodeList中的数据放到自己的snodeList当中。具体加入方法是：<ol>
+<li>当snodeList不为空时，取出一个snode。</li>
+<li>这个snode是否时当前正在使用的snode，如果是，不做任何操作，取出下一个snode。如果不是，</li>
+<li>ping这个snode，收到回复后</li>
+<li>在自己的snodeList中查询是否有该snode记录。</li>
+<li>如果没有，将其加入snodeList。</li>
+<li>如果有，更新address和lastPingTime。</li>
+</ol>
+</li>
+<li>每分钟询问peer一次，并依据回应的snodeList维护自己的snodeList</li>
+<li>为每个snodeList中的snode增加TimerWheel，这样就不用自己控制超时删除操作了。那些长期没有被其他点报过来的snode，大概率上已经失效了</li>
+<li>当收到一个snodeList请求时，返回自己的snodeList。</li>
+</ul>
+</li>
+<li><p>需要做的修改</p>
+<ul>
+<li>将稳定了的snode加入到snodeList当中</li>
+<li>每分钟询问peer，让peer返回各自的snodeList</li>
+<li>将这些snode加入自己的snodeList，针对上面提到的不同情况做不同处理。</li>
+<li>当收到snodeList询问请求时，发送自己的snodeList。</li>
+<li>获取当前snodeList的工具接口</li>
+<li>activesnode不可达时，优先从snodeList中找其他snode</li>
+<li>寻址时先从snodeList中找，找不到再去问snode</li>
+</ul>
+</li>
+</ul>
+<h2 id="1102-TUR"><a href="#1102-TUR" class="headerlink" title="1102 TUR."></a>1102 TUR.</h2><h3 id="1-snodeMap"><a href="#1-snodeMap" class="headerlink" title="1. snodeMap"></a>1. snodeMap</h3><ul>
+<li><p>snodeMap的流程与问题(有修改)</p>
+<ul>
+<li>首先，当前使用的Snode要稳定下来。</li>
+<li>将activesnode加入到snodeMap当中。</li>
+<li>询问所有peer，让peer返回一个包含snodeMap中所有snode的address的snodeList</li>
+<li>将收到的snodeList中的数据放到自己的snodeMap当中。具体加入方法是：<ol>
+<li>当snodeList不为空时，取出一个snode。</li>
+<li>这个snode是否时当前正在使用的snode，如果是，不做任何操作，取出下一个snode。如果不是，</li>
+<li>ping这个snode，收到回复后</li>
+<li>在自己的snodeList中查询是否有该snode记录。</li>
+<li>如果没有，将其加入snodeMap。</li>
+<li>如果有，更新address和lastPingTime。</li>
+</ol>
+</li>
+<li>单位时间询问peer一次，并依据回应的snodeList维护自己的snodeMap</li>
+<li>为每个snodeMap中的snode增加TimerWheel，这样就不用自己控制超时删除操作了。那些长期没有被其他点报过来的snode，大概率上已经失效了</li>
+<li>当收到一个snodeList请求时，将自己snodeMap中的所有snode的address组成snodeList，返回给对方。</li>
+</ul>
+</li>
+<li><p>需要做的修改</p>
+<ul>
+<li>将activesnode reachable后加入到snodeMap当中</li>
+<li>activesnode unreachable时，从snodeMap中删除</li>
+<li>单位时间询问peer，让peer返回各自的snodeList</li>
+<li>将这些snode加入自己的snodeMap，针对上面提到的不同情况做不同处理。</li>
+<li>当收到snodeList询问请求时，发送自己的snodeList。</li>
+<li>获取当前snodeList的工具接口</li>
+<li>activesnode不可达时，优先从snodeMap中找其他snode</li>
+<li>寻址时先从snodeMap中找，找不到再去问snode</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-snodeMap"><a href="#2-snodeMap" class="headerlink" title="2. snodeMap"></a>2. snodeMap</h3><ul>
+<li>snodeList change name to snodeMap</li>
+<li>修改流程设计</li>
+<li>完成以下部分，并验证效果<ul>
+<li>activesnode reachable时加入snodeMap</li>
+<li>activesnode unreachale时从snodeMap中删除</li>
+</ul>
+</li>
+</ul>
+<h2 id="1103-FRI"><a href="#1103-FRI" class="headerlink" title="1103 FRI."></a>1103 FRI.</h2><h3 id="1-snodeMap-1"><a href="#1-snodeMap-1" class="headerlink" title="1. snodeMap"></a>1. snodeMap</h3><ul>
+<li>完成以下部分，并验证效果<ul>
+<li>activesnode reachable时加入snodeMap</li>
+<li>activesnode unreachale时从snodeMap中删除</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-rom"><a href="#2-rom" class="headerlink" title="2. rom"></a>2. rom</h3><ul>
+<li>短信和电话的广播通知</li>
+</ul>
+<h3 id="snodeMap完成状态"><a href="#snodeMap完成状态" class="headerlink" title="snodeMap完成状态"></a>snodeMap完成状态</h3><ul>
+<li>已完成：<ul>
+<li>创建SupernodeStore，作为SupernodeHunter的成员</li>
+<li>构建SupernodeStore的基础成员</li>
+<li>自动增加和删除activesnode到snodeMap中。</li>
+</ul>
+</li>
+<li>未完成<ul>
+<li>单位时间向peer发送snodeList询问</li>
+<li>处理peer发来的snodeList询问，从snodeMap中取出snode，组成snodeList，并返回</li>
+<li>处理返回的snodeList，加入到snodeMap</li>
+<li>验证时间轮效果</li>
+<li>snode失效时优先查找snodeMap</li>
+<li>寻址优先查找snodeMap</li>
+<li>snodeMap工具</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+    
+  </div>
+  
+    
+
+
+  
+</article>
+
+
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <div id="comment-box" ></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="201711/index.html" data-title="201711" data-url="http://yoursite.com/201711/index.html"></div>
+    <script>
+        var duoshuoQuery = {short_name:"ichrisking"};
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+            s.async = true; s.charset = 'UTF-8';
+            (d.head || d.body).appendChild(s);
+        }
+
+        
+    </script>
+    
+    <script> loadComment(); </script>
+
+</div>
+    
+
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2016-2017 Chris King
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、簡單且強大的網誌框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="簡而不減 Hexo 雙欄網誌主題  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到訪數"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本頁閱讀量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回頂部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看評論"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="轉到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+             categories: ".article-category a, a.tag-list-link", 
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
