@@ -22,7 +22,7 @@
 <meta property="og:site_name" content="IChrisKing">
 <meta property="og:description" content="1101 WED.1. snodeList snodeList的流程与问题(有修改)  首先，当前使用的Snode要稳定下来。 将当前使用的snode加入到snodeList当中。 询问所有peer，让peer返回snodeList 将收到的snodeList中的数据放到自己的snodeList当中。具体加入方法是： 当snodeList不为空时，取出一个snode。 这个snode是否时当前正在">
 <meta property="og:locale" content="zh-Hant-TW">
-<meta property="og:updated_time" content="2017-11-03T11:04:43.322Z">
+<meta property="og:updated_time" content="2017-11-14T07:33:25.338Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="201711">
 <meta name="twitter:description" content="1101 WED.1. snodeList snodeList的流程与问题(有修改)  首先，当前使用的Snode要稳定下来。 将当前使用的snode加入到snodeList当中。 询问所有peer，让peer返回snodeList 将收到的snodeList中的数据放到自己的snodeList当中。具体加入方法是： 当snodeList不为空时，取出一个snode。 这个snode是否时当前正在">
@@ -398,7 +398,7 @@
 <h3 id="2-rom"><a href="#2-rom" class="headerlink" title="2. rom"></a>2. rom</h3><ul>
 <li>短信和电话的广播通知</li>
 </ul>
-<h3 id="snodeMap完成状态"><a href="#snodeMap完成状态" class="headerlink" title="snodeMap完成状态"></a>snodeMap完成状态</h3><ul>
+<h3 id="3-snodeMap完成状态"><a href="#3-snodeMap完成状态" class="headerlink" title="3. snodeMap完成状态"></a>3. snodeMap完成状态</h3><ul>
 <li>已完成：<ul>
 <li>创建SupernodeStore，作为SupernodeHunter的成员</li>
 <li>构建SupernodeStore的基础成员</li>
@@ -406,15 +406,164 @@
 </ul>
 </li>
 <li>未完成<ul>
+<li>验证时间轮效果</li>
 <li>单位时间向peer发送snodeList询问</li>
 <li>处理peer发来的snodeList询问，从snodeMap中取出snode，组成snodeList，并返回</li>
 <li>处理返回的snodeList，加入到snodeMap</li>
-<li>验证时间轮效果</li>
 <li>snode失效时优先查找snodeMap</li>
 <li>寻址优先查找snodeMap</li>
 <li>snodeMap工具</li>
 </ul>
 </li>
+</ul>
+<h2 id="1106-MON"><a href="#1106-MON" class="headerlink" title="1106 MON."></a>1106 MON.</h2><h3 id="1-SnodeMap"><a href="#1-SnodeMap" class="headerlink" title="1. SnodeMap"></a>1. SnodeMap</h3><ul>
+<li>验证时间轮效果</li>
+<li>snodeStore工具</li>
+</ul>
+<h3 id="2-rom-1"><a href="#2-rom-1" class="headerlink" title="2. rom"></a>2. rom</h3><ul>
+<li>通知工具文档</li>
+<li>增加broadcast的permission机制</li>
+</ul>
+<h3 id="3-snodeMap完成状态-1"><a href="#3-snodeMap完成状态-1" class="headerlink" title="3. snodeMap完成状态"></a>3. snodeMap完成状态</h3><ul>
+<li><p>已完成：</p>
+<ul>
+<li>创建SupernodeStore，作为SupernodeHunter的成员</li>
+<li>构建SupernodeStore的基础成员</li>
+<li>自动增加和删除activesnode到snodeMap中。</li>
+<li>验证时间轮效果</li>
+<li>snodeMap工具</li>
+</ul>
+</li>
+<li><p>未完成</p>
+<ul>
+<li>单位时间向peer发送snodeList询问</li>
+<li>处理peer发来的snodeList询问，从snodeMap中取出snode，组成snodeList，并返回</li>
+<li>处理返回的snodeList，加入到snodeMap</li>
+<li>snode失效时优先查找snodeMap</li>
+<li>寻址优先查找snodeMap</li>
+</ul>
+</li>
+</ul>
+<h2 id="1107-TUE"><a href="#1107-TUE" class="headerlink" title="1107 TUE."></a>1107 TUE.</h2><h3 id="1-SnodeMap-1"><a href="#1-SnodeMap-1" class="headerlink" title="1. SnodeMap"></a>1. SnodeMap</h3><ul>
+<li>单位时间向peer发送snodeList询问</li>
+<li>处理peer发来的snodeList询问，从snodeMap中取出snode，组成snodeList，并返回</li>
+</ul>
+<h3 id="2-snodeMap完成状态"><a href="#2-snodeMap完成状态" class="headerlink" title="2. snodeMap完成状态"></a>2. snodeMap完成状态</h3><ul>
+<li><p>已完成：</p>
+<ul>
+<li>创建SupernodeStore，作为SupernodeHunter的成员</li>
+<li>构建SupernodeStore的基础成员</li>
+<li>自动增加和删除activesnode到snodeMap中。</li>
+<li>验证时间轮效果</li>
+<li>snodeMap工具</li>
+</ul>
+</li>
+<li><p>未完成</p>
+<ul>
+<li>单位时间向peer发送snodeList询问</li>
+<li>处理peer发来的snodeList询问，从snodeMap中取出snode，组成snodeList，并返回</li>
+<li>处理返回的snodeList，加入到snodeMap</li>
+<li>snode失效时优先查找snodeMap</li>
+<li>寻址优先查找snodeMap</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-rom"><a href="#3-rom" class="headerlink" title="3. rom"></a>3. rom</h3><ul>
+<li>通知文档</li>
+</ul>
+<h2 id="1108-WED"><a href="#1108-WED" class="headerlink" title="1108 WED."></a>1108 WED.</h2><h3 id="1-SnodeMap-2"><a href="#1-SnodeMap-2" class="headerlink" title="1. SnodeMap"></a>1. SnodeMap</h3><ul>
+<li>单位时间向peer发送snodeList询问</li>
+<li>处理peer发来的snodeList询问，从snodeMap中取出snode，组成snodeList，并返回</li>
+</ul>
+<h3 id="2-snodeMap完成状态-1"><a href="#2-snodeMap完成状态-1" class="headerlink" title="2. snodeMap完成状态"></a>2. snodeMap完成状态</h3><ul>
+<li><p>已完成：</p>
+<ul>
+<li>创建SupernodeStore，作为SupernodeHunter的成员</li>
+<li>构建SupernodeStore的基础成员</li>
+<li>自动增加和删除activesnode到snodeMap中。</li>
+<li>验证时间轮效果</li>
+<li>snodeMap工具</li>
+</ul>
+</li>
+<li><p>未完成</p>
+<ul>
+<li>单位时间向peer发送snodeList询问</li>
+<li>处理peer发来的snodeList询问，从snodeMap中取出snode，组成snodeList，并返回</li>
+<li>处理返回的snodeList，加入到snodeMap</li>
+<li>snode失效时优先查找snodeMap(推迟实现)</li>
+<li>寻址优先查找snodeMap</li>
+</ul>
+</li>
+</ul>
+<h2 id="1109-TUR"><a href="#1109-TUR" class="headerlink" title="1109 TUR."></a>1109 TUR.</h2><h3 id="1-SnodeMap-3"><a href="#1-SnodeMap-3" class="headerlink" title="1. SnodeMap"></a>1. SnodeMap</h3><ul>
+<li>处理返回的snodeList，加入到snodeMap</li>
+</ul>
+<h3 id="2-snodeMap完成状态-2"><a href="#2-snodeMap完成状态-2" class="headerlink" title="2. snodeMap完成状态"></a>2. snodeMap完成状态</h3><ul>
+<li><p>已完成：</p>
+<ul>
+<li>创建SupernodeStore，作为SupernodeHunter的成员</li>
+<li>构建SupernodeStore的基础成员</li>
+<li>自动增加和删除activesnode到snodeMap中。</li>
+<li>验证时间轮效果</li>
+<li>snodeMap工具</li>
+<li>单位时间向peer发送snodeList询问</li>
+<li>处理peer发来的snodeList询问，从snodeMap中取出snode，组成snodeList，并返回</li>
+</ul>
+</li>
+<li><p>未完成</p>
+<ul>
+<li>处理返回的snodeList，加入到snodeMap</li>
+<li>snode失效时优先查找snodeMap(推迟实现)</li>
+<li>寻址优先查找snodeMap</li>
+</ul>
+</li>
+</ul>
+<h2 id="1110-FRI"><a href="#1110-FRI" class="headerlink" title="1110 FRI."></a>1110 FRI.</h2><h3 id="1-SnodeMap-4"><a href="#1-SnodeMap-4" class="headerlink" title="1. SnodeMap"></a>1. SnodeMap</h3><ul>
+<li>修复时间轮</li>
+<li>修改文档</li>
+</ul>
+<h3 id="2-snodeMap完成状态-3"><a href="#2-snodeMap完成状态-3" class="headerlink" title="2. snodeMap完成状态"></a>2. snodeMap完成状态</h3><ul>
+<li>已完成：<ul>
+<li>创建SupernodeStore，作为SupernodeHunter的成员</li>
+<li>构建SupernodeStore的基础成员</li>
+<li>自动增加和删除activesnode到snodeMap中。</li>
+<li>验证时间轮效果</li>
+<li>snodeMap工具</li>
+<li>单位时间向peer发送snodeList询问</li>
+<li>处理peer发来的snodeList询问，从snodeMap中取出snode，组成snodeList，并返回</li>
+<li>处理返回的snodeList，加入到snodeMap</li>
+<li>寻址优先查找snodeMap（功能已达到，不需要实现）</li>
+</ul>
+</li>
+<li>未完成<ul>
+<li>snode失效时优先查找snodeMap(推迟实现)</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-rom-1"><a href="#3-rom-1" class="headerlink" title="3. rom"></a>3. rom</h3><ul>
+<li>创建文件时，将权限改为666</li>
+</ul>
+<h2 id="1113-MON"><a href="#1113-MON" class="headerlink" title="1113 MON."></a>1113 MON.</h2><h3 id="1-SnodeMap-5"><a href="#1-SnodeMap-5" class="headerlink" title="1. SnodeMap"></a>1. SnodeMap</h3><ul>
+<li>使用tmpAlloc,防止out of memory</li>
+<li>在activeSnode状态发生变化时，不再往SnodeMap中增加和删除。</li>
+<li>为SupernodeStore增加snodeAddress成员，在activeSnode发生变化时，同步更新snodeAdress。</li>
+<li>当收到别人给的snodeList中有activeSnode时，不把activeSnode加入到SnodeMap中</li>
+<li>当别人来请求snodeList（调用SupernodeStore_getSnodeList），先将自己的snodeMap中的点加入list，然后将自己的activeSnode加入list。<br><strong> 以上操作是为了解决：当某些比较极端的情况下，可能出现还没来得及跟peer报过来snode建立好连接，自己map里的snode就失效了。在比较坏的情况下（比如时间轮超时时间段，问peer拿snodeList的间隔长），所有点的snodeMap都会被超时清空。</strong><br><strong> 使用了新的操作以后，每次返回snodelist，至少会包括自己的activeSnode，这也完成了最初希望supernode点都可以将自己是snode这一消息扩散出去的需求</strong></li>
+</ul>
+<h3 id="2-ROM"><a href="#2-ROM" class="headerlink" title="2. ROM"></a>2. ROM</h3><ul>
+<li>将目录设为777</li>
+</ul>
+<h2 id="1114-TUE"><a href="#1114-TUE" class="headerlink" title="1114 TUE."></a>1114 TUE.</h2><h3 id="1-SnodeMap-6"><a href="#1-SnodeMap-6" class="headerlink" title="1. SnodeMap"></a>1. SnodeMap</h3><ul>
+<li>查看修改效果，测试效果</li>
+<li>清log，并且存一个log的patch</li>
+<li>递交代码</li>
+</ul>
+<h3 id="2-rom-2"><a href="#2-rom-2" class="headerlink" title="2. rom"></a>2. rom</h3><ul>
+<li>牵出device/oneplue/chesseburger的代码，clean重新编译</li>
+<li>解决初次建立CallRecording目录时，权限为700，第二次创建时才变成777的问题</li>
+</ul>
+<h3 id="3-snode文档"><a href="#3-snode文档" class="headerlink" title="3. snode文档"></a>3. snode文档</h3><ul>
+<li>修改以前的snode文档中的错误</li>
 </ul>
 
       
