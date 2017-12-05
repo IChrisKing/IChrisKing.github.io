@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Chris King" />
+
+
+
+<meta name="description" content="1204 MON.1. 数据包伪装 干扰包 干扰包的使用时机：握手前互相发送总计4个干扰包 干扰包的格式：目前支持伪装成三种使用udp的协议：rtp,ovpn,bt-utp 干扰包与正常包的区分：CA握手认证不通过的，就算干扰包 收到干扰包后的处理：分辨干扰包类型，根据类型构建同协议的新干扰包并返回   需要做的修改 干扰包生成器 干扰包分析器 peer增加干扰包计数字段 发包处增加发送干扰包的方">
+<meta property="og:type" content="website">
+<meta property="og:title" content="201712">
+<meta property="og:url" content="http://yoursite.com/201712/index.html">
+<meta property="og:site_name" content="IChrisKing">
+<meta property="og:description" content="1204 MON.1. 数据包伪装 干扰包 干扰包的使用时机：握手前互相发送总计4个干扰包 干扰包的格式：目前支持伪装成三种使用udp的协议：rtp,ovpn,bt-utp 干扰包与正常包的区分：CA握手认证不通过的，就算干扰包 收到干扰包后的处理：分辨干扰包类型，根据类型构建同协议的新干扰包并返回   需要做的修改 干扰包生成器 干扰包分析器 peer增加干扰包计数字段 发包处增加发送干扰包的方">
+<meta property="og:locale" content="zh-Hant-TW">
+<meta property="og:updated_time" content="2017-12-05T10:06:56.938Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="201712">
+<meta name="twitter:description" content="1204 MON.1. 数据包伪装 干扰包 干扰包的使用时机：握手前互相发送总计4个干扰包 干扰包的格式：目前支持伪装成三种使用udp的协议：rtp,ovpn,bt-utp 干扰包与正常包的区分：CA握手认证不通过的，就算干扰包 收到干扰包后的处理：分辨干扰包类型，根据类型构建同协议的新干扰包并返回   需要做的修改 干扰包生成器 干扰包分析器 peer增加干扰包计数字段 发包处增加发送干扰包的方">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="IChrisKing" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>201712 | IChrisKing</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: false,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: undefined
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Chris King</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">#IMNOTCHRISLEE</p>
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜單</li>
+                        <li>標籤</li>
+                        
+                        <li>友情鏈接</li>
+                        
+                        
+                        <li>關於我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主頁</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">標籤雲</a></li>
+                        
+                            <li><a href="/about/">關於我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="https://chrisking310@gmail.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="https://github.com/IChrisKing" title="GitHub"></a>
+                            
+                                <a class="fa 新浪博客" href="http://blog.sina.com.cn/u/1733434252" title="新浪博客"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-everyday/">Android_everyday</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android开发工程师/">Android开发工程师</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Anrom/">Anrom</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C-C/">C/C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SEAndroid/">SEAndroid</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SELinux/">SELinux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/anrom/">anrom</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cjdns/">cjdns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cjdns源码分析/">cjdns源码分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iptables/">iptables</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/life/">life</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/music/">music</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/network/">network</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/raspberry配置/">raspberry配置</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rom/">rom</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shadowsocks-vps/">shadowsocks/vps</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tool/">tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/填坑/">填坑</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/排序算法/">排序算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/查找算法/">查找算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/树莓派raspberry/">树莓派raspberry</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网络/">网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://anromos.github.io/">Anrom OS</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://github.com/AnromOS">Team GitHub</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">Android ROM 开发</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Chris King</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Chris King</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">#IMNOTCHRISLEE</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主頁</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">標籤雲</a></li>
+                
+                    <li><a href="/about/">關於我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="https://chrisking310@gmail.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/IChrisKing" title="GitHub"></a>
+                            
+                                <a class="fa 新浪博客" target="_blank" href="http://blog.sina.com.cn/u/1733434252" title="新浪博客"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="標籤" friends="友情鏈接" about="關於我"/>
+</nav>
+      <div class="body-wrap"><article id="page-undefined" class="article article-type-page" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/201712/index.html" class="article-date">
+      <time datetime="2017-12-04T02:32:34.000Z" itemprop="datePublished">2017-12-04</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      201712
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              <style>
+    .article-meta { display: none; }
+    #container .article .article-title { padding-right: 0; }
+    .article-header {
+        padding: 0;
+        padding-top: 26px;
+        border-left: none;
+        text-align: center;
+    }
+    .article-header:hover { border-left: none; }
+    .article-title { font-size: 1.6em }
+    .article-entry hr { margin: 0;}
+    .article-meta,
+    #container .article-info-post.article-info { display: none;}
+    #container .article .article-title { padding: 0; }
+</style>
+
+
+          
+        <h2 id="1204-MON"><a href="#1204-MON" class="headerlink" title="1204 MON."></a>1204 MON.</h2><h3 id="1-数据包伪装"><a href="#1-数据包伪装" class="headerlink" title="1. 数据包伪装"></a>1. 数据包伪装</h3><ul>
+<li>干扰包<ul>
+<li>干扰包的使用时机：握手前互相发送总计4个干扰包</li>
+<li>干扰包的格式：目前支持伪装成三种使用udp的协议：rtp,ovpn,bt-utp</li>
+<li>干扰包与正常包的区分：CA握手认证不通过的，就算干扰包</li>
+<li>收到干扰包后的处理：分辨干扰包类型，根据类型构建同协议的新干扰包并返回</li>
+</ul>
+</li>
+<li>需要做的修改<ul>
+<li>干扰包生成器</li>
+<li>干扰包分析器</li>
+<li>peer增加干扰包计数字段</li>
+<li>发包处增加发送干扰包的方法</li>
+<li>收包处增加分析辨认干扰包的方法</li>
+</ul>
+</li>
+<li>协议选择</li>
+<li><p>RUDP<br>  1．协议格式<br>  0 1 2 3 4 5 6 7 8            15<br> +-+-+-+-+-+-+-+-+—————+<br> |S|A|E|R|N|C|T| |    Header     |<br> |Y|C|A|S|U|H|C|0|    Length     |<br> |N|K|K|T|L|K|S| |               |<br> +-+-+-+-+-+-+-+-+—————+<br> |  Sequence #   +   Ack Number  |<br> +—————+—————+<br> |            Checksum           |<br> +—————+—————+</p>
+<p> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<br> |  RDP标志(12位:0x888) |包类型(4位)|         窗口大小（16位）         |<br> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<br> |                       Socket ID (32位)                           |<br> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<br> |                             SEQ Number                           |<br> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<br> |                          ACK Number                           |<br> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<br> |                           ..数据..                             |<br> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<br>  字段含义如下：</p>
+<pre><code>RDP标志：标志RDP包，固定是 0x888。
+包类型：
+       SYN：发起连接。
+       SYNACK：SYN确认。
+       DATA：数据包。
+       ACK： 数据包确认。
+       CHECK：接收窗口检测。
+       PUNCH：NAT穿透。
+       LIV：连接保活标志。
+     FIN：关闭连接。
+      FINACK：FIN确认
+</code></pre><p>窗口大小：接收端可接收数据的窗口大小。<br>数据：用户通过RDP传输的数据。</p>
+</li>
+<li><p>RTP<br>  RTP协议格式：<br> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<br> |V=2|P|X|  CC   |M|     PT      |       sequence number         |<br> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<br> |                           timestamp                           |<br> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<br> |           synchronization source (SSRC) identifier            |<br> +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+<br> |            contributing source (CSRC) identifiers             |<br> |                             ….                              |<br> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</p>
+<pre><code>l V：RTP协议的版本号，占2位，当前协议版本号为2。
+</code></pre><p>  l P：填充标志，占1位，如果P=1，则在该报文的尾部填充一个或多个额外的八位组，它们不是有效载荷的一部分。<br>  l X：扩展标志，占1位，如果X=1，则在RTP报头后跟有一个扩展报头。<br>  l CC：CSRC计数器，占4位，指示CSRC 标识符的个数。<br>  l M: 标记，占1位，不同的有效载荷有不同的含义，对于视频，标记一帧的结束；对于音频，标记会话的开始。<br>  l 同步信源(SSRC)标识符：占32位，用于标识同步信源。该标识符是随机选择的，参加同一视频会议的两个同步信源不能有相同的SSRC。<br>  l 特约信源(CSRC)标识符：每个CSRC标识符占32位，可以有0～15个。每个CSRC标识了包含在该RTP报文有效载荷中的所有特约信源。<br>  l PT: 有效载荷类型，占7位，用于说明RTP报文中有效载荷的类型，如GSM音频、JPEM图像等。<br>  l 序列号：占16位，用于标识发送者所发送的RTP报文的序列号，每发送一个报文，序列号增1。接收者通过序列号来检测报文丢失情况，重新排序报文，恢复数据。<br>  l 时戳(Timestamp)：占32位，时戳反映了该RTP报文的第一个八位组的采样时刻。接收者使用时戳来计算延迟和延迟抖动，并进行同步控制。</p>
+</li>
+<li><p>bt-utp</p>
+<ul>
+<li>version 1 header:</li>
+</ul>
+</li>
+</ul>
+<p>0       4       8               16              24              32<br>+——-+——-+—————+—————+—————+<br>| type  | ver   | extension     | connection_id                 |<br>+——-+——-+—————+—————+—————+<br>| timestamp_microseconds                                        |<br>+—————+—————+—————+—————+<br>| timestamp_difference_microseconds                             |<br>+—————+—————+—————+—————+<br>| wnd_size                                                      |<br>+—————+—————+—————+—————+<br>| seq_nr                        | ack_nr                        |<br>+—————+—————+—————+—————+<br>type：帧类型。一共有ST_DATA = 0，ST_FIN = 1，ST_STATE = 2，ST_RESET = 3，ST_SYN = 4 五种。<br>分别表示数据帧，断开连接帧（TCP 的FIN），确认帧（TCP 的ACK），重建连接帧，建立连接帧（TCP 的SYN）<br>（）表示，对应TCP里面的类型。<br>ver：版本号。目前为1。<br>extension：扩展字段，比如selective ack就需要这个字段非零，没有扩展置零即可。<br>connection id：用来唯一表示一个连接的，一个connection会使用两个id，一个用来发，一个用来收，注意本端的收=对端的发，所以一个connection有两个id，而变量一共有四个：一端的收发两个，另一端的收发两个。而一端的收发id只相差1（连接发起一端随机产生一个数，作为接收id，此端发送id=接收id+1），所以可以用这个id来唯一标识一个connection。<br>timestamp_microseconds：表示此帧的发送时间。<br>timestamp_difference_microseconds：单向传播时延，用帧的收到时间-timestamp_microseconds的到。由于两端的时间并没有同步，或者说并没有到达微秒级别的同步，这个字段的绝对值并没有实际意义，但是对比两次timestamp_difference_microseconds的差别具有意义。<br>wnd_size：窗口大小，这个和TCP里面的意义一样，是对端给的一个限制发送的标志，用于流量控制。<br>seq_nr：包序号。这个和TCP一样，双方各自维护一个序列来表示自己的发送。<br>ack_nr：确认号。注意这里和TCP不同，TCP是应答下一个期望得到的对方的seq。而这里是收到了哪个seq就ack那个seq。</p>
+<ul>
+<li>握手时隐藏明文ipv6地址</li>
+<li>稳定后的SID隐藏</li>
+</ul>
+<h3 id="2-openflow"><a href="#2-openflow" class="headerlink" title="2. openflow"></a>2. openflow</h3><ul>
+<li>研究openflow标准相关内容</li>
+<li>研究引擎如何符合openflow标准</li>
+</ul>
+<h3 id="3-ROM"><a href="#3-ROM" class="headerlink" title="3. ROM"></a>3. ROM</h3><ul>
+<li>去掉电话界面中的录音选项</li>
+<li>维护dell上的代码</li>
+</ul>
+<h2 id="1205-TUR"><a href="#1205-TUR" class="headerlink" title="1205 TUR."></a>1205 TUR.</h2><h3 id="1-数据包伪装-1"><a href="#1-数据包伪装-1" class="headerlink" title="1. 数据包伪装"></a>1. 数据包伪装</h3><ul>
+<li>干扰包<ul>
+<li>干扰包的使用时机：握手前互相发送总计4个干扰包</li>
+<li>干扰包的格式：目前支持伪装成三种使用udp的协议：rtp,ovpn,bt-utp</li>
+<li>干扰包与正常包的区分：CA握手认证不通过的，就算干扰包</li>
+<li>收到干扰包后的处理：分辨干扰包类型，根据类型构建同协议的新干扰包并返回</li>
+</ul>
+</li>
+<li><p>需要做的修改</p>
+<ul>
+<li>干扰包生成器</li>
+<li>干扰包分析器</li>
+<li>peer增加干扰包计数字段</li>
+<li>发包处增加发送干扰包的方法</li>
+<li>收包处增加分析辨认干扰包的方法</li>
+</ul>
+</li>
+<li><p>设计</p>
+<ul>
+<li>Peer增加noisePkg字段，计数收发了多少干扰包,初始值0</li>
+<li>增加固定值NOISE_PKG_ENOUGH 标识多少个干扰包后发送握手包。暂时设为4</li>
+<li>InterfaceController_bootstrapPeer里，不再sendPing，而是发送干扰包。</li>
+<li>sendPing中，将noisePkg设为NOISE_PKG_ENOUGH</li>
+<li>收到包后判断是否是干扰包，调用NoisePackageMaker_isNoisePackage（msg）,返回干扰包类型type（不是干扰包为-1）</li>
+<li>如果是干扰包，查看ep-&gt;noisePkg<ul>
+<li>如果小于NOISE_PKG_ENOUGH，执行<ul>
+<li>调用NoisePackageMaker_create（type）。构造同类干扰包</li>
+<li>调用NoisePackageMaker_send（） 发送干扰包</li>
+<li>ep-&gt;noisePkg++</li>
+<li>扔掉干扰包</li>
+</ul>
+</li>
+<li>如果大于等于NOISE_PKG_ENOUGH，执行<ul>
+<li>调用sendPing,发送握手包</li>
+<li>扔掉干扰包</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>如果不是干扰包，继续传递包</p>
+</li>
+<li></li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+    
+  </div>
+  
+    
+
+
+  
+</article>
+
+
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <div id="comment-box" ></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="201712/index.html" data-title="201712" data-url="http://yoursite.com/201712/index.html"></div>
+    <script>
+        var duoshuoQuery = {short_name:"ichrisking"};
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+            s.async = true; s.charset = 'UTF-8';
+            (d.head || d.body).appendChild(s);
+        }
+
+        
+    </script>
+    
+    <script> loadComment(); </script>
+
+</div>
+    
+
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2016-2017 Chris King
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、簡單且強大的網誌框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="簡而不減 Hexo 雙欄網誌主題  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到訪數"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本頁閱讀量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回頂部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看評論"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="轉到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+             categories: ".article-category a, a.tag-list-link", 
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

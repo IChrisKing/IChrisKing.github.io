@@ -22,7 +22,7 @@
 <meta property="og:site_name" content="IChrisKing">
 <meta property="og:description" content="1101 WED.1. snodeList snodeList的流程与问题(有修改)  首先，当前使用的Snode要稳定下来。 将当前使用的snode加入到snodeList当中。 询问所有peer，让peer返回snodeList 将收到的snodeList中的数据放到自己的snodeList当中。具体加入方法是： 当snodeList不为空时，取出一个snode。 这个snode是否时当前正在">
 <meta property="og:locale" content="zh-Hant-TW">
-<meta property="og:updated_time" content="2017-11-14T07:33:25.338Z">
+<meta property="og:updated_time" content="2017-12-04T02:31:48.531Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="201711">
 <meta name="twitter:description" content="1101 WED.1. snodeList snodeList的流程与问题(有修改)  首先，当前使用的Snode要稳定下来。 将当前使用的snode加入到snodeList当中。 询问所有peer，让peer返回snodeList 将收到的snodeList中的数据放到自己的snodeList当中。具体加入方法是： 当snodeList不为空时，取出一个snode。 这个snode是否时当前正在">
@@ -184,7 +184,7 @@
                 
                 <section class="switch-part switch-part2">
                     <div class="widget tagcloud" id="js-tagcloud">
-                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-everyday/">Android_everyday</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android开发工程师/">Android开发工程师</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Anrom/">Anrom</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C-C/">C/C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SEAndroid/">SEAndroid</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SELinux/">SELinux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/anrom/">anrom</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cjdns/">cjdns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cjdns源码分析/">cjdns源码分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iptables/">iptables</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/life/">life</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/music/">music</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/network/">network</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/raspberry配置/">raspberry配置</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shadowsocks-vps/">shadowsocks/vps</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tool/">tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/填坑/">填坑</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/排序算法/">排序算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/查找算法/">查找算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/树莓派raspberry/">树莓派raspberry</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网络/">网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-everyday/">Android_everyday</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android开发工程师/">Android开发工程师</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Anrom/">Anrom</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C-C/">C/C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SEAndroid/">SEAndroid</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SELinux/">SELinux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/anrom/">anrom</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cjdns/">cjdns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cjdns源码分析/">cjdns源码分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iptables/">iptables</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/life/">life</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/music/">music</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/network/">network</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/raspberry配置/">raspberry配置</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rom/">rom</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shadowsocks-vps/">shadowsocks/vps</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tool/">tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/填坑/">填坑</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/排序算法/">排序算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/查找算法/">查找算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/树莓派raspberry/">树莓派raspberry</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网络/">网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
                     </div>
                 </section>
                 
@@ -548,7 +548,7 @@
 <li>在activeSnode状态发生变化时，不再往SnodeMap中增加和删除。</li>
 <li>为SupernodeStore增加snodeAddress成员，在activeSnode发生变化时，同步更新snodeAdress。</li>
 <li>当收到别人给的snodeList中有activeSnode时，不把activeSnode加入到SnodeMap中</li>
-<li>当别人来请求snodeList（调用SupernodeStore_getSnodeList），先将自己的snodeMap中的点加入list，然后将自己的activeSnode加入list。<br><strong> 以上操作是为了解决：当某些比较极端的情况下，可能出现还没来得及跟peer报过来snode建立好连接，自己map里的snode就失效了。在比较坏的情况下（比如时间轮超时时间段，问peer拿snodeList的间隔长），所有点的snodeMap都会被超时清空。</strong><br><strong> 使用了新的操作以后，每次返回snodelist，至少会包括自己的activeSnode，这也完成了最初希望supernode点都可以将自己是snode这一消息扩散出去的需求</strong></li>
+<li>当别人来请求snodeList（调用SupernodeStore_getSnodeList），先将自己的snodeMap中的点加入list，然后将自己的activeSnode加入list。<br><strong> 以上操作是为了解决：当某些比较极端的情况下，可能出现还没来得及跟peer报过来snode建立好连接，自己map里的snode就超时删除了。在比较坏的情况下（比如时间轮超时时间短，问peer拿snodeList的间隔长），所有点的snodeMap都会被超时清空。</strong><br><strong> 使用了新的操作以后，每次返回snodelist，至少会包括自己的activeSnode，这也完成了最初希望supernode点都可以将自己是snode这一消息扩散出去的需求</strong></li>
 </ul>
 <h3 id="2-ROM"><a href="#2-ROM" class="headerlink" title="2. ROM"></a>2. ROM</h3><ul>
 <li>将目录设为777</li>
@@ -564,6 +564,145 @@
 </ul>
 <h3 id="3-snode文档"><a href="#3-snode文档" class="headerlink" title="3. snode文档"></a>3. snode文档</h3><ul>
 <li>修改以前的snode文档中的错误</li>
+</ul>
+<h3 id="4-snodeMap完成状态"><a href="#4-snodeMap完成状态" class="headerlink" title="4. snodeMap完成状态"></a>4. snodeMap完成状态</h3><ul>
+<li><p>已完成：</p>
+<ul>
+<li>创建SupernodeStore，作为SupernodeHunter的成员</li>
+<li>构建SupernodeStore的基础成员</li>
+<li>在activeSnode发生变化时，维护Supernodetore中的snodeAddress。</li>
+<li>时间轮</li>
+<li>snodeMap工具</li>
+<li>单位时间向peer发送snodeList询问</li>
+<li>处理peer发来的snodeList询问，从snodeMap中取出snode，组成snodeList，并返回</li>
+<li>处理返回的snodeList，加入到snodeMap</li>
+<li>寻址优先查找snodeMap（功能已经实现，不需要特别处理）</li>
+</ul>
+</li>
+<li><p>未完成</p>
+<ul>
+<li>snode失效时优先查找snodeMap(推迟实现)</li>
+</ul>
+</li>
+</ul>
+<h3 id="5-cjdnsnode项目代码更新"><a href="#5-cjdnsnode项目代码更新" class="headerlink" title="5. cjdnsnode项目代码更新"></a>5. cjdnsnode项目代码更新</h3><ul>
+<li>更新一下cjdnsnode项目的代码</li>
+<li>同步更新测试机上的cjdnsnode代码</li>
+<li>更新后观察cjdnsnode进程的状态</li>
+</ul>
+<h2 id="1115-WED"><a href="#1115-WED" class="headerlink" title="1115 WED."></a>1115 WED.</h2><h3 id="1-cjdnsnode项目代码更新"><a href="#1-cjdnsnode项目代码更新" class="headerlink" title="1. cjdnsnode项目代码更新"></a>1. cjdnsnode项目代码更新</h3><ul>
+<li>更新一下cjdnsnode项目的代码</li>
+<li>同步更新测试机上的cjdnsnode代码</li>
+<li>更新后观察cjdnsnode进程的状态</li>
+</ul>
+<h3 id="2-rom-3"><a href="#2-rom-3" class="headerlink" title="2. rom"></a>2. rom</h3><ul>
+<li>查看policy内容</li>
+<li>repo sync代码</li>
+<li>查看一下差分包的编译，看能不能取消</li>
+</ul>
+<h2 id="1116-TUR"><a href="#1116-TUR" class="headerlink" title="1116 TUR."></a>1116 TUR.</h2><h3 id="1-POLICY的ip类型匹配检验"><a href="#1-POLICY的ip类型匹配检验" class="headerlink" title="1. POLICY的ip类型匹配检验"></a>1. POLICY的ip类型匹配检验</h3><ul>
+<li>在加规则的接口，增加检查src和dst的ip类型是否匹配的代码，防止出现一个ipv4，一个ipv6的情况。</li>
+</ul>
+<h3 id="2-多snode环境测试"><a href="#2-多snode环境测试" class="headerlink" title="2. 多snode环境测试"></a>2. 多snode环境测试</h3><ul>
+<li>在一个5 inbound，10 普通点的网络中，验证多snode环境下，peer之间的snodeMap互通和snode之间的连通性。</li>
+<li>主要验证内容：<ul>
+<li>运行了cjdnsnode进程的点，能否发现自己是snode，并且将自己设为activesnode</li>
+<li>snode能否将自己是snode的消息扩散出去</li>
+<li>peer之间是否良好的维护snodeList消息</li>
+<li>全网内所有点能否得知所有snode的信息</li>
+<li>snode之间的连通性</li>
+<li>某个snode点上的cjdnsnode进程down之后，网络能否切换到新的snode，能否正确更新每个peer上的snodeMap</li>
+<li>某个snode点上的cjdnsnode进程up之后，该点能后将自己设为activesnode，并且将自己是snode的消息扩散出去，全网是否能维护这个新来的snode</li>
+</ul>
+</li>
+</ul>
+<h2 id="1117-FRI"><a href="#1117-FRI" class="headerlink" title="1117 FRI."></a>1117 FRI.</h2><h3 id="1-多snode环境测试"><a href="#1-多snode环境测试" class="headerlink" title="1. 多snode环境测试"></a>1. 多snode环境测试</h3><ul>
+<li>在一个5 inbound，10 普通点的网络中，验证多snode环境下，peer之间的snodeMap互通和snode之间的连通性。</li>
+<li>主要验证内容：<ul>
+<li>运行了cjdnsnode进程的点，能否发现自己是snode，并且将自己设为activesnode</li>
+<li>snode能否将自己是snode的消息扩散出去</li>
+<li>peer之间是否良好的维护snodeList消息</li>
+<li>全网内所有点能否得知所有snode的信息</li>
+<li>snode之间的连通性</li>
+<li>某个snode点上的cjdnsnode进程down之后，网络能否切换到新的snode，能否正确更新每个peer上的snodeMap</li>
+<li>某个snode点上的cjdnsnode进程up之后，该点能后将自己设为activesnode，并且将自己是snode的消息扩散出去，全网是否能维护这个新来的snode</li>
+</ul>
+</li>
+</ul>
+<h2 id="1120-MON"><a href="#1120-MON" class="headerlink" title="1120 MON."></a>1120 MON.</h2><h3 id="1-多snode"><a href="#1-多snode" class="headerlink" title="1. 多snode"></a>1. 多snode</h3><ul>
+<li>clean code</li>
+<li>activesnode失效后，优先选择snodeMap中的点作为自己的activesnode</li>
+</ul>
+<h3 id="2-android版本"><a href="#2-android版本" class="headerlink" title="2. android版本"></a>2. android版本</h3><ul>
+<li>不去维护snodeStore</li>
+<li>在conf中配个选项，来决定要不要维护snodeStore</li>
+</ul>
+<h3 id="3-协议伪装"><a href="#3-协议伪装" class="headerlink" title="3. 协议伪装"></a>3. 协议伪装</h3><ul>
+<li>伪装IngerfaceController里面的三次握手包，伪装成rtsp协议</li>
+</ul>
+<h2 id="1121-TUE"><a href="#1121-TUE" class="headerlink" title="1121 TUE."></a>1121 TUE.</h2><h3 id="1-多snode-1"><a href="#1-多snode-1" class="headerlink" title="1. 多snode"></a>1. 多snode</h3><ul>
+<li>修复崩溃</li>
+<li>activesnode失效后，优先选择snodeMap中的点作为自己的activesnode</li>
+</ul>
+<h3 id="2-多snode的android版本"><a href="#2-多snode的android版本" class="headerlink" title="2. 多snode的android版本"></a>2. 多snode的android版本</h3><ul>
+<li>判断是否是android，如果是，不去维护snodeStore</li>
+</ul>
+<h3 id="3-协议伪装-1"><a href="#3-协议伪装-1" class="headerlink" title="3. 协议伪装"></a>3. 协议伪装</h3><ul>
+<li>伪装IngerfaceController里面的三次握手包，伪装成rtsp协议</li>
+</ul>
+<h2 id="1122-WED"><a href="#1122-WED" class="headerlink" title="1122 WED."></a>1122 WED.</h2><h3 id="1-协议伪装"><a href="#1-协议伪装" class="headerlink" title="1. 协议伪装"></a>1. 协议伪装</h3><ul>
+<li>伪装IngerfaceController里面的三次握手包，伪装成rtsp协议</li>
+</ul>
+<h3 id="2-3步lladdr的session维护"><a href="#2-3步lladdr的session维护" class="headerlink" title="2. 3步lladdr的session维护"></a>2. 3步lladdr的session维护</h3><h2 id="1123-TUR"><a href="#1123-TUR" class="headerlink" title="1123 TUR."></a>1123 TUR.</h2><h3 id="1-协议伪装-1"><a href="#1-协议伪装-1" class="headerlink" title="1. 协议伪装"></a>1. 协议伪装</h3><ul>
+<li>伪装IngerfaceController里面的三次握手包，伪装成rtp协议，因为rtp是udp，而rtsp是tcp</li>
+</ul>
+<h2 id="1124-FRI"><a href="#1124-FRI" class="headerlink" title="1124 FRI."></a>1124 FRI.</h2><h3 id="1-协议伪装-2"><a href="#1-协议伪装-2" class="headerlink" title="1. 协议伪装"></a>1. 协议伪装</h3><ul>
+<li>伪装IngerfaceController里面的三次握手包，伪装成rtp协议</li>
+</ul>
+<h2 id="1127-MON"><a href="#1127-MON" class="headerlink" title="1127 MON."></a>1127 MON.</h2><h3 id="1-协议伪装-3"><a href="#1-协议伪装-3" class="headerlink" title="1. 协议伪装"></a>1. 协议伪装</h3><ul>
+<li>伪装IngerfaceController里面的三次握手包，伪装成rtp协议</li>
+<li>发出协议的地方，通过tcpdump抓包，已经可以看到加进去的字段，但收到包后没有进行正确的处理。</li>
+</ul>
+<h3 id="2-邻居节点超时后无法握手成功"><a href="#2-邻居节点超时后无法握手成功" class="headerlink" title="2. 邻居节点超时后无法握手成功"></a>2. 邻居节点超时后无法握手成功</h3><ul>
+<li>优先解决</li>
+<li>某些情况下会出现两边对发hello包，无法建立establish状态</li>
+<li><p>表现形式和引起的原因</p>
+<ul>
+<li>两边已经建立了establish状态</li>
+<li>密钥小的那一端重启，发出hello包</li>
+<li><p>密钥大的那一端进入CryptoAuth.c的decryptHandshake的一个密钥大小判断，并reset了session，这个session是ca的session。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">case CryptoAuth_State_SENT_HELLO: &#123;</div><div class="line">if (Bits_memcmp(session-&gt;pub.herPublicKey,</div><div class="line">                session-&gt;context-&gt;pub.publicKey, 32) &lt; 0)</div><div class="line">&#123;</div><div class="line">    // It&apos;s a hello and we are the initiator but their permant public key is</div><div class="line">    // numerically lower than ours, this is so that in the event of two hello</div><div class="line">    // packets crossing on the wire, the nodes will agree on who is the</div><div class="line">    // initiator.</div><div class="line">    cryptoAuthDebug0(session,</div><div class="line">        &quot;Incoming hello from node with lower key, resetting&quot;);</div><div class="line">    reset(session);</div><div class="line"></div><div class="line">    Bits_memcpy(session-&gt;herTempPubKey, header-&gt;encryptedTempKey, 32);</div><div class="line">    break;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>另外一个地方需要留意的在InterfaceController.c的receivedPostCryptoAuth</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">    ep-&gt;bytesIn += msg-&gt;length;</div><div class="line"></div><div class="line">int caState = CryptoAuth_getState(ep-&gt;caSession);</div><div class="line">if (ep-&gt;state &lt; InterfaceController_PeerState_ESTABLISHED) &#123;</div><div class="line">    // EP states track CryptoAuth states...</div><div class="line">    ep-&gt;state = caState;</div></pre></td></tr></table></figure>
+<p>如果ep-&gt;state &lt; InterfaceController_PeerState_ESTABLISHED不成立，则将caState赋值给ep-&gt;state</p>
+</li>
+</ul>
+</li>
+<li>无法复现该情况，已在相关位置添加log，并推送到测试环境中。等待情况复现</li>
+</ul>
+<h2 id="1128-TUE"><a href="#1128-TUE" class="headerlink" title="1128 TUE."></a>1128 TUE.</h2><h3 id="1-windows上的引擎崩溃"><a href="#1-windows上的引擎崩溃" class="headerlink" title="1. windows上的引擎崩溃"></a>1. windows上的引擎崩溃</h3><ul>
+<li>windows上的引擎崩溃</li>
+<li>在linux上复现，发现问题在接入点。这个特殊的接入点，开启了DHT和snode双系统。造成崩溃</li>
+<li>接入点进行修改，关闭DHT</li>
+<li>引擎进行修改，判断返回值</li>
+</ul>
+<h3 id="2-协议伪装"><a href="#2-协议伪装" class="headerlink" title="2. 协议伪装"></a>2. 协议伪装</h3><ul>
+<li>伪装IngerfaceController里面的三次握手包，伪装成rtp协议</li>
+<li>发出协议的地方，通过tcpdump抓包，已经可以看到加进去的字段，但收到包后没有进行正确的处理。</li>
+</ul>
+<h3 id="3-snode代码优化"><a href="#3-snode代码优化" class="headerlink" title="3. snode代码优化"></a>3. snode代码优化</h3><ul>
+<li>SnodeGetter.c的循环优化</li>
+</ul>
+<h2 id="1129-WED"><a href="#1129-WED" class="headerlink" title="1129 WED."></a>1129 WED.</h2><h3 id="1-协议伪装-4"><a href="#1-协议伪装-4" class="headerlink" title="1. 协议伪装"></a>1. 协议伪装</h3><ul>
+<li>伪装IngerfaceController里面的三次握手包，伪装成rtp协议</li>
+<li>详细伪装rtp头部的所有字段，让他们符合字段的自然状态</li>
+<li>写一个文档记录伪装过程</li>
+</ul>
+<h2 id="1130-TUR"><a href="#1130-TUR" class="headerlink" title="1130 TUR."></a>1130 TUR.</h2><h3 id="1-协议伪装-5"><a href="#1-协议伪装-5" class="headerlink" title="1. 协议伪装"></a>1. 协议伪装</h3><ul>
+<li>伪装IngerfaceController里面的三次握手包，伪装成rtp协议</li>
+<li>详细伪装rtp头部的所有字段，让他们符合字段的自然状态</li>
+<li>写一个文档记录伪装过程</li>
 </ul>
 
       
