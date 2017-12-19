@@ -15,17 +15,17 @@
 
 
 
-<meta name="description" content="1204 MON.1. 数据包伪装 干扰包 干扰包的使用时机：握手前互相发送总计4个干扰包 干扰包的格式：目前支持伪装成三种使用udp的协议：rtp,ovpn,bt-utp 干扰包与正常包的区分：CA握手认证不通过的，就算干扰包 收到干扰包后的处理：分辨干扰包类型，根据类型构建同协议的新干扰包并返回   需要做的修改 干扰包生成器 干扰包分析器 peer增加干扰包计数字段 发包处增加发送干扰包的方">
+<meta name="description" content="1204 MON.1. 数据包伪装 干扰包  需要做的修改  干扰包生成器 干扰包分析器 peer增加干扰包计数字段 发包处增加发送干扰包的方法 收包处增加分析辨认干扰包的方法   协议选择 RUDP  1．协议格式  0 1 2 3 4 5 6 7 8            15 +-+-+-+-+-+-+-+-+—————+ |S|A|E|R|N|C|T| |    Header     |">
 <meta property="og:type" content="website">
 <meta property="og:title" content="201712">
 <meta property="og:url" content="http://yoursite.com/201712/index.html">
 <meta property="og:site_name" content="IChrisKing">
-<meta property="og:description" content="1204 MON.1. 数据包伪装 干扰包 干扰包的使用时机：握手前互相发送总计4个干扰包 干扰包的格式：目前支持伪装成三种使用udp的协议：rtp,ovpn,bt-utp 干扰包与正常包的区分：CA握手认证不通过的，就算干扰包 收到干扰包后的处理：分辨干扰包类型，根据类型构建同协议的新干扰包并返回   需要做的修改 干扰包生成器 干扰包分析器 peer增加干扰包计数字段 发包处增加发送干扰包的方">
+<meta property="og:description" content="1204 MON.1. 数据包伪装 干扰包  需要做的修改  干扰包生成器 干扰包分析器 peer增加干扰包计数字段 发包处增加发送干扰包的方法 收包处增加分析辨认干扰包的方法   协议选择 RUDP  1．协议格式  0 1 2 3 4 5 6 7 8            15 +-+-+-+-+-+-+-+-+—————+ |S|A|E|R|N|C|T| |    Header     |">
 <meta property="og:locale" content="zh-Hant-TW">
-<meta property="og:updated_time" content="2017-12-05T10:06:56.938Z">
+<meta property="og:updated_time" content="2017-12-19T03:06:45.335Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="201712">
-<meta name="twitter:description" content="1204 MON.1. 数据包伪装 干扰包 干扰包的使用时机：握手前互相发送总计4个干扰包 干扰包的格式：目前支持伪装成三种使用udp的协议：rtp,ovpn,bt-utp 干扰包与正常包的区分：CA握手认证不通过的，就算干扰包 收到干扰包后的处理：分辨干扰包类型，根据类型构建同协议的新干扰包并返回   需要做的修改 干扰包生成器 干扰包分析器 peer增加干扰包计数字段 发包处增加发送干扰包的方">
+<meta name="twitter:description" content="1204 MON.1. 数据包伪装 干扰包  需要做的修改  干扰包生成器 干扰包分析器 peer增加干扰包计数字段 发包处增加发送干扰包的方法 收包处增加分析辨认干扰包的方法   协议选择 RUDP  1．协议格式  0 1 2 3 4 5 6 7 8            15 +-+-+-+-+-+-+-+-+—————+ |S|A|E|R|N|C|T| |    Header     |">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -315,14 +315,10 @@
 
           
         <h2 id="1204-MON"><a href="#1204-MON" class="headerlink" title="1204 MON."></a>1204 MON.</h2><h3 id="1-数据包伪装"><a href="#1-数据包伪装" class="headerlink" title="1. 数据包伪装"></a>1. 数据包伪装</h3><ul>
-<li>干扰包<ul>
-<li>干扰包的使用时机：握手前互相发送总计4个干扰包</li>
-<li>干扰包的格式：目前支持伪装成三种使用udp的协议：rtp,ovpn,bt-utp</li>
-<li>干扰包与正常包的区分：CA握手认证不通过的，就算干扰包</li>
-<li>收到干扰包后的处理：分辨干扰包类型，根据类型构建同协议的新干扰包并返回</li>
-</ul>
+<li><p>干扰包</p>
 </li>
-<li>需要做的修改<ul>
+<li><p>需要做的修改</p>
+<ul>
 <li>干扰包生成器</li>
 <li>干扰包分析器</li>
 <li>peer增加干扰包计数字段</li>
@@ -346,6 +342,11 @@
       FINACK：FIN确认
 </code></pre><p>窗口大小：接收端可接收数据的窗口大小。<br>数据：用户通过RDP传输的数据。</p>
 </li>
+<li><p>R2TP<br>0       4       8               16              24              32<br>+——-+——-+—————+—————+—————+<br>|T|L|X|X|S|X|O|P|X|X|X|X|  ver  |             Length            |<br>+——-+——-+—————+—————+—————+<br>|           Tunnel Id           |         session ID            |<br>+—————+—————+—————+—————+<br>|            Ns(opt)            |             Nr(opt)           |<br>+—————+—————+—————+—————+<br>|          Offset(opt)          |        Offset pad…(opt)     |<br>+—————+—————+—————+—————+</p>
+</li>
+</ul>
+<p>Type(T)：标识消息的类型，0表示是数据消息，1表示控制消息。<br>Length(L)：置1时，说明Length域的值是存在的，对于控制消息L位必须置1。<br>X bit：保留位，所有保留位均置0。<br>Sequence(S)：置1时，说明Ns和Nr是存在的，对于控制消息S必须置1。<br>Offset(O)：置1时，说明Offset Size域是存在的，对于控制消息O必须置0。<br>Priority(P)：只用于数据消息，对于控制消息P位置0，当数据消息此位置1时，说明该消息在本列队和传输时应得到优先处理。<br>Ver：必须是2，表示L2TP数据报头的版本。<br>Length：标识整个报文的长度(以字节为单位)。<br>Tunnel ID：标识L2TP控制链接，L2TP Tunnel标识符只有本地意义，一个Tunnel两端被分配的Tunnel ID可能会不同，报头中的Tunnel是指接收方的Tunnel ID，而不是发送方的。本端的Tunnel ID在创建Tunnel时分配。通过Tunnel ID AVPs和对端交换Tunnel ID信息。<br>Session ID：标识Tunnel中的一个session，只有本地意义，一个session两端Session ID可能不同。<br>Ns：标识发送数据或控制消息的序号，从0开始，以1递增，到216再从0开始。<br>Nr：标识下一个期望接收到的控制消息。Nr的值设置成上一个接收到的控制消息的Ns+1。这样是对上一个接收到的控制消息的确认。数据消息忽略Nr。<br>Offset Size：如果值存在的话，标识有效载荷数据的偏移。</p>
+<ul>
 <li><p>RTP<br>  RTP协议格式：<br> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<br> |V=2|P|X|  CC   |M|     PT      |       sequence number         |<br> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<br> |                           timestamp                           |<br> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<br> |           synchronization source (SSRC) identifier            |<br> +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+<br> |            contributing source (CSRC) identifiers             |<br> |                             ….                              |<br> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</p>
 <pre><code>l V：RTP协议的版本号，占2位，当前协议版本号为2。
 </code></pre><p>  l P：填充标志，占1位，如果P=1，则在该报文的尾部填充一个或多个额外的八位组，它们不是有效载荷的一部分。<br>  l X：扩展标志，占1位，如果X=1，则在RTP报头后跟有一个扩展报头。<br>  l CC：CSRC计数器，占4位，指示CSRC 标识符的个数。<br>  l M: 标记，占1位，不同的有效载荷有不同的含义，对于视频，标记一帧的结束；对于音频，标记会话的开始。<br>  l 同步信源(SSRC)标识符：占32位，用于标识同步信源。该标识符是随机选择的，参加同一视频会议的两个同步信源不能有相同的SSRC。<br>  l 特约信源(CSRC)标识符：每个CSRC标识符占32位，可以有0～15个。每个CSRC标识了包含在该RTP报文有效载荷中的所有特约信源。<br>  l PT: 有效载荷类型，占7位，用于说明RTP报文中有效载荷的类型，如GSM音频、JPEM图像等。<br>  l 序列号：占16位，用于标识发送者所发送的RTP报文的序列号，每发送一个报文，序列号增1。接收者通过序列号来检测报文丢失情况，重新排序报文，恢复数据。<br>  l 时戳(Timestamp)：占32位，时戳反映了该RTP报文的第一个八位组的采样时刻。接收者使用时戳来计算延迟和延迟抖动，并进行同步控制。</p>
@@ -377,8 +378,7 @@
 <li>收到干扰包后的处理：分辨干扰包类型，根据类型构建同协议的新干扰包并返回</li>
 </ul>
 </li>
-<li><p>需要做的修改</p>
-<ul>
+<li>需要做的修改<ul>
 <li>干扰包生成器</li>
 <li>干扰包分析器</li>
 <li>peer增加干扰包计数字段</li>
@@ -386,35 +386,157 @@
 <li>收包处增加分析辨认干扰包的方法</li>
 </ul>
 </li>
+</ul>
+<h2 id="1206-WED"><a href="#1206-WED" class="headerlink" title="1206 WED."></a>1206 WED.</h2><h3 id="1-数据包伪装-2"><a href="#1-数据包伪装-2" class="headerlink" title="1. 数据包伪装"></a>1. 数据包伪装</h3><h2 id="1207-TUR"><a href="#1207-TUR" class="headerlink" title="1207 TUR."></a>1207 TUR.</h2><h3 id="1-数据包伪装-3"><a href="#1-数据包伪装-3" class="headerlink" title="1. 数据包伪装"></a>1. 数据包伪装</h3><h2 id="1208-FRI"><a href="#1208-FRI" class="headerlink" title="1208 FRI."></a>1208 FRI.</h2><h3 id="1-数据包伪装-4"><a href="#1-数据包伪装-4" class="headerlink" title="1. 数据包伪装"></a>1. 数据包伪装</h3><ul>
+<li>干扰包<ul>
+<li>干扰包的使用时机：握手前互相发送总计4个干扰包</li>
+<li>干扰包的格式：目前支持伪装成三种使用udp的协议：rtp,ovpn,bt-utp</li>
+<li>干扰包与正常包的区分：CA握手认证不通过的，就算干扰包</li>
+<li>收到干扰包后的处理：分辨干扰包类型，根据类型构建同协议的新干扰包并返回</li>
+</ul>
+</li>
+<li>需要做的修改<ul>
+<li>干扰包生成器</li>
+<li>干扰包分析器</li>
+<li>peer增加干扰包计数字段</li>
+<li>发包处增加发送干扰包的方法</li>
+<li>收包处增加分析辨认干扰包的方法</li>
+</ul>
+</li>
+</ul>
+<h2 id="1211-MON"><a href="#1211-MON" class="headerlink" title="1211 MON."></a>1211 MON.</h2><h3 id="1-数据包伪装-5"><a href="#1-数据包伪装-5" class="headerlink" title="1. 数据包伪装"></a>1. 数据包伪装</h3><h3 id="2-党组织生活"><a href="#2-党组织生活" class="headerlink" title="2. 党组织生活"></a>2. 党组织生活</h3><h2 id="1212-TUE"><a href="#1212-TUE" class="headerlink" title="1212 TUE."></a>1212 TUE.</h2><h3 id="1-数据包伪装-6"><a href="#1-数据包伪装-6" class="headerlink" title="1. 数据包伪装"></a>1. 数据包伪装</h3><h3 id="2-体检"><a href="#2-体检" class="headerlink" title="2. 体检"></a>2. 体检</h3><h3 id="3-消防安全培训"><a href="#3-消防安全培训" class="headerlink" title="3. 消防安全培训"></a>3. 消防安全培训</h3><h2 id="1213-WED"><a href="#1213-WED" class="headerlink" title="1213 WED."></a>1213 WED.</h2><h3 id="1-数据包伪装-7"><a href="#1-数据包伪装-7" class="headerlink" title="1. 数据包伪装"></a>1. 数据包伪装</h3><h2 id="1214-TUR"><a href="#1214-TUR" class="headerlink" title="1214 TUR."></a>1214 TUR.</h2><h3 id="1-ROM"><a href="#1-ROM" class="headerlink" title="1. ROM"></a>1. ROM</h3><ul>
+<li>编译新版本</li>
+<li>确认录音文件权限</li>
+<li>权限没问题</li>
+</ul>
+<h3 id="2-数据包伪装"><a href="#2-数据包伪装" class="headerlink" title="2. 数据包伪装"></a>2. 数据包伪装</h3><h2 id="1215-FRI"><a href="#1215-FRI" class="headerlink" title="1215 FRI."></a>1215 FRI.</h2><h3 id="1-rom"><a href="#1-rom" class="headerlink" title="1. rom"></a>1. rom</h3><ul>
+<li>刷上新版本rom/MK71.2-cheeseburger-201712141857-UNOFFICIAL.zip</li>
+<li>确认新版本录音文件权限没有问题</li>
+<li>对方发来apk，查看对方反应的情况</li>
+</ul>
+<h3 id="2-数据包伪装-1"><a href="#2-数据包伪装-1" class="headerlink" title="2. 数据包伪装"></a>2. 数据包伪装</h3><ul>
+<li>协议选择</li>
+<li><p>RUDP<br>  1．协议格式<br>  0 1 2 3 4 5 6 7 8            15<br> +-+-+-+-+-+-+-+-+—————+<br> |S|A|E|R|N|C|T| |    Header     |<br> |Y|C|A|S|U|H|C|0|    Length     |<br> |N|K|K|T|L|K|S| |               |<br> +-+-+-+-+-+-+-+-+—————+<br> |  Sequence #   +   Ack Number  |<br> +—————+—————+<br> |            Checksum           |<br> +—————+—————+</p>
+<p> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<br> |  RDP标志(12位:0x888) |包类型(4位)|         窗口大小（16位）         |<br> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<br> |                       Socket ID (32位)                           |<br> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<br> |                             SEQ Number                           |<br> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<br> |                          ACK Number                           |<br> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<br> |                           ..数据..                             |<br> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<br>  字段含义如下：</p>
+<pre><code>RDP标志：标志RDP包，固定是 0x888。
+包类型：
+       SYN：发起连接。
+       SYNACK：SYN确认。
+       DATA：数据包。
+       ACK： 数据包确认。
+       CHECK：接收窗口检测。
+       PUNCH：NAT穿透。
+       LIV：连接保活标志。
+     FIN：关闭连接。
+      FINACK：FIN确认
+</code></pre><p>窗口大小：接收端可接收数据的窗口大小。<br>数据：用户通过RDP传输的数据。</p>
+</li>
+<li><p>L2TP<br>0       4       8               16              24              32<br>+——-+——-+—————+—————+—————+<br>|T|L|X|X|S|X|O|P|X|X|X|X|  ver  |             Length            |<br>+——-+——-+—————+—————+—————+<br>|           Tunnel Id           |         session ID            |<br>+—————+—————+—————+—————+<br>|            Ns(opt)            |             Nr(opt)           |<br>+—————+—————+—————+—————+<br>|          Offset(opt)          |        Offset pad…(opt)     |<br>+—————+—————+—————+—————+</p>
+</li>
+</ul>
+<p>Type(T)：标识消息的类型，0表示是数据消息，1表示控制消息。<br>Length(L)：置1时，说明Length域的值是存在的，对于控制消息L位必须置1。<br>X bit：保留位，所有保留位均置0。<br>Sequence(S)：置1时，说明Ns和Nr是存在的，对于控制消息S必须置1。<br>Offset(O)：置1时，说明Offset Size域是存在的，对于控制消息O必须置0。<br>Priority(P)：只用于数据消息，对于控制消息P位置0，当数据消息此位置1时，说明该消息在本列队和传输时应得到优先处理。<br>Ver：必须是2，表示L2TP数据报头的版本。<br>Length：标识整个报文的长度(以字节为单位)。<br>Tunnel ID：标识L2TP控制链接，L2TP Tunnel标识符只有本地意义，一个Tunnel两端被分配的Tunnel ID可能会不同，报头中的Tunnel是指接收方的Tunnel ID，而不是发送方的。本端的Tunnel ID在创建Tunnel时分配。通过Tunnel ID AVPs和对端交换Tunnel ID信息。<br>Session ID：标识Tunnel中的一个session，只有本地意义，一个session两端Session ID可能不同。<br>Ns：标识发送数据或控制消息的序号，从0开始，以1递增，到216再从0开始。<br>Nr：标识下一个期望接收到的控制消息。Nr的值设置成上一个接收到的控制消息的Ns+1。这样是对上一个接收到的控制消息的确认。数据消息忽略Nr。<br>Offset Size：如果值存在的话，标识有效载荷数据的偏移。</p>
+<ul>
+<li><p>RTP<br>  RTP协议格式：<br> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<br> |V=2|P|X|  CC   |M|     PT      |       sequence number         |<br> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<br> |                           timestamp                           |<br> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<br> |           synchronization source (SSRC) identifier            |<br> +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+<br> |            contributing source (CSRC) identifiers             |<br> |                             ….                              |<br> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</p>
+<pre><code>l V：RTP协议的版本号，占2位，当前协议版本号为2。
+</code></pre><p>  l P：填充标志，占1位，如果P=1，则在该报文的尾部填充一个或多个额外的八位组，它们不是有效载荷的一部分。<br>  l X：扩展标志，占1位，如果X=1，则在RTP报头后跟有一个扩展报头。<br>  l CC：CSRC计数器，占4位，指示CSRC 标识符的个数。<br>  l M: 标记，占1位，不同的有效载荷有不同的含义，对于视频，标记一帧的结束；对于音频，标记会话的开始。<br>  l 同步信源(SSRC)标识符：占32位，用于标识同步信源。该标识符是随机选择的，参加同一视频会议的两个同步信源不能有相同的SSRC。<br>  l 特约信源(CSRC)标识符：每个CSRC标识符占32位，可以有0～15个。每个CSRC标识了包含在该RTP报文有效载荷中的所有特约信源。<br>  l PT: 有效载荷类型，占7位，用于说明RTP报文中有效载荷的类型，如GSM音频、JPEM图像等。<br>  l 序列号：占16位，用于标识发送者所发送的RTP报文的序列号，每发送一个报文，序列号增1。接收者通过序列号来检测报文丢失情况，重新排序报文，恢复数据。<br>  l 时戳(Timestamp)：占32位，时戳反映了该RTP报文的第一个八位组的采样时刻。接收者使用时戳来计算延迟和延迟抖动，并进行同步控制。</p>
+</li>
+<li><p>bt-utp</p>
+<ul>
+<li>version 1 header:</li>
+</ul>
+</li>
+</ul>
+<p>0       4       8               16              24              32<br>+——-+——-+—————+—————+—————+<br>| type  | ver   | extension     | connection_id                 |<br>+——-+——-+—————+—————+—————+<br>| timestamp_microseconds                                        |<br>+—————+—————+—————+—————+<br>| timestamp_difference_microseconds                             |<br>+—————+—————+—————+—————+<br>| wnd_size                                                      |<br>+—————+—————+—————+—————+<br>| seq_nr                        | ack_nr                        |<br>+—————+—————+—————+—————+<br>type：帧类型。一共有ST_DATA = 0，ST_FIN = 1，ST_STATE = 2，ST_RESET = 3，ST_SYN = 4 五种。<br>分别表示数据帧，断开连接帧（TCP 的FIN），确认帧（TCP 的ACK），重建连接帧，建立连接帧（TCP 的SYN）<br>（）表示，对应TCP里面的类型。<br>ver：版本号。目前为1。<br>extension：扩展字段，比如selective ack就需要这个字段非零，没有扩展置零即可。<br>connection id：用来唯一表示一个连接的，一个connection会使用两个id，一个用来发，一个用来收，注意本端的收=对端的发，所以一个connection有两个id，而变量一共有四个：一端的收发两个，另一端的收发两个。而一端的收发id只相差1（连接发起一端随机产生一个数，作为接收id，此端发送id=接收id+1），所以可以用这个id来唯一标识一个connection。<br>timestamp_microseconds：表示此帧的发送时间。<br>timestamp_difference_microseconds：单向传播时延，用帧的收到时间-timestamp_microseconds的到。由于两端的时间并没有同步，或者说并没有到达微秒级别的同步，这个字段的绝对值并没有实际意义，但是对比两次timestamp_difference_microseconds的差别具有意义。<br>wnd_size：窗口大小，这个和TCP里面的意义一样，是对端给的一个限制发送的标志，用于流量控制。<br>seq_nr：包序号。这个和TCP一样，双方各自维护一个序列来表示自己的发送。<br>ack_nr：确认号。注意这里和TCP不同，TCP是应答下一个期望得到的对方的seq。而这里是收到了哪个seq就ack那个seq。</p>
+<ul>
+<li>干扰包<ul>
+<li>干扰包的使用时机：握手前互相发送总计4个干扰包</li>
+<li>干扰包的格式：目前支持伪装成三种使用udp的协议：rtp,ovpn,bt-utp</li>
+<li>干扰包与正常包的区分：查看包头是否有标识字段</li>
+<li>收到干扰包后的处理：分辨干扰包类型，根据类型构建同协议的新干扰包并返回</li>
+</ul>
+</li>
+<li><p>需要做的修改</p>
+<ul>
+<li>干扰包生成器</li>
+<li>干扰包分析器</li>
+<li>干扰包类，包括类型，头部，计数字段</li>
+<li>发包处增加发送干扰包的方法</li>
+<li>收包处增加分析辨认干扰包的方法</li>
+</ul>
+</li>
 <li><p>设计</p>
 <ul>
-<li>Peer增加noisePkg字段，计数收发了多少干扰包,初始值0</li>
+<li>InterfaceController的修改</li>
+<li>Peer增加NoisePackage_Peer类，保存干扰包类型，头部重要字段，包计数</li>
 <li>增加固定值NOISE_PKG_ENOUGH 标识多少个干扰包后发送握手包。暂时设为4</li>
-<li>InterfaceController_bootstrapPeer里，不再sendPing，而是发送干扰包。</li>
+<li>InterfaceController_bootstrapPeer里，不再sendPing，而是发送干扰包,发送第一个干扰包NoisePackageMaker_createandsend()。</li>
 <li>sendPing中，将noisePkg设为NOISE_PKG_ENOUGH</li>
-<li>收到包后判断是否是干扰包，调用NoisePackageMaker_isNoisePackage（msg）,返回干扰包类型type（不是干扰包为-1）</li>
-<li>如果是干扰包，查看ep-&gt;noisePkg<ul>
-<li>如果小于NOISE_PKG_ENOUGH，执行<ul>
-<li>调用NoisePackageMaker_create（type）。构造同类干扰包</li>
-<li>调用NoisePackageMaker_send（） 发送干扰包</li>
-<li>ep-&gt;noisePkg++</li>
-<li>扔掉干扰包</li>
+<li>iciPing中增加判断，引擎启动5秒后或者noisePkg到达NOISE_PKG_ENOUGH之后再执行sendPing，相当于留一点时间来发送干扰包</li>
+<li><p>收到包后首先找ep</p>
+<ul>
+<li>如果没找到，说明收到的这个包，是peer发来的第一个包。新建ep，并加入map中，如果后续握手过程失败了，再把ep从map中删除。这么做是因为，ep必须在第一个包到达后就建立，ep-&gt;noisePkg中的伪装字段才能使用。</li>
+<li>如果找到了ep，判断包是否是干扰包，调用NoisePackageMaker_isNoisePackage（msg）,返回干扰包类型type（不是干扰包为-1）<ul>
+<li>如果是干扰包<ul>
+<li>干扰包计数++</li>
+<li>构造同类干扰包</li>
+<li>发送同类干扰包</li>
+<li>干扰包计数++</li>
+<li>结束，扔掉包</li>
 </ul>
 </li>
-<li>如果大于等于NOISE_PKG_ENOUGH，执行<ul>
-<li>调用sendPing,发送握手包</li>
-<li>扔掉干扰包</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p>如果不是干扰包，继续传递包</p>
-</li>
-<li></li>
+<li>如果不是干扰包，查看ep-&gt;caSession<ul>
+<li>如果为空，进入handleUnexpectedIncoming，进行握手（如果握手失败，要去map里删除ep）</li>
+<li>如果不为空，进入后续处理</li>
 </ul>
 </li>
 </ul>
-
+</li>
+</ul>
+</li>
+<li><p>NoisePackageMaker<br>  {</p>
+<pre><code>log
+eventBase
+rand
+alloc
+</code></pre><p>  }</p>
+</li>
+<li>NoisePackageMaker_Type<br>  {<pre><code>NoiseType_NOT = -1,
+NoiseType_RANDOM = 0,
+NoiseType_RTP = 1,
+NoiseType_RUDP = 2,
+NoiseType_BTUTP = 3
+</code></pre>  }</li>
+<li><p>NoisePackage标志位<br>  #define RTP_FLAG Endian_hostToBigEndian16(UINT32_C(0x8060))</p>
+</li>
+<li><p>生成包</p>
+<ul>
+<li>NoisePackageMaker_create（NoisePackageMaker_Type type）</li>
+<li>NoisePackageMaker_createRTP（）</li>
+<li>NoisePackageMaker_createRUDP（）</li>
+<li>NoisePackageMaker_createBTUTP（）</li>
+<li>生成各种长度的随机值组成包内容</li>
+<li>生成各种协议需要的固定字段</li>
+</ul>
+</li>
+<li><p>分析包</p>
+<ul>
+<li>NoisePackageMaker_getType（Message* msg）<br>  retunr NoisePackageMaker_Type type</li>
+</ul>
+</li>
+<li>发送包<ul>
+<li>NoisePackageMaker_send（）</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="1218-MON"><a href="#1218-MON" class="headerlink" title="1218 MON."></a>1218 MON.</h2><h3 id="1-干扰包功能测试"><a href="#1-干扰包功能测试" class="headerlink" title="1. 干扰包功能测试"></a>1. 干扰包功能测试</h3><ul>
+<li>普通点使用干扰包，接入点不使用干扰包</li>
+<li>普通点不使用干扰包，接入点使用干扰包</li>
+<li>普通点和接入点都使用干扰包</li>
+<li>两边多次重启</li>
+</ul>
+<h3 id="2-异步实现加解密功能"><a href="#2-异步实现加解密功能" class="headerlink" title="2. 异步实现加解密功能"></a>2. 异步实现加解密功能</h3><h2 id="1219-TUR"><a href="#1219-TUR" class="headerlink" title="1219 TUR."></a>1219 TUR.</h2><h3 id="1-异步实现加解密功能"><a href="#1-异步实现加解密功能" class="headerlink" title="1. 异步实现加解密功能"></a>1. 异步实现加解密功能</h3>
       
     </div>
     
