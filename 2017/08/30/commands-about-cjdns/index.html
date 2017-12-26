@@ -23,7 +23,7 @@
 <meta property="og:site_name" content="IChrisKing">
 <meta property="og:description" content="一些在cjdns开发过程中的命令。主要包括一些特殊点的命令；普通点的通用命令；linux上的命令；git使用的命令">
 <meta property="og:locale" content="zh-Hant-TW">
-<meta property="og:updated_time" content="2017-11-27T02:06:08.376Z">
+<meta property="og:updated_time" content="2017-12-26T07:37:18.784Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="记录一些在开发cjdns过程中用到的命令">
 <meta name="twitter:description" content="一些在cjdns开发过程中的命令。主要包括一些特殊点的命令；普通点的通用命令；linux上的命令；git使用的命令">
@@ -340,7 +340,7 @@
 <h2 id="git相关"><a href="#git相关" class="headerlink" title="git相关"></a>git相关</h2><h3 id="合代码"><a href="#合代码" class="headerlink" title="合代码"></a>合代码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">git stash </div><div class="line">git pull</div><div class="line">git stash pop</div></pre></td></tr></table></figure>
 <h2 id="docker相关"><a href="#docker相关" class="headerlink" title="docker相关"></a>docker相关</h2><h3 id="docker-build"><a href="#docker-build" class="headerlink" title="docker build"></a>docker build</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">sudo killall cjdroute </div><div class="line">docker-compose up -d</div><div class="line">docker ps</div><div class="line">docker exec -it xenial_anet_1 bash</div><div class="line"></div><div class="line">docker-compose down</div></pre></td></tr></table></figure>
 <h3 id="docker-cp"><a href="#docker-cp" class="headerlink" title="docker cp"></a>docker cp</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ docker inspect -f &apos;&#123;&#123;.Id&#125;&#125;&apos; xenial_anet_1 </div><div class="line">17faf181f188879dd03ef022db4f8b959d81209901baf4f74568f1ebe9771675</div><div class="line"></div><div class="line">docker cp /home/jinwh/anet/debug_tools/anet_debug_tool/ 17faf181f188879dd03ef022db4f8b959d81209901baf4f74568f1ebe9771675:/</div></pre></td></tr></table></figure>
-<h2 id="c"><a href="#c" class="headerlink" title="c"></a>c</h2><h3 id="输出64-t"><a href="#输出64-t" class="headerlink" title="输出64_t"></a>输出64_t</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">%&quot;PRIu64&quot;</div></pre></td></tr></table></figure>
+<h2 id="c"><a href="#c" class="headerlink" title="c"></a>c</h2><h3 id="输出64-t"><a href="#输出64-t" class="headerlink" title="输出64_t"></a>输出64_t</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">%&quot;PRIu64&quot;</div><div class="line">0x%&quot;PRIx64&quot;</div></pre></td></tr></table></figure>
       
     </div>
     

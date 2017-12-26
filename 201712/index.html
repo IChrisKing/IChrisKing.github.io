@@ -22,7 +22,7 @@
 <meta property="og:site_name" content="IChrisKing">
 <meta property="og:description" content="1204 MON.1. 数据包伪装 干扰包  需要做的修改  干扰包生成器 干扰包分析器 peer增加干扰包计数字段 发包处增加发送干扰包的方法 收包处增加分析辨认干扰包的方法   协议选择 RUDP  1．协议格式  0 1 2 3 4 5 6 7 8            15 +-+-+-+-+-+-+-+-+—————+ |S|A|E|R|N|C|T| |    Header     |">
 <meta property="og:locale" content="zh-Hant-TW">
-<meta property="og:updated_time" content="2017-12-19T03:06:45.335Z">
+<meta property="og:updated_time" content="2017-12-26T09:47:46.028Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="201712">
 <meta name="twitter:description" content="1204 MON.1. 数据包伪装 干扰包  需要做的修改  干扰包生成器 干扰包分析器 peer增加干扰包计数字段 发包处增加发送干扰包的方法 收包处增加分析辨认干扰包的方法   协议选择 RUDP  1．协议格式  0 1 2 3 4 5 6 7 8            15 +-+-+-+-+-+-+-+-+—————+ |S|A|E|R|N|C|T| |    Header     |">
@@ -370,7 +370,7 @@
 <li>去掉电话界面中的录音选项</li>
 <li>维护dell上的代码</li>
 </ul>
-<h2 id="1205-TUR"><a href="#1205-TUR" class="headerlink" title="1205 TUR."></a>1205 TUR.</h2><h3 id="1-数据包伪装-1"><a href="#1-数据包伪装-1" class="headerlink" title="1. 数据包伪装"></a>1. 数据包伪装</h3><ul>
+<h2 id="1205-TUE"><a href="#1205-TUE" class="headerlink" title="1205 TUE."></a>1205 TUE.</h2><h3 id="1-数据包伪装-1"><a href="#1-数据包伪装-1" class="headerlink" title="1. 数据包伪装"></a>1. 数据包伪装</h3><ul>
 <li>干扰包<ul>
 <li>干扰包的使用时机：握手前互相发送总计4个干扰包</li>
 <li>干扰包的格式：目前支持伪装成三种使用udp的协议：rtp,ovpn,bt-utp</li>
@@ -536,7 +536,182 @@ NoiseType_BTUTP = 3
 <li>普通点和接入点都使用干扰包</li>
 <li>两边多次重启</li>
 </ul>
-<h3 id="2-异步实现加解密功能"><a href="#2-异步实现加解密功能" class="headerlink" title="2. 异步实现加解密功能"></a>2. 异步实现加解密功能</h3><h2 id="1219-TUR"><a href="#1219-TUR" class="headerlink" title="1219 TUR."></a>1219 TUR.</h2><h3 id="1-异步实现加解密功能"><a href="#1-异步实现加解密功能" class="headerlink" title="1. 异步实现加解密功能"></a>1. 异步实现加解密功能</h3>
+<h3 id="2-异步实现加解密功能"><a href="#2-异步实现加解密功能" class="headerlink" title="2. 异步实现加解密功能"></a>2. 异步实现加解密功能</h3><h2 id="1219-TUE"><a href="#1219-TUE" class="headerlink" title="1219 TUE."></a>1219 TUE.</h2><h3 id="1-异步实现加解密功能"><a href="#1-异步实现加解密功能" class="headerlink" title="1. 异步实现加解密功能"></a>1. 异步实现加解密功能</h3><ul>
+<li>查看代码逻辑<ul>
+<li>修改主要作用在CryptoAuth中，加解密过程</li>
+<li>调用点主要在InterfaceControler和SessionManager中</li>
+</ul>
+</li>
+</ul>
+<h2 id="1220-WED"><a href="#1220-WED" class="headerlink" title="1220 WED."></a>1220 WED.</h2><h3 id="1-异步实现加解密功能-1"><a href="#1-异步实现加解密功能-1" class="headerlink" title="1. 异步实现加解密功能"></a>1. 异步实现加解密功能</h3><ul>
+<li>查看代码逻辑</li>
+<li>分析实现方法<ul>
+<li>查看c语言的线程池实现方法</li>
+<li>分析回调机制的实现</li>
+</ul>
+</li>
+</ul>
+<h2 id="1221-TUR"><a href="#1221-TUR" class="headerlink" title="1221 TUR."></a>1221 TUR.</h2><h3 id="1-异步实现加解密功能-2"><a href="#1-异步实现加解密功能-2" class="headerlink" title="1. 异步实现加解密功能"></a>1. 异步实现加解密功能</h3><ul>
+<li>沟通实现方案<ul>
+<li>确认不需要使用线程池实现</li>
+<li>只做成使用回调实现的模式</li>
+<li>从加解密处拆分函数，加解密之前的部分保留，在原来调加解密处，改为调用异步加解密方法。</li>
+<li>加解密之后，直到Iface_xxx方法之间的部分，单独作成一个函数，作为异步加解密的回调方法</li>
+</ul>
+</li>
+<li><p>设计实现方法</p>
+<ul>
+<li><p>AsyncTask类，实现一个异步调用的框架。</p>
+<ul>
+<li>AsyncTask_newTask，传入三个重要的参数：<ol>
+<li>AsyncTask_BEGIN(begin)，task运行函数，指向真正的执行任务的方法。</li>
+<li>AsyncTask_FINISH(finish)， task毁掉函数，指向任务完成后的回调方法</li>
+<li>uint32_t timeoutMilliseconds,超时时间</li>
+</ol>
+</li>
+<li>AsyncTask_finishReceived<br> 真正的执行任务的方法完成后，会调用这个方法，来实现调用回调方法</li>
+<li>当调用AsyncTask_newTask时，真正的执行任务的方法会被调用，同时，会开始一个时长为timeoutMilliseconds的倒计时。</li>
+<li>回调方法call_back，会在两种情况下被调用，<ol>
+<li>真正的执行任务的方法完成后，调用AsyncTask_finishReceived时，会在AsyncTask_finishReceived方法中调用到call_back方法，通知任务完成，并传回必要的数据</li>
+<li>超时倒计时结束时，调用call_back方法，通知任务超时。</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><p>AsyncCrypto类，实现一个使用异步方法的加解密框架</p>
+<ul>
+<li>作为一个协调各种真正的加解密方法和AsyncTask类的中间处理层</li>
+<li>根据调用时传入的参数，判断需要加密还是解密，挑选CryptoAuth中合适的加解密方法，作为AsyncTask_BEGIN(begin)，传给AsyncTask。</li>
+<li>将传入的回调函数作为AsyncTask_FINISH(finish)，将传入的 uint32_t timeoutMilliseconds作为超时时间，传给AsyncTask</li>
+<li>在加解密操作完成后，调用AsyncTask_finishReceived，通知AsyncTask，调用回调函数。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>进度<ul>
+<li>实现AsyncTask类</li>
+<li>实现AsyncCrypto类</li>
+</ul>
+</li>
+</ul>
+<h2 id="1222-FRI"><a href="#1222-FRI" class="headerlink" title="1222 FRI."></a>1222 FRI.</h2><h3 id="1-异步实现加解密功能-3"><a href="#1-异步实现加解密功能-3" class="headerlink" title="1. 异步实现加解密功能"></a>1. 异步实现加解密功能</h3><ul>
+<li><p>进度</p>
+<ul>
+<li>实现AsyncTask类</li>
+<li>实现AsyncCrypto类</li>
+</ul>
+</li>
+<li><p>现状</p>
+<ul>
+<li>第一个测试点：InterfaceController.c中的sendFromSwitch方法</li>
+<li>调用和回调路线已贯通，但数据有问题，会出现各种崩溃</li>
+</ul>
+</li>
+</ul>
+<h2 id="1225-MON"><a href="#1225-MON" class="headerlink" title="1225 MON."></a>1225 MON.</h2><h3 id="1-干扰包功能测试-1"><a href="#1-干扰包功能测试-1" class="headerlink" title="1. 干扰包功能测试"></a>1. 干扰包功能测试</h3><ul>
+<li>构建小型网络，大概十几二十个点</li>
+<li>一半使用带有干扰包功能的点，一半使用不带有干扰包功能的点</li>
+<li>长期运行，观察连通性，观察稳定性</li>
+</ul>
+<h3 id="2-异步实现加解密功能-1"><a href="#2-异步实现加解密功能-1" class="headerlink" title="2. 异步实现加解密功能"></a>2. 异步实现加解密功能</h3><h2 id="1226-TUE"><a href="#1226-TUE" class="headerlink" title="1226 TUE."></a>1226 TUE.</h2><h3 id="1-干扰包功能修改"><a href="#1-干扰包功能修改" class="headerlink" title="1. 干扰包功能修改"></a>1. 干扰包功能修改</h3><ul>
+<li>提前建peer可能会有dos风险</li>
+<li>改为自己维护一个noise相关结构表</li>
+<li>回退代码</li>
+<li><p>重写noise package功能调用部分代码</p>
+</li>
+<li><p>干扰包</p>
+<ul>
+<li>干扰包的使用时机：握手前互相发送总计6个干扰包</li>
+<li>干扰包的格式：目前支持伪装成三种使用udp的协议：rtp,ovpn,bt-utp</li>
+<li>干扰包与正常包的区分：查看包头是否有标识字段</li>
+<li>收到干扰包后的处理：分辨干扰包类型，根据类型构建同协议的新干扰包并返回</li>
+</ul>
+</li>
+<li><p>需要做的修改</p>
+<ul>
+<li>干扰包生成器</li>
+<li>干扰包分析器</li>
+<li>干扰包类，包括类型，头部，计数字段</li>
+<li>发包处增加发送干扰包的方法</li>
+<li>收包处增加分析辨认干扰包的方法</li>
+</ul>
+</li>
+<li><p>设计</p>
+<ul>
+<li>InterfaceController的修改</li>
+<li>InterfaceController_Iface_pvt增加struct Map_NoisePkgBySockaddr noiseMap，key为struct Sockaddr<em>，value为struct NoisePackage_Peer</em>，保存所有peer相关的干扰包数据。NoisePackage_Peer结构体包括干扰包类型，头部重要字段，包计数，alloc</li>
+<li>增加固定值NOISE_PKG_ENOUGH 标识多少个干扰包后发送握手包。暂时设为6</li>
+<li>InterfaceController_bootstrapPeer里，不再sendPing，而是发送干扰包,发送第一个干扰包NoisePackageMaker_createandsend()。</li>
+<li>sendPing中，将noisePkg设为NOISE_PKG_ENOUGH</li>
+<li>iciPing中增加判断，引擎启动5秒后或者noisePkg到达NOISE_PKG_ENOUGH之后再执行sendPing，相当于留一点时间来发送干扰包</li>
+<li><p>收到包后首先查看是不是干扰包</p>
+<ul>
+<li>如果是,查看noiseMap中有没有相关记录，<ul>
+<li>如果有<ul>
+<li>取出NoisePackage_Peer* noisePkg</li>
+<li>干扰包计数++</li>
+<li>构造同类干扰包</li>
+<li>发送同类干扰包</li>
+<li>干扰包计数++</li>
+<li>结束，扔掉包</li>
+</ul>
+</li>
+<li>如果没有<ul>
+<li>构造NoisePackage_Peer</li>
+<li>将它加入到noiseMap中</li>
+<li>干扰包计数++</li>
+<li>构造同类干扰包</li>
+<li>发送同类干扰包</li>
+<li>干扰包计数++</li>
+<li>结束，扔掉包</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>如果不是干扰包，<ul>
+<li>按照原有逻辑进入后续处理</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>NoisePackageMaker<br>  {</p>
+<pre><code>log
+eventBase
+rand
+alloc
+</code></pre><p>  }</p>
+</li>
+<li>NoisePackageMaker_Type<br>  {<pre><code>NoiseType_NOT = -1,
+NoiseType_RANDOM = 0,
+NoiseType_RTP = 1,
+NoiseType_RUDP = 2,
+NoiseType_BTUTP = 3
+</code></pre>  }</li>
+<li><p>NoisePackage标志位<br>  #define RTP_FLAG Endian_hostToBigEndian16(UINT32_C(0x8060))</p>
+</li>
+<li><p>生成包</p>
+<ul>
+<li>NoisePackageMaker_create（NoisePackageMaker_Type type）</li>
+<li>NoisePackageMaker_createRTP（）</li>
+<li>NoisePackageMaker_createRUDP（）</li>
+<li>NoisePackageMaker_createBTUTP（）</li>
+<li>生成各种长度的随机值组成包内容</li>
+<li>生成各种协议需要的固定字段</li>
+</ul>
+</li>
+<li><p>分析包</p>
+<ul>
+<li>NoisePackageMaker_getType（Message* msg）<br>  retunr NoisePackageMaker_Type type</li>
+</ul>
+</li>
+<li>发送包<ul>
+<li>NoisePackageMaker_send（）</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
       
     </div>
     
