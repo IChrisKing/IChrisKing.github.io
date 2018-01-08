@@ -22,7 +22,7 @@
 <meta property="og:site_name" content="IChrisKing">
 <meta property="og:description" content="0102 TUE.1. 干扰包功能测试 测试环境中的点运行正常 递交干扰包相关代码  2. 异步实现加解密功能 重构代码，将加解密不需要的那些局部状态，作成结构体，挂在调用异步加解密的那些结构体中。只将加解密必须的msg和caSession传递给异步加解密方法。 比如，在InterfaceController.c中，handleUnexpectedIncoming调用了异步解密方法。 需要保存的局">
 <meta property="og:locale" content="zh-Hant-TW">
-<meta property="og:updated_time" content="2018-01-02T09:23:34.243Z">
+<meta property="og:updated_time" content="2018-01-08T02:39:49.633Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="201801">
 <meta name="twitter:description" content="0102 TUE.1. 干扰包功能测试 测试环境中的点运行正常 递交干扰包相关代码  2. 异步实现加解密功能 重构代码，将加解密不需要的那些局部状态，作成结构体，挂在调用异步加解密的那些结构体中。只将加解密必须的msg和caSession传递给异步加解密方法。 比如，在InterfaceController.c中，handleUnexpectedIncoming调用了异步解密方法。 需要保存的局">
@@ -327,6 +327,39 @@
 <li>使用HashMap的原因是，加解密是一个非常密集的操作，使用HashMap比使用Map能得到更快的检索速度</li>
 </ul>
 </li>
+</ul>
+<h2 id="0103-WED"><a href="#0103-WED" class="headerlink" title="0103 WED."></a>0103 WED.</h2><h3 id="1-异步实现加解密功能"><a href="#1-异步实现加解密功能" class="headerlink" title="1. 异步实现加解密功能"></a>1. 异步实现加解密功能</h3><ul>
+<li>result放到AsyncCrypto_Response当中,将调用的传入值和调用的返回值彻底拆分开</li>
+<li>不用使用HashMap，只需要在结构体AsyncCrypto_Promise中增加一个void*类型的指针，指向保存局部状态的结构体就可以了。</li>
+<li>至于保存局部变量的结构体，根据需要，可以为每个调用点做一个</li>
+<li>简化AsyncCrypto中的代码逻辑，type简化为两个，一个加密AsyncCrypto_ENCRPTY，一个解密AsyncCrypto_DECRPTY</li>
+<li>runTask中也只需要判断这两种情况，分别调用CryptoAuth中的加密和解密函数即可</li>
+</ul>
+<h2 id="0104-TUR"><a href="#0104-TUR" class="headerlink" title="0104 TUR."></a>0104 TUR.</h2><h3 id="1-异步实现加解密功能-1"><a href="#1-异步实现加解密功能-1" class="headerlink" title="1. 异步实现加解密功能"></a>1. 异步实现加解密功能</h3><ul>
+<li>修改程序中用来验证加解密性能的bench，位置在net/Benchmark.c,运行命令为<code>./anet --bench</code></li>
+<li>bench出现内存溢出</li>
+<li>统一alloc使用<ul>
+<li>异步加解密相关内容全部使用child出来的alloc</li>
+<li>将此alloc保存在promise中</li>
+<li>在加解密返回后free这个alloc，以防止出现内存泄漏</li>
+</ul>
+</li>
+<li>使用Message_clone<ul>
+<li>所有异步加解密时用到的msg全部使用Message_clone,复制出副本来进行加解密，</li>
+<li>这样原本的msg就可以随着程序原有的逻辑释放掉</li>
+<li>这样做并不成功，在InterfaceController.c的handleIncomingFromWire中，如果使用clone的msg，会造成sendFromSwitch2中的<code>Message_push64(msg, Endian_bigEndianToHost64(FLOAT_ADDR_MAGIC), NULL);</code>出现错误，导致崩溃。错误是<code>buffer overflow adding xxxxx to length 76</code></li>
+<li>SessionManager.c中的两个修改点都会出现类似的奇怪现象。</li>
+<li>当改回使用原有msg，并执行<code>Allocator_adopt(tmpAlloc, msg-&gt;alloc);</code>时，就不会出现任何问题。</li>
+</ul>
+</li>
+</ul>
+<h2 id="0105-FRI"><a href="#0105-FRI" class="headerlink" title="0105 FRI."></a>0105 FRI.</h2><h3 id="1-异步实现加解密功能-2"><a href="#1-异步实现加解密功能-2" class="headerlink" title="1. 异步实现加解密功能"></a>1. 异步实现加解密功能</h3><ul>
+<li>鉴于昨天写到的那个奇怪现象，目前代码中使用的方法是，InterfaceConntroller.c中的前两处使用Message_clone，第三处和SessionManager.c中，使用原有的msg，并adopt msg的alloc到tmpAlloc</li>
+</ul>
+<h2 id="0108-MON"><a href="#0108-MON" class="headerlink" title="0108 MON."></a>0108 MON.</h2><h3 id="1-异步实现加解密功能-3"><a href="#1-异步实现加解密功能-3" class="headerlink" title="1. 异步实现加解密功能"></a>1. 异步实现加解密功能</h3><ul>
+<li>鉴于上周发现的情况，这周优先尝试重写bench当中，使用异步加解密的部分。严格模仿InterfaceConntroller.c中的使用方式。看看能不能解决内存溢出问题。</li>
+<li>尝试将AsyncCrypto_Promise的赋值过程整合到AsyncCrypto的AsyncCrypto_newTask当中，对外隐藏具体封装过程。</li>
+<li>尝试在AsyncCrypto_newTask中使用Message_clone，看看还会不会出现奇怪的崩溃</li>
 </ul>
 
       
