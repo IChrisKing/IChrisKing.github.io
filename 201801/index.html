@@ -22,7 +22,7 @@
 <meta property="og:site_name" content="IChrisKing">
 <meta property="og:description" content="0102 TUE.1. 干扰包功能测试 测试环境中的点运行正常 递交干扰包相关代码  2. 异步实现加解密功能 重构代码，将加解密不需要的那些局部状态，作成结构体，挂在调用异步加解密的那些结构体中。只将加解密必须的msg和caSession传递给异步加解密方法。 比如，在InterfaceController.c中，handleUnexpectedIncoming调用了异步解密方法。 需要保存的局">
 <meta property="og:locale" content="zh-Hant-TW">
-<meta property="og:updated_time" content="2018-01-08T02:44:02.353Z">
+<meta property="og:updated_time" content="2018-01-25T01:52:26.453Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="201801">
 <meta name="twitter:description" content="0102 TUE.1. 干扰包功能测试 测试环境中的点运行正常 递交干扰包相关代码  2. 异步实现加解密功能 重构代码，将加解密不需要的那些局部状态，作成结构体，挂在调用异步加解密的那些结构体中。只将加解密必须的msg和caSession传递给异步加解密方法。 比如，在InterfaceController.c中，handleUnexpectedIncoming调用了异步解密方法。 需要保存的局">
@@ -369,6 +369,151 @@
 <h3 id="2-ROM"><a href="#2-ROM" class="headerlink" title="2. ROM"></a>2. ROM</h3><ul>
 <li>抛出Mokee已经支持一加5T的事实，推进项目</li>
 <li>本地开始预先编译一加5T</li>
+</ul>
+<h2 id="0109-TUE"><a href="#0109-TUE" class="headerlink" title="0109 TUE."></a>0109 TUE.</h2><h3 id="1-异步实现加解密功能-4"><a href="#1-异步实现加解密功能-4" class="headerlink" title="1. 异步实现加解密功能"></a>1. 异步实现加解密功能</h3><ul>
+<li>bench中分配很大的内存来跑十万次加解密测试，结果表明，比同步加解密还要快一点。</li>
+<li>通过原网传了一个100G的大文件，从而证明了引擎确实没有内存溢出的问题。所以，bench当中的内存无法释放问题，应该另有原因。</li>
+<li>大师给的提示，InterfaceController中应该是因为涉及到msg加入list，后期直接从list中取出才会出现第三处修改，第一处崩溃的问题。怀疑SessionManager也可能是类似的原因。</li>
+</ul>
+<p>static void sendFromSwitch2(struct AsyncCrypto_Response<em> resp, void</em> userData)<br>     Iface_send(&amp;ep-&gt;ici-&gt;pub.addrIf, msg);</p>
+<p>ici-&gt;pub.addrIf.send = handleIncomingFromWire;</p>
+<p>调用到util/events/libuv/UDPAddrIface.c incomingFromIface</p>
+<ul>
+<li>找到崩溃的原因，因为保存的环境变量中，有一些是从msg直接获取的，所以如果不adopt msg，就会崩溃。对此的解决方法当然是先clone msg或者所有环境变量都使用clone的方法</li>
+</ul>
+<h2 id="0110-WED"><a href="#0110-WED" class="headerlink" title="0110 WED."></a>0110 WED.</h2><h3 id="1-异步实现加解密功能-5"><a href="#1-异步实现加解密功能-5" class="headerlink" title="1. 异步实现加解密功能"></a>1. 异步实现加解密功能</h3><ul>
+<li>msg相关<ul>
+<li>所有地方都使用了先clone msg，然后环境变量中的所有成员，都是tmpAlloc clone msg的结果。</li>
+<li>然而，发现了内存溢出。要找原因了。</li>
+</ul>
+</li>
+<li>caSession相关<ul>
+<li>因为InterfaceController,SessionManager,CryptoAuth中，都对caSession有修改，所以，要想办法维护好这些修改。在以后的多线程中才不会造成问题。</li>
+<li>比如查看异步加解密中修改了caSession的那些成员，如果这些成员没有在InterfaceController和SessionManager中没有修改，就把这些成员拆出来，在异步前clone，异步后clone回去。</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-snode功能加强"><a href="#2-snode功能加强" class="headerlink" title="2. snode功能加强"></a>2. snode功能加强</h3><ul>
+<li>当拿到peer给的snodeList之后，如果里面的点已经是我自己snodeList里面的点或者是正在使用的snode，就不再重复沟通过程。</li>
+<li>具体做法是<ul>
+<li>收到peer给的snodeList之后，查看<ul>
+<li>如果是正在使用的snode，return(正在使用的snode的保活不需要snodeList来维护)</li>
+<li>如果在自己的snodeList中，查看状态是不是CONNECTING<ul>
+<li>是，return（说明已经开始跟这个snode沟通了，不需要再次发起沟通过程）</li>
+<li>不是，加到snodeList中，状态为CONNECTING，开始跟这个snode沟通过程。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>当第一次沟通过程完成后，将状态改为CONNECTED</li>
+<li>当第二次沟通过程完成后，将状态改为PATH_UPDATED</li>
+<li>peer来问我的snodeList时，只返回状态不为不为不为CONNECTING的snode和现在正在用的snode</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-time函数改为cjdns的取时间方法"><a href="#3-time函数改为cjdns的取时间方法" class="headerlink" title="3. time函数改为cjdns的取时间方法"></a>3. time函数改为cjdns的取时间方法</h3><ul>
+<li>time函数可能在不同系统上拿到不同的结果，改为使用cjdns集成好的Time_currentTimeMilliseconds(base);方法</li>
+</ul>
+<h3 id="4-snodeStore中的map的key不使用String"><a href="#4-snodeStore中的map的key不使用String" class="headerlink" title="4. snodeStore中的map的key不使用String"></a>4. snodeStore中的map的key不使用String</h3><ul>
+<li>key的类型不影响使用，不使用String，可以减少计算量</li>
+<li>改用struct Address*</li>
+<li>具体做法：</li>
+</ul>
+<h2 id="0111-TUR"><a href="#0111-TUR" class="headerlink" title="0111 TUR."></a>0111 TUR.</h2><h3 id="1-异步实现加解密功能-6"><a href="#1-异步实现加解密功能-6" class="headerlink" title="1. 异步实现加解密功能"></a>1. 异步实现加解密功能</h3><ul>
+<li>尝试了修改AsyncCrypto中，setTimeout时用的allocator，崩溃时的内存记录有变化，但依然没有解决内存无法释放的问题</li>
+</ul>
+<h3 id="2-握手过程的梳理"><a href="#2-握手过程的梳理" class="headerlink" title="2. 握手过程的梳理"></a>2. 握手过程的梳理</h3><ul>
+<li>和李茁大师在交流中详细梳理了自己的点和接入点，以及非接入点建立连接过程中，有关非对称加解密的过程。理论与代码实现相互印证。区别了接入点和非接入点建立连接时，使用的加解密钥对的不同之处。</li>
+</ul>
+<h3 id="3-干扰包环境的搭建"><a href="#3-干扰包环境的搭建" class="headerlink" title="3. 干扰包环境的搭建"></a>3. 干扰包环境的搭建</h3><ul>
+<li>测试用的小网络中存在4个branch节点，连成环。每个branch节点下连接两个leaf节点，共8个leaf节点。</li>
+<li>无论是branch节点还是leaf节点，单号使用引擎1.23.2，不带干扰包功能。双号使用引擎1.23.5，带干扰包功能。</li>
+<li>这样，网内就会同时存在大量的”新到新“和“新到旧”。</li>
+<li>整个测试小网络通过下面的节点，连接到大网络中  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">	&quot;120.25.233.251:50006&quot;: &#123;</div><div class="line">	&quot;password&quot;: &quot;....&quot;,</div><div class="line">	&quot;publicKey&quot;: &quot;......&quot;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="0112-FRI"><a href="#0112-FRI" class="headerlink" title="0112 FRI."></a>0112 FRI.</h2><h3 id="1-党组织活动"><a href="#1-党组织活动" class="headerlink" title="1. 党组织活动"></a>1. 党组织活动</h3><h2 id="0115-MON"><a href="#0115-MON" class="headerlink" title="0115 MON."></a>0115 MON.</h2><h3 id="1-异步实现加解密功能-7"><a href="#1-异步实现加解密功能-7" class="headerlink" title="1. 异步实现加解密功能"></a>1. 异步实现加解密功能</h3><ul>
+<li>继续对付alloc的问题</li>
+</ul>
+<ul>
+<li><p>引擎崩溃时的记录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div></pre></td><td class="code"><pre><div class="line">| SessionManager.c:927 [1384] bytes</div><div class="line">| | SessionManager.c:430 [4328] bytes</div><div class="line">| | | Message.h:86 [80] bytes at [0x55f605128730]</div><div class="line">| | | Message.h:75 [4088] bytes at [0x55f6053235d0]</div><div class="line">| | | SessionManager.c:430 [160] bytes at [0x55f60531be50]</div><div class="line">| | SessionManager.c:660 [296] bytes</div><div class="line">| | | Pipe.c:217 [4992] bytes</div><div class="line">| | |   SessionManager.c:666 [64] bytes at [0x55f604f43850]</div><div class="line">| | |   SessionManager.c:666 [64] bytes at [0x55f605204ec0]</div><div class="line">| | |   SessionManager.c:666 [64] bytes at [0x55f6052b9e70]</div><div class="line">| | |   Pipe.c:192 [80] bytes at [0x55f6052e1d60]</div><div class="line">| | |   Pipe.c:218 [4560] bytes at [0x55f6053213f0]</div><div class="line">| | |   Pipe.c:217 [160] bytes at [0x55f605116250]</div><div class="line">| | | SessionManager.c:666 [64] bytes at [0x55f604e84500]</div><div class="line">| | | SessionManager.c:662 [72] bytes at [0x55f604f04250]</div><div class="line">| | | SessionManager.c:660 [160] bytes at [0x55f605149210]</div><div class="line">| | SessionManager.c:430 [9584] bytes</div><div class="line">| | | ASynchronizer.c:93 [64] bytes at [0x55f605057920]</div><div class="line">| | | ASynchronizer.c:93 [64] bytes at [0x55f604f34e50]</div><div class="line">| | | ASynchronizer.c:104 [64] bytes at [0x55f6050d1c70]</div><div class="line">| | | ASynchronizer.c:104 [64] bytes at [0x55f6050d1c20]</div><div class="line">| | | ASynchronizer.c:104 [64] bytes at [0x55f605136ff0]</div><div class="line">| | | ASynchronizer.c:104 [64] bytes at [0x55f605136fa0]</div><div class="line">| | | ASynchronizer.c:104 [64] bytes at [0x55f604f24790]</div><div class="line">| | | Message.h:63 [80] bytes at [0x55f6050c7b20]</div><div class="line">| | | Message.h:62 [560] bytes at [0x55f605150460]</div><div class="line">| | | Message.h:86 [80] bytes at [0x55f605150390]</div><div class="line">| | | Message.h:75 [4088] bytes at [0x55f6051627a0]</div><div class="line">| | | Message.h:86 [80] bytes at [0x55f60513de40]</div><div class="line">| | | Message.h:75 [4088] bytes at [0x55f6051617a0]</div><div class="line">| | | SessionManager.c:430 [160] bytes at [0x55f6050a06b0]</div><div class="line">| | SessionManager.c:430 [4520] bytes</div><div class="line">| | | PeerLink.c:50 [64] bytes at [0x55f605134750]</div><div class="line">| | | PeerLink.c:50 [64] bytes at [0x55f604fd1630]</div><div class="line">| | | PeerLink.c:50 [64] bytes at [0x55f6050a8ea0]</div><div class="line">| | | Message.h:86 [80] bytes at [0x55f604fcdfc0]</div><div class="line">| | | Message.h:75 [4088] bytes at [0x55f6051547a0]</div><div class="line">| | | SessionManager.c:430 [160] bytes at [0x55f6050aac60]</div><div class="line">| | SessionManager.c:430 [8688] bytes</div><div class="line">| | | ASynchronizer.c:104 [64] bytes at [0x55f60500db50]</div><div class="line">| | | ASynchronizer.c:104 [64] bytes at [0x55f605308410]</div><div class="line">| | | ASynchronizer.c:104 [64] bytes at [0x55f6052ba590]</div><div class="line">| | | Message.h:86 [80] bytes at [0x55f6050e9e70]</div><div class="line">| | | Message.h:75 [4088] bytes at [0x55f605313210]</div><div class="line">| | | Message.h:86 [80] bytes at [0x55f60529f8e0]</div><div class="line">| | | Message.h:75 [4088] bytes at [0x55f605311030]</div><div class="line">| | | SessionManager.c:430 [160] bytes at [0x55f605308bd0]</div><div class="line">| | SessionManager.c:430 [4328] bytes</div><div class="line">| | | Message.h:86 [80] bytes at [0x55f604990250]</div><div class="line">| | | Message.h:75 [4088] bytes at [0x55f60498f250]</div><div class="line">| | | SessionManager.c:430 [160] bytes at [0x55f60498f1a0]</div><div class="line">| | AsyncCrypto.c:160 [720] bytes</div><div class="line">| | | Map.h:197 [208] bytes at [0x55f604a292c0]</div><div class="line">| | | Map.h:192 [128] bytes at [0x55f604a29230]</div><div class="line">| | | AsyncTask.c:197 [128] bytes at [0x55f604963570]</div><div class="line">| | | AsyncCrypto.c:161 [96] bytes at [0x55f604963500]</div><div class="line">| | | AsyncCrypto.c:160 [160] bytes at [0x55f604963450]</div><div class="line">| | SessionManager.c:949 [488] bytes</div><div class="line">| |   Allocator.c:786 [104] bytes at [0x55f6049633e0]</div><div class="line">| |   Timeout.c:87 [224] bytes at [0x55f6049632f0]</div><div class="line">| |   SessionManager.c:949 [160] bytes at [0x55f604963240]</div><div class="line">| | Map.h:197 [128] bytes at [0x55f60498e2d0]</div><div class="line">| | Map.h:192 [88] bytes at [0x55f60498e050]</div><div class="line">| | Map.h:186 [208] bytes at [0x55f604941500]</div><div class="line">| | Map.h:183 [88] bytes at [0x55f60498dff0]</div><div class="line">| | Map.h:197 [128] bytes at [0x55f6049883b0]</div><div class="line">| | Map.h:186 [208] bytes at [0x55f6049882d0]</div><div class="line">| | Map.h:183 [88] bytes at [0x55f604988270]</div><div class="line">| | SessionManager.c:928 [288] bytes at [0x55f604962f50]</div><div class="line">| | SessionManager.c:927 [160] bytes at [0x55f604962ea0]</div></pre></td></tr></table></figure>
+</li>
+<li><p>bench崩溃的记录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line">| Benchmark.c:183 [2216] bytes (freeing)</div><div class="line">| | AsyncTask.c:107 [824] bytes (freeing)</div><div class="line">| |   AsyncTask.c:141 [488] bytes (freeing)</div><div class="line">| |   | Allocator.c:786 [104] bytes at [0x563cdcaa1bf0]</div><div class="line">| |   | Timeout.c:87 [224] bytes at [0x563cdcaa1b00]</div><div class="line">| |   | AsyncTask.c:141 [160] bytes at [0x563cdcaa1a50]</div><div class="line">| |   AsyncTask.c:139 [488] bytes (freeing)</div><div class="line">| |     Allocator.c:786 [104] bytes at [0x563cdcaa19e0]</div><div class="line">| |     Timeout.c:87 [224] bytes at [0x563cdcaa18f0]</div><div class="line">| |     AsyncTask.c:139 [160] bytes at [0x563cdcaa1840]</div><div class="line">| |   AsyncCrypto.c:70 [64] bytes at [0x563cdcaa1e10]</div><div class="line">| |   Allocator.c:786 [104] bytes at [0x563cdcaa1cf0]</div><div class="line">| |   AsyncCrypto.c:146 [128] bytes at [0x563cdcaa1c60]</div><div class="line">| |   Allocator.c:786 [104] bytes at [0x563cdcaa17d0]</div><div class="line">| |   String.c:39 [64] bytes at [0x563cdcaa1780]</div><div class="line">| |   String.c:31 [64] bytes at [0x563cdcaa1730]</div><div class="line">| |   AsyncTask.c:117 [136] bytes at [0x563cdcaa16a0]</div><div class="line">| |   AsyncTask.c:107 [160] bytes at [0x563cdcaa15f0]</div><div class="line">| | Benchmark.c:203 [88] bytes at [0x563cdcaa1db0]</div><div class="line">| | Benchmark.c:195 [72] bytes at [0x563cdcaa1d60]</div><div class="line">| | Message.h:86 [80] bytes at [0x563cdcaa1590]</div><div class="line">| | Message.h:75 [1816] bytes at [0x563cdcaa0e70]</div><div class="line">| | Benchmark.c:183 [160] bytes at [0x563cdcaa0dc0]</div><div class="line">| Benchmark.c:143 [2216] bytes (freeing)</div><div class="line">| | AsyncTask.c:107 [824] bytes (freeing)</div><div class="line">| |   AsyncTask.c:141 [488] bytes (freeing)</div><div class="line">| |   | Allocator.c:786 [104] bytes at [0x563cdcaa0b50]</div><div class="line">| |   | Timeout.c:87 [224] bytes at [0x563cdcaa0a60]</div><div class="line">| |   | AsyncTask.c:141 [160] bytes at [0x563cdcaa09b0]</div><div class="line">| |   AsyncTask.c:139 [488] bytes (freeing)</div><div class="line">| |     Allocator.c:786 [104] bytes at [0x563cdcaa0940]</div><div class="line">| |     Timeout.c:87 [224] bytes at [0x563cdcaa0850]</div><div class="line">| |     AsyncTask.c:139 [160] bytes at [0x563cdcaa07a0]</div><div class="line">| |   AsyncCrypto.c:70 [64] bytes at [0x563cdcaa0d70]</div><div class="line">| |   Allocator.c:786 [104] bytes at [0x563cdcaa0c50]</div><div class="line">| |   AsyncCrypto.c:146 [128] bytes at [0x563cdcaa0bc0]</div><div class="line">| |   Allocator.c:786 [104] bytes at [0x563cdcaa0730]</div><div class="line">| |   String.c:39 [64] bytes at [0x563cdcaa06e0]</div><div class="line">| |   String.c:31 [64] bytes at [0x563cdcaa0690]</div><div class="line">| |   AsyncTask.c:117 [136] bytes at [0x563cdcaa0600]</div><div class="line">| |   AsyncTask.c:107 [160] bytes at [0x563cdcaa0550]</div><div class="line">| | Benchmark.c:163 [88] bytes at [0x563cdcaa0d10]</div><div class="line">| | Benchmark.c:155 [72] bytes at [0x563cdcaa0cc0]</div><div class="line">| | Message.h:86 [80] bytes at [0x563cdcaa04f0]</div><div class="line">| | Message.h:75 [1816] bytes at [0x563cdca9fdd0]</div><div class="line">| | Benchmark.c:143 [160] bytes at [0x563cdca9fd20]</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="2-组网测试snode修改"><a href="#2-组网测试snode修改" class="headerlink" title="2. 组网测试snode修改"></a>2. 组网测试snode修改</h3><ul>
+<li>编译带有上周snode相关修改的引擎版本</li>
+<li>在小型测试网络中进行测试</li>
+<li>依然单数点旧引擎，双数点新引擎</li>
+<li><p>测试网络和外面断开</p>
+</li>
+<li><p>修复snode的bug</p>
+<ul>
+<li>map的hash方法</li>
+<li>timeout檢測</li>
+<li>時間輪刪除操作</li>
+</ul>
+</li>
+</ul>
+<h2 id="0117-WED"><a href="#0117-WED" class="headerlink" title="0117 WED."></a>0117 WED.</h2><h3 id="1-2snode"><a href="#1-2snode" class="headerlink" title="1. 2snode"></a>1. 2snode</h3><ul>
+<li>修復snode的bug<ul>
+<li>map的hash方法</li>
+<li>timeout檢測</li>
+<li>時間輪刪除操作</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-升級引擎"><a href="#2-升級引擎" class="headerlink" title="2. 升級引擎"></a>2. 升級引擎</h3><ul>
+<li>disable 2snode功能，發佈穩定引擎1.26</li>
+<li>更新引擎</li>
+</ul>
+<h2 id="0118-TUR"><a href="#0118-TUR" class="headerlink" title="0118 TUR."></a>0118 TUR.</h2><h3 id="1-升級引擎"><a href="#1-升級引擎" class="headerlink" title="1. 升級引擎"></a>1. 升級引擎</h3><ul>
+<li>只有sbu接入點和各種客戶端升級了引擎1.26</li>
+</ul>
+<h3 id="2-2snode"><a href="#2-2snode" class="headerlink" title="2. 2snode"></a>2. 2snode</h3><ul>
+<li>修復引擎中2snode的部分</li>
+<li>小網絡內測試</li>
+</ul>
+<h2 id="0119-FRI"><a href="#0119-FRI" class="headerlink" title="0119 FRI."></a>0119 FRI.</h2><h3 id="1-2snode-1"><a href="#1-2snode-1" class="headerlink" title="1. 2snode"></a>1. 2snode</h3><ul>
+<li>小网络内测试<ul>
+<li>关闭一个snode，其他点可以正确感知到</li>
+<li>重启snode，自己被设为snode</li>
+<li>关闭某两个docker，其他点可以正确感知到</li>
+</ul>
+</li>
+</ul>
+<h2 id="0122-MON"><a href="#0122-MON" class="headerlink" title="0122 MON."></a>0122 MON.</h2><h3 id="1-2snode-2"><a href="#1-2snode-2" class="headerlink" title="1. 2snode"></a>1. 2snode</h3><ul>
+<li>现有代码推到jwh_2snode分支</li>
+<li>现有代码版本放在小测试环境中持续运行</li>
+<li>后期全网如何推进</li>
+</ul>
+<h3 id="2-异步加解密"><a href="#2-异步加解密" class="headerlink" title="2. 异步加解密"></a>2. 异步加解密</h3><ul>
+<li>内存无法释放问题</li>
+</ul>
+<h2 id="0123-TUE"><a href="#0123-TUE" class="headerlink" title="0123 TUE."></a>0123 TUE.</h2><h3 id="1-2snode-3"><a href="#1-2snode-3" class="headerlink" title="1. 2snode"></a>1. 2snode</h3><ul>
+<li>cjdnsnode的config.js中ws要配ipv6地址</li>
+<li>小网络运行正常</li>
+</ul>
+<h3 id="2-异步加解密-1"><a href="#2-异步加解密-1" class="headerlink" title="2. 异步加解密"></a>2. 异步加解密</h3><ul>
+<li>分支jwh_ja</li>
+<li>内存无法释放问题</li>
+<li>内存无法释放是因为，timeout的free操作不是立即执行的，而是等待eventbase下一次操作才执行的。然而在bench中，每次都会new一个task，而在new task时，会执行<code>Timeout_setTimeout(asyncRunTask, task, 0, asyncTask-&gt;eventBase, alloc);</code>,这个操作会立刻将新的加解密操作塞到eventbasse的队列头。这样，就会把上一轮的timeout的free操作推到后面。在bench中，这样的堆积操作会一直被堵塞，无法释放。进而引发内存耗尽。</li>
+<li>在引擎中，这个堵塞操作也会发生，但会有一定缓解。因为实际情况中，不会出现像bench中这样的嵌套结构。</li>
+<li>然而如果进行频繁的加解密操作，比如两点之间传输大文件，也会在一段时间后发生内存耗尽。</li>
+</ul>
+<h2 id="0124-WED"><a href="#0124-WED" class="headerlink" title="0124 WED."></a>0124 WED.</h2><h3 id="1-异步加解密"><a href="#1-异步加解密" class="headerlink" title="1. 异步加解密"></a>1. 异步加解密</h3><ul>
+<li>昨天定位到内存耗尽的问题后，预备想办法提前timeout的free操作，让其立刻执行。增加uv_timer_close_now方法。</li>
+<li>uv_timer_close_now方法已添加，但因为timeout中包括了task，timeout的释放，导致task被太早的释放了，返回值的内存地址被释放了。所以，暂时不使用uv_timer_close_now方法，</li>
+</ul>
+<h3 id="2-RuleSet-flush"><a href="#2-RuleSet-flush" class="headerlink" title="2. RuleSet_flush"></a>2. RuleSet_flush</h3><ul>
+<li>源代码存在内存泄漏</li>
+<li>ArrayList删除操作需要倒序执行</li>
+</ul>
+<h2 id="0125-TUR"><a href="#0125-TUR" class="headerlink" title="0125 TUR."></a>0125 TUR.</h2><h3 id="1-异步加解密-1"><a href="#1-异步加解密-1" class="headerlink" title="1. 异步加解密"></a>1. 异步加解密</h3><ul>
+<li>分析CryptoAuth_Session_pvt和CryptoAuth_Session内部的成员，看看哪些会在加解密过程中改变。设计异步加解密前后，同步这些数据的方法。</li>
+<li>将caSession也作成clone的。以便以后将整个异步加解密变成多线程执行。</li>
 </ul>
 
       
