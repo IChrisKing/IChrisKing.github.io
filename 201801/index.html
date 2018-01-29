@@ -22,7 +22,7 @@
 <meta property="og:site_name" content="IChrisKing">
 <meta property="og:description" content="0102 TUE.1. 干扰包功能测试 测试环境中的点运行正常 递交干扰包相关代码  2. 异步实现加解密功能 重构代码，将加解密不需要的那些局部状态，作成结构体，挂在调用异步加解密的那些结构体中。只将加解密必须的msg和caSession传递给异步加解密方法。 比如，在InterfaceController.c中，handleUnexpectedIncoming调用了异步解密方法。 需要保存的局">
 <meta property="og:locale" content="zh-Hant-TW">
-<meta property="og:updated_time" content="2018-01-29T08:10:41.189Z">
+<meta property="og:updated_time" content="2018-01-29T08:23:34.294Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="201801">
 <meta name="twitter:description" content="0102 TUE.1. 干扰包功能测试 测试环境中的点运行正常 递交干扰包相关代码  2. 异步实现加解密功能 重构代码，将加解密不需要的那些局部状态，作成结构体，挂在调用异步加解密的那些结构体中。只将加解密必须的msg和caSession传递给异步加解密方法。 比如，在InterfaceController.c中，handleUnexpectedIncoming调用了异步解密方法。 需要保存的局">
@@ -556,6 +556,10 @@
 <li>因为引起崩溃的地方只有SessionManager.c中的ctrlFrame,其中调用了Iface_next方法，引发了崩溃。所以直接将这里的Iface_next方法，改为Iface_send方法，避开msg-&gt;currentIface的检查。</li>
 </ul>
 </li>
+</ul>
+<h3 id="2-异步加解密小环境测试"><a href="#2-异步加解密小环境测试" class="headerlink" title="2. 异步加解密小环境测试"></a>2. 异步加解密小环境测试</h3><ul>
+<li>编译fb-clean版本，放入小环境测试</li>
+<li>观察稳定性和连通性</li>
 </ul>
 <h3 id="2-多线程实现"><a href="#2-多线程实现" class="headerlink" title="2. 多线程实现"></a>2. 多线程实现</h3><ul>
 <li>查看cjdns中自带的async和threadpool相关代码</li>
