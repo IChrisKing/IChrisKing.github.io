@@ -22,7 +22,7 @@
 <meta property="og:site_name" content="IChrisKing">
 <meta property="og:description" content="0102 TUE.1. 干扰包功能测试 测试环境中的点运行正常 递交干扰包相关代码  2. 异步实现加解密功能 重构代码，将加解密不需要的那些局部状态，作成结构体，挂在调用异步加解密的那些结构体中。只将加解密必须的msg和caSession传递给异步加解密方法。 比如，在InterfaceController.c中，handleUnexpectedIncoming调用了异步解密方法。 需要保存的局">
 <meta property="og:locale" content="zh-Hant-TW">
-<meta property="og:updated_time" content="2018-01-25T01:52:26.453Z">
+<meta property="og:updated_time" content="2018-01-29T08:10:41.189Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="201801">
 <meta name="twitter:description" content="0102 TUE.1. 干扰包功能测试 测试环境中的点运行正常 递交干扰包相关代码  2. 异步实现加解密功能 重构代码，将加解密不需要的那些局部状态，作成结构体，挂在调用异步加解密的那些结构体中。只将加解密必须的msg和caSession传递给异步加解密方法。 比如，在InterfaceController.c中，handleUnexpectedIncoming调用了异步解密方法。 需要保存的局">
@@ -514,6 +514,54 @@
 <h2 id="0125-TUR"><a href="#0125-TUR" class="headerlink" title="0125 TUR."></a>0125 TUR.</h2><h3 id="1-异步加解密-1"><a href="#1-异步加解密-1" class="headerlink" title="1. 异步加解密"></a>1. 异步加解密</h3><ul>
 <li>分析CryptoAuth_Session_pvt和CryptoAuth_Session内部的成员，看看哪些会在加解密过程中改变。设计异步加解密前后，同步这些数据的方法。</li>
 <li>将caSession也作成clone的。以便以后将整个异步加解密变成多线程执行。</li>
+</ul>
+<h2 id="0126-FRI"><a href="#0126-FRI" class="headerlink" title="0126 FRI."></a>0126 FRI.</h2><h3 id="1-异步加解密-2"><a href="#1-异步加解密-2" class="headerlink" title="1. 异步加解密"></a>1. 异步加解密</h3><ul>
+<li>编译一个单线程，全clone版本引擎，放到测试环境中进行测试<ul>
+<li>AsyncCrypto需要的msg和caSession都使用clone的方法。传入加解密操作的msg和caSession都是复制版本</li>
+<li>传回加解密结果后，copy回msg和caSession</li>
+<li>因为caSession中，只有部份成员需要copy回来，所以使用merge方法。</li>
+</ul>
+</li>
+<li>查看cjdns中自带的async和threadpool相关代码</li>
+</ul>
+<h3 id="2-merge代码"><a href="#2-merge代码" class="headerlink" title="2. merge代码"></a>2. merge代码</h3><ul>
+<li>diff ja和fb-clean的时候发现ja分支有几行代码应该有的代码没写，增加一下</li>
+</ul>
+<h2 id="0129-MON"><a href="#0129-MON" class="headerlink" title="0129 MON."></a>0129 MON.</h2><h3 id="1-异步加解密-3"><a href="#1-异步加解密-3" class="headerlink" title="1. 异步加解密"></a>1. 异步加解密</h3><ul>
+<li>目前版本情况<ul>
+<li>AsyncCrypto需要的msg和caSession都使用clone的方法。传入加解密操作的msg和caSession都是复制版本</li>
+<li>传回加解密结果后，copy回msg和caSession</li>
+<li>因为caSession中，只有部份成员需要copy回来，所以使用merge方法。</li>
+</ul>
+</li>
+<li><p>查找fb-clean崩溃的原因</p>
+<ul>
+<li><p>fb-clean编译开启PARANOIA，会在Iface.h的Iface_next方法中检查</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Assert_true(msg-&gt;currentIface);</div><div class="line">Assert_true(msg-&gt;currentIface-&gt;currentMsg == msg);</div></pre></td></tr></table></figure>
+<p>而Message_clone时，并没有clone currentIface，造成检查失败，引擎崩溃</p>
+</li>
+</ul>
+</li>
+<li><p>解决方法(作废)</p>
+<ul>
+<li><p>新增 Message_cloneIncludeIface方法，在原来的clone基础上，增加</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">    #ifdef PARANOIA</div><div class="line">    if (toClone-&gt;currentIface) &#123;</div><div class="line">        msg-&gt;currentIface = toClone-&gt;currentIface;</div><div class="line">    &#125;</div><div class="line">#endif</div></pre></td></tr></table></figure>
+</li>
+<li><p>不再<code>Assert_true(msg-&gt;currentIface-&gt;currentMsg == msg);</code>因为，异步加解密必定clone msg，所有绝对不可能等于原msg</p>
+</li>
+</ul>
+</li>
+<li><p>解决方法</p>
+<ul>
+<li>因为引起崩溃的地方只有SessionManager.c中的ctrlFrame,其中调用了Iface_next方法，引发了崩溃。所以直接将这里的Iface_next方法，改为Iface_send方法，避开msg-&gt;currentIface的检查。</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-多线程实现"><a href="#2-多线程实现" class="headerlink" title="2. 多线程实现"></a>2. 多线程实现</h3><ul>
+<li>查看cjdns中自带的async和threadpool相关代码</li>
+</ul>
+<h3 id="3-非对称密钥对的运用文档"><a href="#3-非对称密钥对的运用文档" class="headerlink" title="3. 非对称密钥对的运用文档"></a>3. 非对称密钥对的运用文档</h3><ul>
+<li>两对非对称密钥在cjdns中的运用</li>
 </ul>
 
       
