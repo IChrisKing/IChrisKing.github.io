@@ -1,21 +1,102 @@
 <!DOCTYPE html>
-<html lang="zh-Hant-TW">
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hant-TW">
 <head><meta name="generator" content="Hexo 3.8.0">
-
-    <!--[if lt IE 9]>
-        <style>body {display: none; background: none !important} </style>
-        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
-    <![endif]-->
-
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<meta name="format-detection" content="telephone=no">
-<meta name="author" content="Chris King">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
 
 
 
-<meta name="description" content="结合cjdns项目中，policy执行模块的实现，来分析一下简单的iptables命令">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.0.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.0.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.0.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.0.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="结合cjdns项目中，policy执行模块的实现，来分析一下简单的iptables命令">
 <meta name="keywords" content="iptables,linux">
 <meta property="og:type" content="article">
 <meta property="og:title" content="cjdns源码分析--iptables在cjdns项目中的运用">
@@ -31,282 +112,311 @@
 <meta name="twitter:description" content="结合cjdns项目中，policy执行模块的实现，来分析一下简单的iptables命令">
 <meta name="twitter:image" content="http://yoursite.com/assets/img/about-iptables/links.png">
 
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
-
-
-    <link rel="alternate" href="/atom.xml" title="IChrisKing" type="application/atom+xml">
 
 
 
-    <link rel="shortcut icon" href="/favicon.png">
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/27/about-iptables/">
 
 
 
-    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
-
-
-
-    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
-
-
-
-    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
-    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
-
-
-<link rel="stylesheet" href="/css/style.css">
-
-
-
-<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
-
-
-<title>cjdns源码分析--iptables在cjdns项目中的运用 | IChrisKing</title>
-
-<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
-<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
-
-<script>
-    var yiliaConfig = {
-        fancybox: true,
-        animate: true,
-        isHome: false,
-        isPost: true,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
-        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
-        search: undefined
-    }
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
 </script>
 
-
-    <script> yiliaConfig.jquery_ui = [false]; </script>
-
-
-
-    <script> yiliaConfig.rootUrl = "\/";</script>
+  <title>cjdns源码分析--iptables在cjdns项目中的运用 | IChrisKing</title>
+  
 
 
 
 
 
 
-</head></html>
-<body>
-  <div id="container">
-    <div class="left-col">
-    <div class="overlay"></div>
-<div class="intrude-less">
-    <header id="header" class="inner">
-        <a href="/" class="profilepic">
-            <img src="/img/avatar.png" class="animated zoomIn">
-        </a>
-        <hgroup>
-          <h1 class="header-author"><a href="/">Chris King</a></h1>
-        </hgroup>
-
-        
-        <p class="header-subtitle">#IMNOTCHRISLEE</p>
-        
-
-        
 
 
-        
-            <div id="switch-btn" class="switch-btn">
-                <div class="icon">
-                    <div class="icon-ctn">
-                        <div class="icon-wrap icon-house" data-idx="0">
-                            <div class="birdhouse"></div>
-                            <div class="birdhouse_holes"></div>
-                        </div>
-                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
-                            <div class="ribbon"></div>
-                        </div>
-                        
-                        <div class="icon-wrap icon-link hide" data-idx="2">
-                            <div class="loopback_l"></div>
-                            <div class="loopback_r"></div>
-                        </div>
-                        
-                        
-                        <div class="icon-wrap icon-me hide" data-idx="3">
-                            <div class="user"></div>
-                            <div class="shoulder"></div>
-                        </div>
-                        
-                    </div>
-                    
-                </div>
-                <div class="tips-box hide">
-                    <div class="tips-arrow"></div>
-                    <ul class="tips-inner">
-                        <li>菜單</li>
-                        <li>標籤</li>
-                        
-                        <li>友情鏈接</li>
-                        
-                        
-                        <li>關於我</li>
-                        
-                    </ul>
-                </div>
-            </div>
-        
 
-        <div id="switch-area" class="switch-area">
-            <div class="switch-wrap">
-                <section class="switch-part switch-part1">
-                    <nav class="header-menu">
-                        <ul>
-                        
-                            <li><a href="/">主頁</a></li>
-                        
-                            <li><a href="/archives/">所有文章</a></li>
-                        
-                            <li><a href="/tags/">標籤雲</a></li>
-                        
-                            <li><a href="/about/">關於我</a></li>
-                        
-                        </ul>
-                    </nav>
-                    <nav class="header-nav">
-                        <ul class="social">
-                            
-                                <a class="fa Email" href="https://chrisking310@gmail.com" title="Email"></a>
-                            
-                                <a class="fa GitHub" href="https://github.com/IChrisKing" title="GitHub"></a>
-                            
-                                <a class="fa 新浪博客" href="http://blog.sina.com.cn/u/1733434252" title="新浪博客"></a>
-                            
-                        </ul>
-                    </nav>
-                </section>
-                
-                
-                <section class="switch-part switch-part2">
-                    <div class="widget tagcloud" id="js-tagcloud">
-                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-everyday/">Android_everyday</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android开发工程师/">Android开发工程师</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Anrom/">Anrom</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C-C/">C/C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SEAndroid/">SEAndroid</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SELinux/">SELinux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cjdns/">cjdns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cjdns源码分析/">cjdns源码分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iptables/">iptables</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/music/">music</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/raspberry配置/">raspberry配置</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rom/">rom</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shadowsocks-vps/">shadowsocks/vps</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tool/">tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/填坑/">填坑</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/排序算法/">排序算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/查找算法/">查找算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/树莓派raspberry/">树莓派raspberry</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
-                    </div>
-                </section>
-                
-                
-                
-                <section class="switch-part switch-part3">
-                    <div id="js-friends">
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://anromos.github.io/">Anrom OS</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://github.com/AnromOS">Team GitHub</a>
-                    
-                    </div>
-                </section>
-                
 
-                
-                
-                <section class="switch-part switch-part4">
-                
-                    <div id="js-aboutme">Android ROM 开发</div>
-                </section>
-                
-            </div>
-        </div>
-    </header>                
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hant-TW">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">IChrisKing</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">#IMNOTCHRISLEE</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
 </div>
-    </div>
-    <div class="mid-col">
-      <nav id="mobile-nav">
-      <div class="overlay">
-          <div class="slider-trigger"></div>
-          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Chris King</a></h1>
-      </div>
-    <div class="intrude-less">
-        <header id="header" class="inner">
-            <a href="/" class="profilepic">
-                <img src="/img/avatar.png" class="animated zoomIn">
-            </a>
-            <hgroup>
-              <h1 class="header-author"><a href="/" title="回到主页">Chris King</a></h1>
-            </hgroup>
-            
-            <p class="header-subtitle">#IMNOTCHRISLEE</p>
-            
-            <nav class="header-menu">
-                <ul>
-                
-                    <li><a href="/">主頁</a></li>
-                
-                    <li><a href="/archives/">所有文章</a></li>
-                
-                    <li><a href="/tags/">標籤雲</a></li>
-                
-                    <li><a href="/about/">關於我</a></li>
-                
-                <div class="clearfix"></div>
-                </ul>
-            </nav>
-            <nav class="header-nav">
-                        <ul class="social">
-                            
-                                <a class="fa Email" target="_blank" href="https://chrisking310@gmail.com" title="Email"></a>
-                            
-                                <a class="fa GitHub" target="_blank" href="https://github.com/IChrisKing" title="GitHub"></a>
-                            
-                                <a class="fa 新浪博客" target="_blank" href="http://blog.sina.com.cn/u/1733434252" title="新浪博客"></a>
-                            
-                        </ul>
-            </nav>
-        </header>                
-    </div>
-    <link class="menu-list" tags="標籤" friends="友情鏈接" about="關於我">
-</nav>
-      <div class="body-wrap"><article id="post-about-iptables" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/04/27/about-iptables/" class="article-date">
-      <time datetime="2017-04-27T03:20:05.000Z" itemprop="datePublished">2017-04-27</time>
-</a>
 
 
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 class="article-title" itemprop="name">
-      cjdns源码分析--iptables在cjdns项目中的运用
-    </h1>
-  
 
-      </header>
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
       
-      <div class="article-info article-info-post">
         
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/net/">net</a><a class="article-category-link" href="/categories/net/iptables/">iptables</a>
-    </div>
-
-
         
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iptables/">iptables</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
-    </div>
-
-        <div class="clearfix"></div>
-      </div>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
+        
           
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/27/about-iptables/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chris King">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="IChrisKing">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">cjdns源码分析--iptables在cjdns项目中的运用
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2017-04-27 11:20:05" itemprop="dateCreated datePublished" datetime="2017-04-27T11:20:05+08:00">2017-04-27</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-03-22 11:49:42" itemprop="dateModified" datetime="2019-03-22T11:49:42+08:00">2019-03-22</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/net/" itemprop="url" rel="index"><span itemprop="name">net</span></a></span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/net/iptables/" itemprop="url" rel="index"><span itemprop="name">iptables</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+            <div class="post-description">结合cjdns项目中，policy执行模块的实现，来分析一下简单的iptables命令</div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
         <h2 id="关于iptables"><a href="#关于iptables" class="headerlink" title="关于iptables"></a>关于iptables</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>iptables是linux平台的网络访问控制管理系统，是一个包过滤防火墙。<br>它会检查数据包的相关信息，如源地址，目的地址，源端口，目的端口，协议类型等，结合规则的设置，来决定数据包的处理方法。</p>
 <h3 id="规则表（table）与规则链（chains）"><a href="#规则表（table）与规则链（chains）" class="headerlink" title="规则表（table）与规则链（chains）"></a>规则表（table）与规则链（chains）</h3><h4 id="规则链"><a href="#规则链" class="headerlink" title="规则链"></a>规则链</h4><p>数据包会在如下五个位置经受检查：</p>
 <ol>
@@ -343,223 +453,513 @@
 <li>Raw表——两个链：OUTPUT、PREROUTING<br>作用：决定数据包是否被状态跟踪机制处理  内核模块：iptable_raw<br>(这个是REHL4没有的，不过用的不多)</li>
 </ol>
 <p><strong> 规则表之间的优先顺序：</strong><br>Raw——mangle——nat——filter</p>
-<h3 id="基本规则语法"><a href="#基本规则语法" class="headerlink" title="基本规则语法"></a>基本规则语法</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">iptables [-t filter] [-AI INPUT,OUTPUT,FORWARD] [-io interface]</div><div class="line">      [-p tcp,udp.icmp,all] [-s ip/nerwork] [--sport ports]</div><div class="line">      [-d ip/netword] [--dport ports] [-j ACCEPT DROP]</div></pre></td></tr></table></figure>
+<h3 id="基本规则语法"><a href="#基本规则语法" class="headerlink" title="基本规则语法"></a>基本规则语法</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">iptables [-t filter] [-AI INPUT,OUTPUT,FORWARD] [-io interface]</span><br><span class="line">      [-p tcp,udp.icmp,all] [-s ip/nerwork] [--sport ports]</span><br><span class="line">      [-d ip/netword] [--dport ports] [-j ACCEPT DROP]</span><br></pre></td></tr></table></figure>
 <p>常用命令列表：<br>命令 -A, –append<br>范例 iptables -A INPUT …<br>说明 新增规则到某个规则链中，该规则将会成为规则链中的最后一条规则。<br>命令 -D, –delete<br>范例 iptables -D INPUT –dport 80 -j DROP<br>iptables -D INPUT 1<br>说明 从某个规则链中删除一条规则，可以输入完整规则，或直接指定规则编号加以删除。<br>命令 -R, –replace<br>范例 iptables -R INPUT 1 -s 192.168.0.1 -j DROP<br>说明 取代现行规则，规则被取代后并不会改变顺序。<br>命令 -I, –insert<br>范例 iptables -I INPUT 1 –dport 80 -j ACCEPT<br>说明 插入一条规则，原本该位置上的规则将会往后移动一个顺位。<br>命令 -L, –list<br>范例 iptables -L INPUT<br>说明 列出某规则链中的所有规则。<br>命令 -F, –flush<br>范例 iptables -F INPUT<br>说明 删除某规则链中的所有规则。<br>命令 -Z, –zero<br>范例 iptables -Z INPUT<br>说明 将封包计数器归零。封包计数器是用来计算同一封包出现次数，是过滤阻断式攻击不可或缺的工具。<br>命令 -N, –new-chain<br>范例 iptables -N allowed<br>说明 定义新的规则链。<br>命令 -X, –delete-chain<br>范例 iptables -X allowed<br>说明 删除某个规则链。<br>命令 -P, –policy<br>范例 iptables -P INPUT DROP<br>说明 定义过滤政策。 也就是未符合过滤条件之封包，预设的处理方式。<br>命令 -E, –rename-chain<br>范例 iptables -E allowed disallowed<br>说明 修改某自订规则链的名称。<br>常用封包比对参数：<br>参数 -p, –protocol<br>范例 iptables -A INPUT -p tcp<br>说明 比对通讯协议类型是否相符，可以使用 ! 运算子进行反向比对，例如：-p ! tcp ，意思是指除 tcp 以外的其它类型，包含udp、icmp …等。如果要比对所有类型，则可以使用 all 关键词，例如：-p all。<br>参数 -s, –src, –source<br>范例 iptables -A INPUT -s 192.168.1.1<br>说明 用来比对封包的来源 IP，可以比对单机或网络，比对网络时请用数字来表示屏蔽，例如：-s 192.168.0.0/24，比对 IP 时可以使用 ! 运算子进行反向比对，例如：-s ! 192.168.0.0/24。<br>参数 -d, –dst, –destination<br>范例 iptables -A INPUT -d 192.168.1.1<br>说明 用来比对封包的目的地 IP，设定方式同上。<br>参数 -i, –in-interface<br>范例 iptables -A INPUT -i eth0<br>说明 用来比对封包是从哪片网卡进入，可以使用通配字符 + 来做大范围比对，例如：-i eth+ 表示所有的 ethernet 网卡，也以使用 ! 运算子进行反向比对，例如：-i ! eth0。<br>参数 -o, –out-interface<br>范例 iptables -A FORWARD -o eth0<br>说明 用来比对封包要从哪片网卡送出，设定方式同上。<br>参数 –sport, –source-port<br>范例 iptables -A INPUT -p tcp –sport 22<br>说明 用来比对封包的来源埠号，可以比对单一埠，或是一个范围，例如：–sport 22:80，表示从 22 到 80 埠之间都算是符合件，如果要比对不连续的多个埠，则必须使用 –multiport 参数，详见后文。比对埠号时，可以使用 ! 运算子进行反向比对。<br>参数 –dport, –destination-port<br>范例 iptables -A INPUT -p tcp –dport 22<br>说明 用来比对封包的目的地埠号，设定方式同上。<br>参数 –tcp-flags<br>范例 iptables -p tcp –tcp-flags SYN,FIN,ACK SYN<br>说明 比对 TCP 封包的状态旗号，参数分为两个部分，第一个部分列举出想比对的旗号，第二部分则列举前述旗号中哪些有被设，未被列举的旗号必须是空的。TCP 状态旗号包括：SYN（同步）、ACK（应答）、FIN（结束）、RST（重设）、URG（紧急）<br>PSH（强迫推送） 等均可使用于参数中，除此之外还可以使用关键词 ALL 和 NONE 进行比对。比对旗号时，可以使用 ! 运算子行反向比对。<br>参数 –syn<br>范例 iptables -p tcp –syn<br>说明 用来比对是否为要求联机之 TCP 封包，与 iptables -p tcp –tcp-flags SYN,FIN,ACK SYN 的作用完全相同，如果使用 !运算子，可用来比对非要求联机封包。<br>参数 -m multiport –source-port<br>范例 iptables -A INPUT -p tcp -m multiport –source-port 22,53,80,110<br>说明 用来比对不连续的多个来源埠号，一次最多可以比对 15 个埠，可以使用 ! 运算子进行反向比对。<br>参数 -m multiport –destination-port<br>范例 iptables -A INPUT -p tcp -m multiport –destination-port 22,53,80,110<br>说明 用来比对不连续的多个目的地埠号，设定方式同上。<br>参数 -m multiport –port<br>范例 iptables -A INPUT -p tcp -m multiport –port 22,53,80,110<br>说明 这个参数比较特殊，用来比对来源埠号和目的埠号相同的封包，设定方式同上。注意：在本范例中，如果来源端口号为 80 目的地埠号为 110，这种封包并不算符合条件。<br>参数 –icmp-type<br>范例 iptables -A INPUT -p icmp –icmp-type 8<br>说明 用来比对 ICMP 的类型编号，可以使用代码或数字编号来进行比对。请打 iptables -p icmp –help 来查看有哪些代码可用。<br>参数 -m limit –limit<br>范例 iptables -A INPUT -m limit –limit 3/hour<br>说明 用来比对某段时间内封包的平均流量，上面的例子是用来比对：每小时平均流量是否超过一次 3 个封包。 除了每小时平均次外，也可以每秒钟、每分钟或每天平均一次，默认值为每小时平均一次，参数如后： /second、 /minute、/day。 除了进行封<br>数量的比对外，设定这个参数也会在条件达成时，暂停封包的比对动作，以避免因骇客使用洪水攻击法，导致服务被阻断。<br>参数 –limit-burst<br>范例 iptables -A INPUT -m limit –limit-burst 5<br>说明 用来比对瞬间大量封包的数量，上面的例子是用来比对一次同时涌入的封包是否超过 5 个（这是默认值），超过此上限的封将被直接丢弃。使用效果同上。<br>参数 -m mac –mac-source<br>范例 iptables -A INPUT -m mac –mac-source 00:00:00:00:00:01<br>说明 用来比对封包来源网络接口的硬件地址，这个参数不能用在 OUTPUT 和 Postrouting 规则炼上，这是因为封包要送出到网后，才能由网卡驱动程序透过 ARP 通讯协议查出目的地的 MAC 地址，所以 iptables 在进行封包比对时，并不知道封包会送到个网络接口去。<br>参数 –mark<br>范例 iptables -t mangle -A INPUT -m mark –mark 1<br>说明 用来比对封包是否被表示某个号码，当封包被比对成功时，我们可以透过 MARK 处理动作，将该封包标示一个号码，号码最不可以超过 4294967296。<br>参数 -m owner –uid-owner<br>范例 iptables -A OUTPUT -m owner –uid-owner 500<br>说明 用来比对来自本机的封包，是否为某特定使用者所产生的，这样可以避免服务器使用 root 或其它身分将敏感数据传送出，可以降低系统被骇的损失。可惜这个功能无法比对出来自其它主机的封包。<br>参数 -m owner –gid-owner<br>范例 iptables -A OUTPUT -m owner –gid-owner 0<br>说明 用来比对来自本机的封包，是否为某特定使用者群组所产生的，使用时机同上。<br>参数 -m owner –pid-owner<br>范例 iptables -A OUTPUT -m owner –pid-owner 78<br>说明 用来比对来自本机的封包，是否为某特定行程所产生的，使用时机同上。<br>参数 -m owner –sid-owner<br>范例 iptables -A OUTPUT -m owner –sid-owner 100<br>说明 用来比对来自本机的封包，是否为某特定联机（Session ID）的响应封包，使用时机同上。<br>参数 -m state –state<br>范例 iptables -A INPUT -m state –state RELATED,ESTABLISHED<br>说明 用来比对联机状态，联机状态共有四种：INVALID、ESTABLISHED、NEW 和 RELATED。</p>
 <p>INVALID 表示该封包的联机编号（Session ID）无法辨识或编号不正确。<br>ESTABLISHED 表示该封包属于某个已经建立的联机。<br>NEW 表示该封包想要起始一个联机（重设联机或将联机重导向）。<br>RELATED 表示该封包是属于某个已经建立的联机，所建立的新联机。例如：FTP-DATA 联机必定是源自某个 FTP 联机。</p>
 <p>常用的处理动作：<br>-j 参数用来指定要进行的处理动作，常用的处理动作包括：ACCEPT、REJECT、DROP、REDIRECT、MASQUERADE、LOG、DNAT、</p>
 <p>SNAT、MIRROR、QUEUE、RETURN、MARK，分别说明如下：<br>ACCEPT 将封包放行，进行完此处理动作后，将不再比对其它规则，直接跳往下一个规则炼（natostrouting）。<br>REJECT 拦阻该封包，并传送封包通知对方，可以传送的封包有几个选择：ICMP port-unreachable、ICMP echo-reply 或是<br>tcp-reset（这个封包会要求对方关闭联机），进行完此处理动作后，将不再比对其它规则，直接 中断过滤程序。 范例如下：<br>iptables -A FORWARD -p TCP –dport 22 -j REJECT –reject-with tcp-reset<br>DROP 丢弃封包不予处理，进行完此处理动作后，将不再比对其它规则，直接中断过滤程序。<br>REDIRECT 将封包重新导向到另一个端口（PNAT），进行完此处理动作后，将 会继续比对其它规则。 这个功能可以用来实作通透式<br>porxy 或用来保护 web 服务器。例如：iptables -t nat -A PREROUTING -p tcp –dport 80 -j REDIRECT –to-ports 8080<br>MASQUERADE 改写封包来源 IP 为防火墙 NIC IP，可以指定 port 对应的范围，进行完此处理动作后，直接跳往下一个规则（mangleostrouting）。这个功能与 SNAT 略有不同，当进行 IP 伪装时，不需指定要伪装成哪个 IP，IP 会从网卡直接读，当使用拨接连线时，IP 通常是由 ISP 公司的 DHCP 服务器指派的，这个时候 MASQUERADE 特别有用。范例如下：<br>iptables -t nat -A POSTROUTING -p TCP -j MASQUERADE –to-ports 1024-31000<br>LOG 将封包相关讯息纪录在 /var/log 中，详细位置请查阅 /etc/syslog.conf 组态档，进行完此处理动作后，将会继续比对其规则。例如：<br>iptables -A INPUT -p tcp -j LOG –log-prefix “INPUT packets”<br>SNAT 改写封包来源 IP 为某特定 IP 或 IP 范围，可以指定 port 对应的范围，进行完此处理动作后，将直接跳往下一个规则（mangleostrouting）。范例如下：<br>iptables -t nat -A POSTROUTING -p tcp-o eth0 -j SNAT –to-source 194.236.50.155-194.236.50.160:1024-32000<br>DNAT 改写封包目的地 IP 为某特定 IP 或 IP 范围，可以指定 port 对应的范围，进行完此处理动作后，将会直接跳往下一个规炼（filter:input 或 filter:forward）。范例如下：<br>iptables -t nat -A PREROUTING -p tcp -d 15.45.23.67 –dport 80 -j DNAT –to-destination<br>192.168.1.1-192.168.1.10:80-100<br>MIRROR 镜射封包，也就是将来源 IP 与目的地 IP 对调后，将封包送回，进行完此处理动作后，将会中断过滤程序。<br>QUEUE 中断过滤程序，将封包放入队列，交给其它程序处理。透过自行开发的处理程序，可以进行其它应用，例如：计算联机费…….等。<br>RETURN 结束在目前规则炼中的过滤程序，返回主规则炼继续过滤，如果把自订规则炼看成是一个子程序，那么这个动作，就相当提早结束子程序并返回到主程序中。<br>MARK 将封包标上某个代号，以便提供作为后续过滤的条件判断依据，进行完此处理动作后，将会继续比对其它规则。范例如下：<br>iptables -t mangle -A PREROUTING -p tcp –dport 22 -j MARK –set-mark 2</p>
 <h3 id="自定义规则链"><a href="#自定义规则链" class="headerlink" title="自定义规则链"></a>自定义规则链</h3><p>自定义链，最终要应用于默认链上，才能起作用。<br>iptables -N CJDNS_INPUT    –自定义一条名为CJDNS_INPUT的规则链<br>iptables -I INPUT -j CJDNS_INPUT;  –将CJDNS_INPUT应用到INPUT规则链上</p>
-<h2 id="cjdns项目中的应用"><a href="#cjdns项目中的应用" class="headerlink" title="cjdns项目中的应用"></a>cjdns项目中的应用</h2><h3 id="rule-flush方法中的使用"><a href="#rule-flush方法中的使用" class="headerlink" title="rule_flush方法中的使用"></a>rule_flush方法中的使用</h3><h4 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">static int Policy_firewall_flush_linux(struct Policy_pvt* policy)</div><div class="line">&#123;</div><div class="line">    int ret = 0;</div><div class="line">    if (policy-&gt;ifName == NULL) &#123;</div><div class="line">        return ret;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    /* Remove all old rules */</div><div class="line">    const char* flushAll = &quot;iptables -F CJDNS_INPUT;&quot;</div><div class="line">                         &quot;iptables -D INPUT -j CJDNS_INPUT;&quot;</div><div class="line">                         &quot;iptables -X CJDNS_INPUT;&quot;</div><div class="line">                         &quot;iptables -F CJDNS_OUTPUT;&quot;</div><div class="line">                         &quot;iptables -D OUTPUT -j CJDNS_OUTPUT;&quot;</div><div class="line">                         &quot;iptables -X CJDNS_OUTPUT;&quot;</div><div class="line">                         &quot;ip6tables -F CJDNS_INPUT;&quot;</div><div class="line">                         &quot;ip6tables -D INPUT -j CJDNS_INPUT;&quot;</div><div class="line">                         &quot;ip6tables -X CJDNS_INPUT;&quot;</div><div class="line">                         &quot;ip6tables -F CJDNS_OUTPUT;&quot;</div><div class="line">                         &quot;ip6tables -D OUTPUT -j CJDNS_OUTPUT;&quot;</div><div class="line">                         &quot;ip6tables -X CJDNS_OUTPUT;&quot;;</div><div class="line">    ret = system(flushAll);</div><div class="line">    return ret;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="cjdns项目中的应用"><a href="#cjdns项目中的应用" class="headerlink" title="cjdns项目中的应用"></a>cjdns项目中的应用</h2><h3 id="rule-flush方法中的使用"><a href="#rule-flush方法中的使用" class="headerlink" title="rule_flush方法中的使用"></a>rule_flush方法中的使用</h3><h4 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">static int Policy_firewall_flush_linux(struct Policy_pvt* policy)</span><br><span class="line">&#123;</span><br><span class="line">    int ret = 0;</span><br><span class="line">    if (policy-&gt;ifName == NULL) &#123;</span><br><span class="line">        return ret;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /* Remove all old rules */</span><br><span class="line">    const char* flushAll = &quot;iptables -F CJDNS_INPUT;&quot;</span><br><span class="line">                         &quot;iptables -D INPUT -j CJDNS_INPUT;&quot;</span><br><span class="line">                         &quot;iptables -X CJDNS_INPUT;&quot;</span><br><span class="line">                         &quot;iptables -F CJDNS_OUTPUT;&quot;</span><br><span class="line">                         &quot;iptables -D OUTPUT -j CJDNS_OUTPUT;&quot;</span><br><span class="line">                         &quot;iptables -X CJDNS_OUTPUT;&quot;</span><br><span class="line">                         &quot;ip6tables -F CJDNS_INPUT;&quot;</span><br><span class="line">                         &quot;ip6tables -D INPUT -j CJDNS_INPUT;&quot;</span><br><span class="line">                         &quot;ip6tables -X CJDNS_INPUT;&quot;</span><br><span class="line">                         &quot;ip6tables -F CJDNS_OUTPUT;&quot;</span><br><span class="line">                         &quot;ip6tables -D OUTPUT -j CJDNS_OUTPUT;&quot;</span><br><span class="line">                         &quot;ip6tables -X CJDNS_OUTPUT;&quot;;</span><br><span class="line">    ret = system(flushAll);</span><br><span class="line">    return ret;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h4 id="命令分析"><a href="#命令分析" class="headerlink" title="命令分析"></a>命令分析</h4><ul>
 <li>iptables -F CJDNS_INPUT;<br>删除CJDNS_INPUT规则链中的所有规则</li>
 <li>iptables -D INPUT -j CJDNS_INPUT;<br>将CJDNS_INPUT规则链从INPUT规则链上删除</li>
-<li>iptables -X CJDNS_INPUT;<br>删除CJDNS_INPUT规则链<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">iptables -F CJDNS_OUTPUT;</div><div class="line">iptables -D OUTPUT -j CJDNS_OUTPUT;</div><div class="line">iptables -X CJDNS_OUTPUT;</div></pre></td></tr></table></figure>
+<li>iptables -X CJDNS_INPUT;<br>删除CJDNS_INPUT规则链<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">iptables -F CJDNS_OUTPUT;</span><br><span class="line">iptables -D OUTPUT -j CJDNS_OUTPUT;</span><br><span class="line">iptables -X CJDNS_OUTPUT;</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
-<p>与上面三条类似<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&quot;ip6tables -F CJDNS_INPUT;&quot;</div><div class="line">&quot;ip6tables -D INPUT -j CJDNS_INPUT;&quot;</div><div class="line">&quot;ip6tables -X CJDNS_INPUT;&quot;</div><div class="line">&quot;ip6tables -F CJDNS_OUTPUT;&quot;</div><div class="line">&quot;ip6tables -D OUTPUT -j CJDNS_OUTPUT;&quot;</div><div class="line">&quot;ip6tables -X CJDNS_OUTPUT;&quot;;</div></pre></td></tr></table></figure></p>
+<p>与上面三条类似<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&quot;ip6tables -F CJDNS_INPUT;&quot;</span><br><span class="line">&quot;ip6tables -D INPUT -j CJDNS_INPUT;&quot;</span><br><span class="line">&quot;ip6tables -X CJDNS_INPUT;&quot;</span><br><span class="line">&quot;ip6tables -F CJDNS_OUTPUT;&quot;</span><br><span class="line">&quot;ip6tables -D OUTPUT -j CJDNS_OUTPUT;&quot;</span><br><span class="line">&quot;ip6tables -X CJDNS_OUTPUT;&quot;;</span><br></pre></td></tr></table></figure></p>
 <p>与上面六条类似，但作用于ipv6</p>
-<h3 id="rule-apply方法中的使用"><a href="#rule-apply方法中的使用" class="headerlink" title="rule_apply方法中的使用"></a>rule_apply方法中的使用</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div></pre></td><td class="code"><pre><div class="line">static int Policy_firewall_linux(struct Policy_pvt* policy,</div><div class="line">                                  struct Policy_RuleList* rules)</div><div class="line">&#123;</div><div class="line">    int ret = 0;</div><div class="line">    if (policy-&gt;ifName == NULL) &#123;</div><div class="line">        return ret;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    /* Remove all old rules */</div><div class="line">    const char* initAll = &quot;iptables -F CJDNS_INPUT;&quot;</div><div class="line">                         &quot;iptables -D INPUT -j CJDNS_INPUT;&quot;</div><div class="line">                         &quot;iptables -X CJDNS_INPUT;&quot;</div><div class="line">                         &quot;iptables -N CJDNS_INPUT;&quot;</div><div class="line">                         &quot;iptables -I INPUT -j CJDNS_INPUT;&quot;</div><div class="line">                         &quot;iptables -F CJDNS_OUTPUT;&quot;</div><div class="line">                         &quot;iptables -D OUTPUT -j CJDNS_OUTPUT;&quot;</div><div class="line">                         &quot;iptables -N CJDNS_OUTPUT;&quot;</div><div class="line">                         &quot;iptables -I OUTPUT -j CJDNS_OUTPUT;&quot;</div><div class="line">                         &quot;ip6tables -F CJDNS_INPUT;&quot;</div><div class="line">                         &quot;ip6tables -D INPUT -j CJDNS_INPUT;&quot;</div><div class="line">                         &quot;ip6tables -X CJDNS_INPUT;&quot;</div><div class="line">                         &quot;ip6tables -N CJDNS_INPUT;&quot;</div><div class="line">                         &quot;ip6tables -I INPUT -j CJDNS_INPUT;&quot;</div><div class="line">                         &quot;ip6tables -F CJDNS_OUTPUT;&quot;</div><div class="line">                         &quot;ip6tables -D OUTPUT -j CJDNS_OUTPUT;&quot;</div><div class="line">                         &quot;ip6tables -X CJDNS_OUTPUT;&quot;</div><div class="line">                         &quot;ip6tables -N CJDNS_OUTPUT;&quot;</div><div class="line">                         &quot;ip6tables -I OUTPUT -j CJDNS_OUTPUT;&quot;;</div><div class="line">    ret = system(initAll);</div><div class="line"></div><div class="line">    const char* fmt = &quot;%s -A %s %s -s %s -d %s -j %s&quot;;</div><div class="line">    char buff[4096];</div><div class="line">    char ip[40];</div><div class="line">    char addr[64];</div><div class="line">    char iface[256], oface[256];</div><div class="line">    char* localip = NULL;</div><div class="line">    char* remoteip = NULL;</div><div class="line">    char* action;</div><div class="line">    char* dir;</div><div class="line">    char* cmd;</div><div class="line">    char* intf;</div><div class="line"></div><div class="line">    Bits_memset(iface, 0, sizeof(iface));</div><div class="line">    Bits_memset(oface, 0, sizeof(iface));</div><div class="line">    snprintf(iface, sizeof(iface) - 1, &quot;-i %s&quot;, policy-&gt;ifName-&gt;bytes);</div><div class="line">    snprintf(oface, sizeof(oface) - 1, &quot;-o %s&quot;, policy-&gt;ifName-&gt;bytes);</div><div class="line"></div><div class="line">    for (int i = 0; i &lt; rules-&gt;length; ++i) &#123;</div><div class="line">        struct Rule* rule = rules-&gt;rules[i];</div><div class="line">        if (rule-&gt;location == Policy_INPUT) &#123;</div><div class="line">            dir = &quot;CJDNS_INPUT&quot;;</div><div class="line">            intf = iface;</div><div class="line">        &#125; else &#123;</div><div class="line">            dir = &quot;CJDNS_OUTPUT&quot;;</div><div class="line">            intf = oface;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        if (rule-&gt;elem.af == Sockaddr_AF_INET) &#123;</div><div class="line">            cmd = &quot;iptables&quot;;</div><div class="line">        &#125; else if (rule-&gt;elem.af == Sockaddr_AF_INET6)&#123;</div><div class="line">            cmd = &quot;ip6tables&quot;;</div><div class="line">        &#125; else &#123;</div><div class="line">            continue;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        if (rule-&gt;elem.sprefix == 0) &#123;</div><div class="line">            if (rule-&gt;elem.af == Sockaddr_AF_INET) &#123;</div><div class="line">                localip = &quot;0.0.0.0/0&quot;;</div><div class="line">            &#125; else &#123;</div><div class="line">                localip = &quot;::/0&quot;;</div><div class="line">            &#125;</div><div class="line">        &#125; else &#123;</div><div class="line">            Bits_memset(ip, 0, sizeof(ip));</div><div class="line">            if (rule-&gt;elem.af == Sockaddr_AF_INET) &#123;</div><div class="line">                snprintf(addr, sizeof(addr), &quot;%u.%u.%u.%u/%u&quot;,</div><div class="line">                         ((uint8_t *)&amp;rule-&gt;elem.src)[0],</div><div class="line">                         ((uint8_t *)&amp;rule-&gt;elem.src)[1],</div><div class="line">                         ((uint8_t *)&amp;rule-&gt;elem.src)[2],</div><div class="line">                         ((uint8_t *)&amp;rule-&gt;elem.src)[3],</div><div class="line">                         rule-&gt;elem.sprefix);</div><div class="line">                localip = addr;</div><div class="line">            &#125; else if (rule-&gt;elem.af == Sockaddr_AF_INET6) &#123;</div><div class="line">                AddrTools_printIp(ip, rule-&gt;elem.src.ip);</div><div class="line">                snprintf(addr, sizeof(addr), &quot;%s/%u&quot;, ip, rule-&gt;elem.sprefix);</div><div class="line">                localip = addr;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        if (rule-&gt;elem.dprefix == 0) &#123;</div><div class="line">            if (rule-&gt;elem.af == Sockaddr_AF_INET) &#123;</div><div class="line">                remoteip = &quot;0.0.0.0/0&quot;;</div><div class="line">            &#125; else &#123;</div><div class="line">                remoteip = &quot;::/0&quot;;</div><div class="line">            &#125;</div><div class="line">        &#125; else &#123;</div><div class="line">            Bits_memset(ip, 0, sizeof(ip));</div><div class="line">            if (rule-&gt;elem.af == Sockaddr_AF_INET) &#123;</div><div class="line">                snprintf(addr, sizeof(addr), &quot;%u.%u.%u.%u/%u&quot;,</div><div class="line">                         ((uint8_t *)&amp;rule-&gt;elem.dst)[0],</div><div class="line">                         ((uint8_t *)&amp;rule-&gt;elem.dst)[1],</div><div class="line">                         ((uint8_t *)&amp;rule-&gt;elem.dst)[2],</div><div class="line">                         ((uint8_t *)&amp;rule-&gt;elem.dst)[3],</div><div class="line">                         rule-&gt;elem.dprefix);</div><div class="line">                remoteip = addr;</div><div class="line">            &#125; else if (rule-&gt;elem.af == Sockaddr_AF_INET6) &#123;</div><div class="line">                AddrTools_printIp(ip, rule-&gt;elem.dst.ip);</div><div class="line">                snprintf(addr, sizeof(addr), &quot;%s/%u&quot;, ip, rule-&gt;elem.dprefix);</div><div class="line">                remoteip = addr;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        if (rule-&gt;action == Rule_ACCEPT) &#123;</div><div class="line">            action = &quot;ACCEPT&quot;;</div><div class="line">        &#125; else &#123;</div><div class="line">            action = &quot;DROP&quot;;</div><div class="line">        &#125;</div><div class="line">        snprintf(buff, sizeof(buff), fmt, cmd, dir, intf, localip, remoteip, action);</div><div class="line">        ret = system(buff);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    /* firewall header */</div><div class="line">    snprintf(buff, sizeof(buff),</div><div class="line">             &quot;iptables -I CJDNS_INPUT %s -m state --state RELATED,ESTABLISHED -j ACCEPT&quot;,</div><div class="line">             iface);</div><div class="line">    ret = system(buff);</div><div class="line">    snprintf(buff, sizeof(buff),</div><div class="line">             &quot;ip6tables -I CJDNS_INPUT %s -m state --state RELATED,ESTABLISHED -j ACCEPT&quot;,</div><div class="line">             iface);</div><div class="line">    ret = system(buff);</div><div class="line">    snprintf(buff, sizeof(buff),</div><div class="line">             &quot;iptables -I CJDNS_OUTPUT %s -m state --state RELATED,ESTABLISHED -j ACCEPT&quot;,</div><div class="line">             oface);</div><div class="line">    ret = system(buff);</div><div class="line">    snprintf(buff, sizeof(buff),</div><div class="line">             &quot;ip6tables -I CJDNS_OUTPUT %s -m state --state RELATED,ESTABLISHED -j ACCEPT&quot;,</div><div class="line">             oface);</div><div class="line">    ret = system(buff);</div><div class="line"></div><div class="line">    /* firewall footer */</div><div class="line">    if (policy-&gt;pub.defaultAction == Policy_ACCEPT) &#123;</div><div class="line">        action = &quot;ACCEPT&quot;;</div><div class="line">    &#125; else &#123;</div><div class="line">        action = &quot;DROP&quot;;</div><div class="line">    &#125;</div><div class="line">    snprintf(buff, sizeof(buff), &quot;iptables -A CJDNS_INPUT %s -j %s&quot;, iface, action);</div><div class="line">    ret = system(buff);</div><div class="line">    snprintf(buff, sizeof(buff), &quot;ip6tables -A CJDNS_INPUT %s -j %s&quot;, iface, action);</div><div class="line">    ret = system(buff);</div><div class="line">    snprintf(buff, sizeof(buff), &quot;iptables -A CJDNS_OUTPUT %s -j %s&quot;, oface, action);</div><div class="line">    ret = system(buff);</div><div class="line">    snprintf(buff, sizeof(buff), &quot;ip6tables -A CJDNS_OUTPUT %s -j %s&quot;, oface, action);</div><div class="line">    ret = system(buff);</div><div class="line"></div><div class="line">    return ret;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="rule-apply方法中的使用"><a href="#rule-apply方法中的使用" class="headerlink" title="rule_apply方法中的使用"></a>rule_apply方法中的使用</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br></pre></td><td class="code"><pre><span class="line">static int Policy_firewall_linux(struct Policy_pvt* policy,</span><br><span class="line">                                  struct Policy_RuleList* rules)</span><br><span class="line">&#123;</span><br><span class="line">    int ret = 0;</span><br><span class="line">    if (policy-&gt;ifName == NULL) &#123;</span><br><span class="line">        return ret;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /* Remove all old rules */</span><br><span class="line">    const char* initAll = &quot;iptables -F CJDNS_INPUT;&quot;</span><br><span class="line">                         &quot;iptables -D INPUT -j CJDNS_INPUT;&quot;</span><br><span class="line">                         &quot;iptables -X CJDNS_INPUT;&quot;</span><br><span class="line">                         &quot;iptables -N CJDNS_INPUT;&quot;</span><br><span class="line">                         &quot;iptables -I INPUT -j CJDNS_INPUT;&quot;</span><br><span class="line">                         &quot;iptables -F CJDNS_OUTPUT;&quot;</span><br><span class="line">                         &quot;iptables -D OUTPUT -j CJDNS_OUTPUT;&quot;</span><br><span class="line">                         &quot;iptables -N CJDNS_OUTPUT;&quot;</span><br><span class="line">                         &quot;iptables -I OUTPUT -j CJDNS_OUTPUT;&quot;</span><br><span class="line">                         &quot;ip6tables -F CJDNS_INPUT;&quot;</span><br><span class="line">                         &quot;ip6tables -D INPUT -j CJDNS_INPUT;&quot;</span><br><span class="line">                         &quot;ip6tables -X CJDNS_INPUT;&quot;</span><br><span class="line">                         &quot;ip6tables -N CJDNS_INPUT;&quot;</span><br><span class="line">                         &quot;ip6tables -I INPUT -j CJDNS_INPUT;&quot;</span><br><span class="line">                         &quot;ip6tables -F CJDNS_OUTPUT;&quot;</span><br><span class="line">                         &quot;ip6tables -D OUTPUT -j CJDNS_OUTPUT;&quot;</span><br><span class="line">                         &quot;ip6tables -X CJDNS_OUTPUT;&quot;</span><br><span class="line">                         &quot;ip6tables -N CJDNS_OUTPUT;&quot;</span><br><span class="line">                         &quot;ip6tables -I OUTPUT -j CJDNS_OUTPUT;&quot;;</span><br><span class="line">    ret = system(initAll);</span><br><span class="line"></span><br><span class="line">    const char* fmt = &quot;%s -A %s %s -s %s -d %s -j %s&quot;;</span><br><span class="line">    char buff[4096];</span><br><span class="line">    char ip[40];</span><br><span class="line">    char addr[64];</span><br><span class="line">    char iface[256], oface[256];</span><br><span class="line">    char* localip = NULL;</span><br><span class="line">    char* remoteip = NULL;</span><br><span class="line">    char* action;</span><br><span class="line">    char* dir;</span><br><span class="line">    char* cmd;</span><br><span class="line">    char* intf;</span><br><span class="line"></span><br><span class="line">    Bits_memset(iface, 0, sizeof(iface));</span><br><span class="line">    Bits_memset(oface, 0, sizeof(iface));</span><br><span class="line">    snprintf(iface, sizeof(iface) - 1, &quot;-i %s&quot;, policy-&gt;ifName-&gt;bytes);</span><br><span class="line">    snprintf(oface, sizeof(oface) - 1, &quot;-o %s&quot;, policy-&gt;ifName-&gt;bytes);</span><br><span class="line"></span><br><span class="line">    for (int i = 0; i &lt; rules-&gt;length; ++i) &#123;</span><br><span class="line">        struct Rule* rule = rules-&gt;rules[i];</span><br><span class="line">        if (rule-&gt;location == Policy_INPUT) &#123;</span><br><span class="line">            dir = &quot;CJDNS_INPUT&quot;;</span><br><span class="line">            intf = iface;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            dir = &quot;CJDNS_OUTPUT&quot;;</span><br><span class="line">            intf = oface;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (rule-&gt;elem.af == Sockaddr_AF_INET) &#123;</span><br><span class="line">            cmd = &quot;iptables&quot;;</span><br><span class="line">        &#125; else if (rule-&gt;elem.af == Sockaddr_AF_INET6)&#123;</span><br><span class="line">            cmd = &quot;ip6tables&quot;;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            continue;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (rule-&gt;elem.sprefix == 0) &#123;</span><br><span class="line">            if (rule-&gt;elem.af == Sockaddr_AF_INET) &#123;</span><br><span class="line">                localip = &quot;0.0.0.0/0&quot;;</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                localip = &quot;::/0&quot;;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            Bits_memset(ip, 0, sizeof(ip));</span><br><span class="line">            if (rule-&gt;elem.af == Sockaddr_AF_INET) &#123;</span><br><span class="line">                snprintf(addr, sizeof(addr), &quot;%u.%u.%u.%u/%u&quot;,</span><br><span class="line">                         ((uint8_t *)&amp;rule-&gt;elem.src)[0],</span><br><span class="line">                         ((uint8_t *)&amp;rule-&gt;elem.src)[1],</span><br><span class="line">                         ((uint8_t *)&amp;rule-&gt;elem.src)[2],</span><br><span class="line">                         ((uint8_t *)&amp;rule-&gt;elem.src)[3],</span><br><span class="line">                         rule-&gt;elem.sprefix);</span><br><span class="line">                localip = addr;</span><br><span class="line">            &#125; else if (rule-&gt;elem.af == Sockaddr_AF_INET6) &#123;</span><br><span class="line">                AddrTools_printIp(ip, rule-&gt;elem.src.ip);</span><br><span class="line">                snprintf(addr, sizeof(addr), &quot;%s/%u&quot;, ip, rule-&gt;elem.sprefix);</span><br><span class="line">                localip = addr;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        if (rule-&gt;elem.dprefix == 0) &#123;</span><br><span class="line">            if (rule-&gt;elem.af == Sockaddr_AF_INET) &#123;</span><br><span class="line">                remoteip = &quot;0.0.0.0/0&quot;;</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                remoteip = &quot;::/0&quot;;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            Bits_memset(ip, 0, sizeof(ip));</span><br><span class="line">            if (rule-&gt;elem.af == Sockaddr_AF_INET) &#123;</span><br><span class="line">                snprintf(addr, sizeof(addr), &quot;%u.%u.%u.%u/%u&quot;,</span><br><span class="line">                         ((uint8_t *)&amp;rule-&gt;elem.dst)[0],</span><br><span class="line">                         ((uint8_t *)&amp;rule-&gt;elem.dst)[1],</span><br><span class="line">                         ((uint8_t *)&amp;rule-&gt;elem.dst)[2],</span><br><span class="line">                         ((uint8_t *)&amp;rule-&gt;elem.dst)[3],</span><br><span class="line">                         rule-&gt;elem.dprefix);</span><br><span class="line">                remoteip = addr;</span><br><span class="line">            &#125; else if (rule-&gt;elem.af == Sockaddr_AF_INET6) &#123;</span><br><span class="line">                AddrTools_printIp(ip, rule-&gt;elem.dst.ip);</span><br><span class="line">                snprintf(addr, sizeof(addr), &quot;%s/%u&quot;, ip, rule-&gt;elem.dprefix);</span><br><span class="line">                remoteip = addr;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        if (rule-&gt;action == Rule_ACCEPT) &#123;</span><br><span class="line">            action = &quot;ACCEPT&quot;;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            action = &quot;DROP&quot;;</span><br><span class="line">        &#125;</span><br><span class="line">        snprintf(buff, sizeof(buff), fmt, cmd, dir, intf, localip, remoteip, action);</span><br><span class="line">        ret = system(buff);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /* firewall header */</span><br><span class="line">    snprintf(buff, sizeof(buff),</span><br><span class="line">             &quot;iptables -I CJDNS_INPUT %s -m state --state RELATED,ESTABLISHED -j ACCEPT&quot;,</span><br><span class="line">             iface);</span><br><span class="line">    ret = system(buff);</span><br><span class="line">    snprintf(buff, sizeof(buff),</span><br><span class="line">             &quot;ip6tables -I CJDNS_INPUT %s -m state --state RELATED,ESTABLISHED -j ACCEPT&quot;,</span><br><span class="line">             iface);</span><br><span class="line">    ret = system(buff);</span><br><span class="line">    snprintf(buff, sizeof(buff),</span><br><span class="line">             &quot;iptables -I CJDNS_OUTPUT %s -m state --state RELATED,ESTABLISHED -j ACCEPT&quot;,</span><br><span class="line">             oface);</span><br><span class="line">    ret = system(buff);</span><br><span class="line">    snprintf(buff, sizeof(buff),</span><br><span class="line">             &quot;ip6tables -I CJDNS_OUTPUT %s -m state --state RELATED,ESTABLISHED -j ACCEPT&quot;,</span><br><span class="line">             oface);</span><br><span class="line">    ret = system(buff);</span><br><span class="line"></span><br><span class="line">    /* firewall footer */</span><br><span class="line">    if (policy-&gt;pub.defaultAction == Policy_ACCEPT) &#123;</span><br><span class="line">        action = &quot;ACCEPT&quot;;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        action = &quot;DROP&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">    snprintf(buff, sizeof(buff), &quot;iptables -A CJDNS_INPUT %s -j %s&quot;, iface, action);</span><br><span class="line">    ret = system(buff);</span><br><span class="line">    snprintf(buff, sizeof(buff), &quot;ip6tables -A CJDNS_INPUT %s -j %s&quot;, iface, action);</span><br><span class="line">    ret = system(buff);</span><br><span class="line">    snprintf(buff, sizeof(buff), &quot;iptables -A CJDNS_OUTPUT %s -j %s&quot;, oface, action);</span><br><span class="line">    ret = system(buff);</span><br><span class="line">    snprintf(buff, sizeof(buff), &quot;ip6tables -A CJDNS_OUTPUT %s -j %s&quot;, oface, action);</span><br><span class="line">    ret = system(buff);</span><br><span class="line"></span><br><span class="line">    return ret;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>这个方法中，对于iptables命令的使用，主要分为四块：</p>
-<h4 id="Remove-all-old-rules"><a href="#Remove-all-old-rules" class="headerlink" title="Remove all old rules"></a>Remove all old rules</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">&quot;iptables -F CJDNS_INPUT;&quot;</div><div class="line">&quot;iptables -D INPUT -j CJDNS_INPUT;&quot;</div><div class="line">&quot;iptables -X CJDNS_INPUT;&quot;</div><div class="line">&quot;iptables -N CJDNS_INPUT;&quot;</div><div class="line">&quot;iptables -I INPUT -j CJDNS_INPUT;&quot;</div><div class="line">&quot;iptables -F CJDNS_OUTPUT;&quot;</div><div class="line">&quot;iptables -D OUTPUT -j CJDNS_OUTPUT;&quot;</div><div class="line">&quot;iptables -N CJDNS_OUTPUT;&quot;</div><div class="line">&quot;iptables -I OUTPUT -j CJDNS_OUTPUT;&quot;</div><div class="line">&quot;ip6tables -F CJDNS_INPUT;&quot;</div><div class="line">&quot;ip6tables -D INPUT -j CJDNS_INPUT;&quot;</div><div class="line">&quot;ip6tables -X CJDNS_INPUT;&quot;</div><div class="line">&quot;ip6tables -N CJDNS_INPUT;&quot;</div><div class="line">&quot;ip6tables -I INPUT -j CJDNS_INPUT;&quot;</div><div class="line">&quot;ip6tables -F CJDNS_OUTPUT;&quot;</div><div class="line">&quot;ip6tables -D OUTPUT -j CJDNS_OUTPUT;&quot;</div><div class="line">&quot;ip6tables -X CJDNS_OUTPUT;&quot;</div><div class="line">&quot;ip6tables -N CJDNS_OUTPUT;&quot;</div><div class="line">&quot;ip6tables -I OUTPUT -j CJDNS_OUTPUT;&quot;;</div></pre></td></tr></table></figure>
-<p>以CJDNS_INPUT为例，这一部分首先做了和rule_flush一样的操作，删除相关数据<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&quot;iptables -F CJDNS_INPUT;&quot;</div><div class="line">&quot;iptables -D INPUT -j CJDNS_INPUT;&quot;</div><div class="line">&quot;iptables -X CJDNS_INPUT;&quot;</div></pre></td></tr></table></figure></p>
-<p>然后，<br>新建自定义规则链CJDNS_INPUT<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">iptables -N CJDNS_INPUT;</div></pre></td></tr></table></figure></p>
-<p>将它应用到INPUT规则链上<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">iptables -I INPUT -j CJDNS_INPUT;</div></pre></td></tr></table></figure></p>
-<h4 id="根据规则，拼接iptables命令"><a href="#根据规则，拼接iptables命令" class="headerlink" title="根据规则，拼接iptables命令"></a>根据规则，拼接iptables命令</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div></pre></td><td class="code"><pre><div class="line">const char* fmt = &quot;%s -A %s %s -s %s -d %s -j %s&quot;;</div><div class="line">char buff[4096];</div><div class="line">char ip[40];</div><div class="line">char addr[64];</div><div class="line">char iface[256], oface[256];</div><div class="line">char* localip = NULL;</div><div class="line">char* remoteip = NULL;</div><div class="line">char* action;</div><div class="line">char* dir;</div><div class="line">char* cmd;</div><div class="line">char* intf;</div><div class="line"></div><div class="line">Bits_memset(iface, 0, sizeof(iface));</div><div class="line">Bits_memset(oface, 0, sizeof(iface));</div><div class="line">snprintf(iface, sizeof(iface) - 1, &quot;-i %s&quot;, policy-&gt;ifName-&gt;bytes);</div><div class="line">snprintf(oface, sizeof(oface) - 1, &quot;-o %s&quot;, policy-&gt;ifName-&gt;bytes);</div><div class="line"></div><div class="line">for (int i = 0; i &lt; rules-&gt;length; ++i) &#123;</div><div class="line">    struct Rule* rule = rules-&gt;rules[i];</div><div class="line">    if (rule-&gt;location == Policy_INPUT) &#123;</div><div class="line">        dir = &quot;CJDNS_INPUT&quot;;</div><div class="line">        intf = iface;</div><div class="line">    &#125; else &#123;</div><div class="line">        dir = &quot;CJDNS_OUTPUT&quot;;</div><div class="line">        intf = oface;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    if (rule-&gt;elem.af == Sockaddr_AF_INET) &#123;</div><div class="line">        cmd = &quot;iptables&quot;;</div><div class="line">    &#125; else if (rule-&gt;elem.af == Sockaddr_AF_INET6)&#123;</div><div class="line">        cmd = &quot;ip6tables&quot;;</div><div class="line">    &#125; else &#123;</div><div class="line">        continue;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    if (rule-&gt;elem.sprefix == 0) &#123;</div><div class="line">        if (rule-&gt;elem.af == Sockaddr_AF_INET) &#123;</div><div class="line">            localip = &quot;0.0.0.0/0&quot;;</div><div class="line">        &#125; else &#123;</div><div class="line">            localip = &quot;::/0&quot;;</div><div class="line">        &#125;</div><div class="line">    &#125; else &#123;</div><div class="line">        Bits_memset(ip, 0, sizeof(ip));</div><div class="line">        if (rule-&gt;elem.af == Sockaddr_AF_INET) &#123;</div><div class="line">            snprintf(addr, sizeof(addr), &quot;%u.%u.%u.%u/%u&quot;,</div><div class="line">                     ((uint8_t *)&amp;rule-&gt;elem.src)[0],</div><div class="line">                     ((uint8_t *)&amp;rule-&gt;elem.src)[1],</div><div class="line">                     ((uint8_t *)&amp;rule-&gt;elem.src)[2],</div><div class="line">                     ((uint8_t *)&amp;rule-&gt;elem.src)[3],</div><div class="line">                     rule-&gt;elem.sprefix);</div><div class="line">            localip = addr;</div><div class="line">        &#125; else if (rule-&gt;elem.af == Sockaddr_AF_INET6) &#123;</div><div class="line">            AddrTools_printIp(ip, rule-&gt;elem.src.ip);</div><div class="line">            snprintf(addr, sizeof(addr), &quot;%s/%u&quot;, ip, rule-&gt;elem.sprefix);</div><div class="line">            localip = addr;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    if (rule-&gt;elem.dprefix == 0) &#123;</div><div class="line">        if (rule-&gt;elem.af == Sockaddr_AF_INET) &#123;</div><div class="line">            remoteip = &quot;0.0.0.0/0&quot;;</div><div class="line">        &#125; else &#123;</div><div class="line">            remoteip = &quot;::/0&quot;;</div><div class="line">        &#125;</div><div class="line">    &#125; else &#123;</div><div class="line">        Bits_memset(ip, 0, sizeof(ip));</div><div class="line">        if (rule-&gt;elem.af == Sockaddr_AF_INET) &#123;</div><div class="line">            snprintf(addr, sizeof(addr), &quot;%u.%u.%u.%u/%u&quot;,</div><div class="line">                     ((uint8_t *)&amp;rule-&gt;elem.dst)[0],</div><div class="line">                     ((uint8_t *)&amp;rule-&gt;elem.dst)[1],</div><div class="line">                     ((uint8_t *)&amp;rule-&gt;elem.dst)[2],</div><div class="line">                     ((uint8_t *)&amp;rule-&gt;elem.dst)[3],</div><div class="line">                     rule-&gt;elem.dprefix);</div><div class="line">            remoteip = addr;</div><div class="line">        &#125; else if (rule-&gt;elem.af == Sockaddr_AF_INET6) &#123;</div><div class="line">            AddrTools_printIp(ip, rule-&gt;elem.dst.ip);</div><div class="line">            snprintf(addr, sizeof(addr), &quot;%s/%u&quot;, ip, rule-&gt;elem.dprefix);</div><div class="line">            remoteip = addr;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    if (rule-&gt;action == Rule_ACCEPT) &#123;</div><div class="line">        action = &quot;ACCEPT&quot;;</div><div class="line">    &#125; else &#123;</div><div class="line">        action = &quot;DROP&quot;;</div><div class="line">    &#125;</div><div class="line">    snprintf(buff, sizeof(buff), fmt, cmd, dir, intf, localip, remoteip, action);</div><div class="line">    ret = system(buff);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>在这一过程中，会根据策略规则，获取相关信息，最终拼接出格式如下的规则。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">iptables -A CJDNS_INPUT -i tun0 -s srcip/srcport -d dstip/dstport -j ACCEPT</div></pre></td></tr></table></figure></p>
-<h4 id="firewall-header"><a href="#firewall-header" class="headerlink" title="firewall header"></a>firewall header</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">snprintf(buff, sizeof(buff),</div><div class="line">         &quot;iptables -I CJDNS_INPUT %s -m state --state RELATED,ESTABLISHED -j ACCEPT&quot;,</div><div class="line">         iface);</div><div class="line">ret = system(buff);</div><div class="line">snprintf(buff, sizeof(buff),</div><div class="line">         &quot;ip6tables -I CJDNS_INPUT %s -m state --state RELATED,ESTABLISHED -j ACCEPT&quot;,</div><div class="line">         iface);</div><div class="line">ret = system(buff);</div><div class="line">snprintf(buff, sizeof(buff),</div><div class="line">         &quot;iptables -I CJDNS_OUTPUT %s -m state --state RELATED,ESTABLISHED -j ACCEPT&quot;,</div><div class="line">         oface);</div><div class="line">ret = system(buff);</div><div class="line">snprintf(buff, sizeof(buff),</div><div class="line">         &quot;ip6tables -I CJDNS_OUTPUT %s -m state --state RELATED,ESTABLISHED -j ACCEPT&quot;,</div><div class="line">         oface);</div><div class="line">ret = system(buff);</div></pre></td></tr></table></figure>
+<h4 id="Remove-all-old-rules"><a href="#Remove-all-old-rules" class="headerlink" title="Remove all old rules"></a>Remove all old rules</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&quot;iptables -F CJDNS_INPUT;&quot;</span><br><span class="line">&quot;iptables -D INPUT -j CJDNS_INPUT;&quot;</span><br><span class="line">&quot;iptables -X CJDNS_INPUT;&quot;</span><br><span class="line">&quot;iptables -N CJDNS_INPUT;&quot;</span><br><span class="line">&quot;iptables -I INPUT -j CJDNS_INPUT;&quot;</span><br><span class="line">&quot;iptables -F CJDNS_OUTPUT;&quot;</span><br><span class="line">&quot;iptables -D OUTPUT -j CJDNS_OUTPUT;&quot;</span><br><span class="line">&quot;iptables -N CJDNS_OUTPUT;&quot;</span><br><span class="line">&quot;iptables -I OUTPUT -j CJDNS_OUTPUT;&quot;</span><br><span class="line">&quot;ip6tables -F CJDNS_INPUT;&quot;</span><br><span class="line">&quot;ip6tables -D INPUT -j CJDNS_INPUT;&quot;</span><br><span class="line">&quot;ip6tables -X CJDNS_INPUT;&quot;</span><br><span class="line">&quot;ip6tables -N CJDNS_INPUT;&quot;</span><br><span class="line">&quot;ip6tables -I INPUT -j CJDNS_INPUT;&quot;</span><br><span class="line">&quot;ip6tables -F CJDNS_OUTPUT;&quot;</span><br><span class="line">&quot;ip6tables -D OUTPUT -j CJDNS_OUTPUT;&quot;</span><br><span class="line">&quot;ip6tables -X CJDNS_OUTPUT;&quot;</span><br><span class="line">&quot;ip6tables -N CJDNS_OUTPUT;&quot;</span><br><span class="line">&quot;ip6tables -I OUTPUT -j CJDNS_OUTPUT;&quot;;</span><br></pre></td></tr></table></figure>
+<p>以CJDNS_INPUT为例，这一部分首先做了和rule_flush一样的操作，删除相关数据<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&quot;iptables -F CJDNS_INPUT;&quot;</span><br><span class="line">&quot;iptables -D INPUT -j CJDNS_INPUT;&quot;</span><br><span class="line">&quot;iptables -X CJDNS_INPUT;&quot;</span><br></pre></td></tr></table></figure></p>
+<p>然后，<br>新建自定义规则链CJDNS_INPUT<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iptables -N CJDNS_INPUT;</span><br></pre></td></tr></table></figure></p>
+<p>将它应用到INPUT规则链上<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iptables -I INPUT -j CJDNS_INPUT;</span><br></pre></td></tr></table></figure></p>
+<h4 id="根据规则，拼接iptables命令"><a href="#根据规则，拼接iptables命令" class="headerlink" title="根据规则，拼接iptables命令"></a>根据规则，拼接iptables命令</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line">const char* fmt = &quot;%s -A %s %s -s %s -d %s -j %s&quot;;</span><br><span class="line">char buff[4096];</span><br><span class="line">char ip[40];</span><br><span class="line">char addr[64];</span><br><span class="line">char iface[256], oface[256];</span><br><span class="line">char* localip = NULL;</span><br><span class="line">char* remoteip = NULL;</span><br><span class="line">char* action;</span><br><span class="line">char* dir;</span><br><span class="line">char* cmd;</span><br><span class="line">char* intf;</span><br><span class="line"></span><br><span class="line">Bits_memset(iface, 0, sizeof(iface));</span><br><span class="line">Bits_memset(oface, 0, sizeof(iface));</span><br><span class="line">snprintf(iface, sizeof(iface) - 1, &quot;-i %s&quot;, policy-&gt;ifName-&gt;bytes);</span><br><span class="line">snprintf(oface, sizeof(oface) - 1, &quot;-o %s&quot;, policy-&gt;ifName-&gt;bytes);</span><br><span class="line"></span><br><span class="line">for (int i = 0; i &lt; rules-&gt;length; ++i) &#123;</span><br><span class="line">    struct Rule* rule = rules-&gt;rules[i];</span><br><span class="line">    if (rule-&gt;location == Policy_INPUT) &#123;</span><br><span class="line">        dir = &quot;CJDNS_INPUT&quot;;</span><br><span class="line">        intf = iface;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        dir = &quot;CJDNS_OUTPUT&quot;;</span><br><span class="line">        intf = oface;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (rule-&gt;elem.af == Sockaddr_AF_INET) &#123;</span><br><span class="line">        cmd = &quot;iptables&quot;;</span><br><span class="line">    &#125; else if (rule-&gt;elem.af == Sockaddr_AF_INET6)&#123;</span><br><span class="line">        cmd = &quot;ip6tables&quot;;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        continue;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (rule-&gt;elem.sprefix == 0) &#123;</span><br><span class="line">        if (rule-&gt;elem.af == Sockaddr_AF_INET) &#123;</span><br><span class="line">            localip = &quot;0.0.0.0/0&quot;;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            localip = &quot;::/0&quot;;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        Bits_memset(ip, 0, sizeof(ip));</span><br><span class="line">        if (rule-&gt;elem.af == Sockaddr_AF_INET) &#123;</span><br><span class="line">            snprintf(addr, sizeof(addr), &quot;%u.%u.%u.%u/%u&quot;,</span><br><span class="line">                     ((uint8_t *)&amp;rule-&gt;elem.src)[0],</span><br><span class="line">                     ((uint8_t *)&amp;rule-&gt;elem.src)[1],</span><br><span class="line">                     ((uint8_t *)&amp;rule-&gt;elem.src)[2],</span><br><span class="line">                     ((uint8_t *)&amp;rule-&gt;elem.src)[3],</span><br><span class="line">                     rule-&gt;elem.sprefix);</span><br><span class="line">            localip = addr;</span><br><span class="line">        &#125; else if (rule-&gt;elem.af == Sockaddr_AF_INET6) &#123;</span><br><span class="line">            AddrTools_printIp(ip, rule-&gt;elem.src.ip);</span><br><span class="line">            snprintf(addr, sizeof(addr), &quot;%s/%u&quot;, ip, rule-&gt;elem.sprefix);</span><br><span class="line">            localip = addr;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    if (rule-&gt;elem.dprefix == 0) &#123;</span><br><span class="line">        if (rule-&gt;elem.af == Sockaddr_AF_INET) &#123;</span><br><span class="line">            remoteip = &quot;0.0.0.0/0&quot;;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            remoteip = &quot;::/0&quot;;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        Bits_memset(ip, 0, sizeof(ip));</span><br><span class="line">        if (rule-&gt;elem.af == Sockaddr_AF_INET) &#123;</span><br><span class="line">            snprintf(addr, sizeof(addr), &quot;%u.%u.%u.%u/%u&quot;,</span><br><span class="line">                     ((uint8_t *)&amp;rule-&gt;elem.dst)[0],</span><br><span class="line">                     ((uint8_t *)&amp;rule-&gt;elem.dst)[1],</span><br><span class="line">                     ((uint8_t *)&amp;rule-&gt;elem.dst)[2],</span><br><span class="line">                     ((uint8_t *)&amp;rule-&gt;elem.dst)[3],</span><br><span class="line">                     rule-&gt;elem.dprefix);</span><br><span class="line">            remoteip = addr;</span><br><span class="line">        &#125; else if (rule-&gt;elem.af == Sockaddr_AF_INET6) &#123;</span><br><span class="line">            AddrTools_printIp(ip, rule-&gt;elem.dst.ip);</span><br><span class="line">            snprintf(addr, sizeof(addr), &quot;%s/%u&quot;, ip, rule-&gt;elem.dprefix);</span><br><span class="line">            remoteip = addr;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    if (rule-&gt;action == Rule_ACCEPT) &#123;</span><br><span class="line">        action = &quot;ACCEPT&quot;;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        action = &quot;DROP&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">    snprintf(buff, sizeof(buff), fmt, cmd, dir, intf, localip, remoteip, action);</span><br><span class="line">    ret = system(buff);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这一过程中，会根据策略规则，获取相关信息，最终拼接出格式如下的规则。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iptables -A CJDNS_INPUT -i tun0 -s srcip/srcport -d dstip/dstport -j ACCEPT</span><br></pre></td></tr></table></figure></p>
+<h4 id="firewall-header"><a href="#firewall-header" class="headerlink" title="firewall header"></a>firewall header</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">snprintf(buff, sizeof(buff),</span><br><span class="line">         &quot;iptables -I CJDNS_INPUT %s -m state --state RELATED,ESTABLISHED -j ACCEPT&quot;,</span><br><span class="line">         iface);</span><br><span class="line">ret = system(buff);</span><br><span class="line">snprintf(buff, sizeof(buff),</span><br><span class="line">         &quot;ip6tables -I CJDNS_INPUT %s -m state --state RELATED,ESTABLISHED -j ACCEPT&quot;,</span><br><span class="line">         iface);</span><br><span class="line">ret = system(buff);</span><br><span class="line">snprintf(buff, sizeof(buff),</span><br><span class="line">         &quot;iptables -I CJDNS_OUTPUT %s -m state --state RELATED,ESTABLISHED -j ACCEPT&quot;,</span><br><span class="line">         oface);</span><br><span class="line">ret = system(buff);</span><br><span class="line">snprintf(buff, sizeof(buff),</span><br><span class="line">         &quot;ip6tables -I CJDNS_OUTPUT %s -m state --state RELATED,ESTABLISHED -j ACCEPT&quot;,</span><br><span class="line">         oface);</span><br><span class="line">ret = system(buff);</span><br></pre></td></tr></table></figure>
 <p>-I 参数的规则默认是插入到规则表最上面的，也就是说，这四条规则是最先进行匹配的。<br>从这四条规则可以看出，连接一旦进入RELATED或ESTABLISHED状态，就ACCEPT，不再进行策略审查。换言之，策略检查都是针对NEW状态的连接数据包的。</p>
-<h4 id="firewall-footer"><a href="#firewall-footer" class="headerlink" title="firewall footer"></a>firewall footer</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">if (policy-&gt;pub.defaultAction == Policy_ACCEPT) &#123;</div><div class="line">    action = &quot;ACCEPT&quot;;</div><div class="line">&#125; else &#123;</div><div class="line">    action = &quot;DROP&quot;;</div><div class="line">&#125;</div><div class="line">snprintf(buff, sizeof(buff), &quot;iptables -A CJDNS_INPUT %s -j %s&quot;, iface, action);</div><div class="line">ret = system(buff);</div><div class="line">snprintf(buff, sizeof(buff), &quot;ip6tables -A CJDNS_INPUT %s -j %s&quot;, iface, action);</div><div class="line">ret = system(buff);</div><div class="line">snprintf(buff, sizeof(buff), &quot;iptables -A CJDNS_OUTPUT %s -j %s&quot;, oface, action);</div><div class="line">ret = system(buff);</div><div class="line">snprintf(buff, sizeof(buff), &quot;ip6tables -A CJDNS_OUTPUT %s -j %s&quot;, oface, action);</div><div class="line">ret = system(buff);</div></pre></td></tr></table></figure>
+<h4 id="firewall-footer"><a href="#firewall-footer" class="headerlink" title="firewall footer"></a>firewall footer</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">if (policy-&gt;pub.defaultAction == Policy_ACCEPT) &#123;</span><br><span class="line">    action = &quot;ACCEPT&quot;;</span><br><span class="line">&#125; else &#123;</span><br><span class="line">    action = &quot;DROP&quot;;</span><br><span class="line">&#125;</span><br><span class="line">snprintf(buff, sizeof(buff), &quot;iptables -A CJDNS_INPUT %s -j %s&quot;, iface, action);</span><br><span class="line">ret = system(buff);</span><br><span class="line">snprintf(buff, sizeof(buff), &quot;ip6tables -A CJDNS_INPUT %s -j %s&quot;, iface, action);</span><br><span class="line">ret = system(buff);</span><br><span class="line">snprintf(buff, sizeof(buff), &quot;iptables -A CJDNS_OUTPUT %s -j %s&quot;, oface, action);</span><br><span class="line">ret = system(buff);</span><br><span class="line">snprintf(buff, sizeof(buff), &quot;ip6tables -A CJDNS_OUTPUT %s -j %s&quot;, oface, action);</span><br><span class="line">ret = system(buff);</span><br></pre></td></tr></table></figure>
 <p>最后这四条用于设置默认操作，-A参数保证它们会加入到规则表的最后。</p>
 
       
     </div>
+
     
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iptables/" rel="tag"># iptables</a>
+          
+            <a href="/tags/linux/" rel="tag"># linux</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/21/how-to-build-git-on-raspberry/" rel="next" title="在树莓派上搭建私有git">
+                <i class="fa fa-chevron-left"></i> 在树莓派上搭建私有git
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/07/25/cjdns_IpTunnel/" rel="prev" title="cjdns源码分析--IpTunnel">
+                cjdns源码分析--IpTunnel <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
-    
+  
+  
+  </article>
 
 
-    <nav id="article-nav">
-        
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2017/07/25/cjdns_IpTunnel/">
-                    cjdns源码分析--IpTunnel
-                </a>
-            </div>
-        
-        
-            <div id="article-nav-older" class="article-nav-title">
-                <a href="/2017/04/21/how-to-build-git-on-raspberry/">
-                    在树莓派上搭建私有git
-                </a>
-            </div>
-        
-    </nav>
+  </div>
+
+
+          </div>
+          
 
   
-</article>
-
-    <div id="toc" class="toc-article">
-        <strong class="toc-title">文章目錄</strong>
-        
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#关于iptables"><span class="toc-number">1.</span> <span class="toc-text">关于iptables</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#简介"><span class="toc-number">1.1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#规则表（table）与规则链（chains）"><span class="toc-number">1.2.</span> <span class="toc-text">规则表（table）与规则链（chains）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#规则链"><span class="toc-number">1.2.1.</span> <span class="toc-text">规则链</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#规则表tables"><span class="toc-number">1.2.2.</span> <span class="toc-text">规则表tables</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#规则表："><span class="toc-number">1.2.2.1.</span> <span class="toc-text">规则表：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#基本规则语法"><span class="toc-number">1.3.</span> <span class="toc-text">基本规则语法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#自定义规则链"><span class="toc-number">1.4.</span> <span class="toc-text">自定义规则链</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#cjdns项目中的应用"><span class="toc-number">2.</span> <span class="toc-text">cjdns项目中的应用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#rule-flush方法中的使用"><span class="toc-number">2.1.</span> <span class="toc-text">rule_flush方法中的使用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#源码"><span class="toc-number">2.1.1.</span> <span class="toc-text">源码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#命令分析"><span class="toc-number">2.1.2.</span> <span class="toc-text">命令分析</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#rule-apply方法中的使用"><span class="toc-number">2.2.</span> <span class="toc-text">rule_apply方法中的使用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Remove-all-old-rules"><span class="toc-number">2.2.1.</span> <span class="toc-text">Remove all old rules</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#根据规则，拼接iptables命令"><span class="toc-number">2.2.2.</span> <span class="toc-text">根据规则，拼接iptables命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#firewall-header"><span class="toc-number">2.2.3.</span> <span class="toc-text">firewall header</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#firewall-footer"><span class="toc-number">2.2.4.</span> <span class="toc-text">firewall footer</span></a></li></ol></li></ol></li></ol>
-        
-    </div>
-    <style>
-        .left-col .switch-btn,
-        .left-col .switch-area {
-            display: none;
-        }
-        .toc-level-3 i,
-        .toc-level-3 ol {
-            display: none !important;
-        }
-    </style>
-
-    <input type="button" id="tocButton" value="隱藏目錄" title="點擊按鈕隱藏或者顯示文章目錄">
-
-    <script>
-        yiliaConfig.toc = ["隱藏目錄", "顯示目錄", !!"false"];
-    </script>
 
 
 
-
-
-    
-      <div class="duoshuo" id="comments">
-    <div id="comment-box"></div>
-    <div class="ds-thread" id="ds-thread" data-thread-key="2017/04/27/about-iptables/" data-title="cjdns源码分析--iptables在cjdns项目中的运用" data-url="http://yoursite.com/2017/04/27/about-iptables/"></div>
-    <script>
-        var duoshuoQuery = {short_name:"ichrisking"};
-        var loadComment = function(){
-            var d = document, s = d.createElement('script');
-            s.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-            s.async = true; s.charset = 'UTF-8';
-            (d.head || d.body).appendChild(s);
-        }
-
-        
-    </script>
-    
-    <script> loadComment(); </script>
-
-</div>
-    
-
-
-
-
-    <div class="scroll" id="post-nav-button">
-        
-            <a href="/2017/07/25/cjdns_IpTunnel/" title="上一篇: cjdns源码分析--IpTunnel">
-                <i class="fa fa-angle-left"></i>
-            </a>
-        
-
-        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
-
-        
-            <a href="/2017/04/21/how-to-build-git-on-raspberry/" title="下一篇: 在树莓派上搭建私有git">
-                <i class="fa fa-angle-right"></i>
-            </a>
-        
-    </div>
-
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/03/08/FlameGraph/">使用火焰图（FlameGraph）来分析程序性能</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/29/cjnds-asymmetric-cryptography/">cjdns源码分析--握手过程中，非对称密钥的应用</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/04/how-to-fix-rebase-still-in-progress/">如何解决报错“prior sync failed; rebase still in progress”</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/11/22/cjdns-3steps-lladdrsession/">cjdns源码分析--使用SocketAddress来维护的EndpointsBySockaddr map机制中EndpointsBySockaddr session的建立过程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/05/cjdns-cryptoauth/">cjdns源码分析--CryptoAuth</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/04/how-to-read-staff/">如何看懂五线谱</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/30/rom7-0-phone/">rom7.0-phone 电话相关</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/28/cjdns-SuperNodeHunter/">cjdns源码分析--初探Supernode</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/25/rom7.0-build/">Android7.0Rom编译相关</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/02/cjdns_RouteGen-d/">cjdns源码分析--RouteGen</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/25/cjdns_IpTunnel/">cjdns源码分析--IpTunnel</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/27/about-iptables/">cjdns源码分析--iptables在cjdns项目中的运用</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/21/how-to-build-git-on-raspberry/">在树莓派上搭建私有git</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/15/raspberry-add-camera-dev/">树莓派摄像头没有/dev/video0设备节点的问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/12/ping-pong/">cjdns源码分析--SwitchPing的发送，接收与回复</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/04/contentprovider/">Android中的ContentProvider,ContentResolver,ContentObserver</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/21/pattern-proxy/">Android中的设计模式之代理模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/20/pattern-decorator/">Android中的设计模式之装饰者模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/13/activity-launch-mode/">activity启动模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/12/bin-tree/">二叉搜索树</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/29/pattern-builder/">Android中的设计模式之建造模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/23/pattern-strategy/">Android中的设计模式之策略模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/22/pattern-prototype/">Android中的设计模式之原型模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/Search/">各种查找算法</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/pattern-adapter/">Android中的设计模式之适配器模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/17/pattern-factory/">Android中的设计模式之工厂模式系列</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/10/pattern-flyweight/">Android中的设计模式之享元模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/pattern-memento/">Android中的设计模式之备忘录模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/08/pattern-template-method/">Android中的设计模式之模板方法模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/07/pattern-observer/">Android中的设计模式之观察者模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/04/pattern-composite/">Android中的设计模式之组合模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/02/Sort/">各种排序算法</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/01/oneday-ShardPreferences/">ShardPreferences</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/31/oneday-AsyncTask/">AsyncTask</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/26/pattern-singleton/">Android中的设计模式之单例模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/10/oneday-listview/">如何优化listView</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/08/oneday-context/">Android中的context详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/27/android-parcelable/">activity之间传递数据的方法</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/26/oneday-handler/">android的Handler机制详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/22/oneday-activity-lifecycle/">Activity生命周期</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/22/pass-by-value-or-reference/">Java中的值传递和引用传递</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/22/oneday_BroadcastReceiver/">BroadcastReceiver</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/21/oneday_service/">Android中的Service</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/21/sunjdk/">如何安装sunjdk，并用它替代openjdk</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/19/mvp_in_android/">MVP in Android</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/19/java_synchronized/">Java并发</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/18/java_list_hashmap/">Java集合框架</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/09/java_basic/">Java基础知识</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/08/pattern-design/">设计模式概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/31/Binder/">Binder</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/24/Fragment/">Fragment</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/24/Android-TouchEvent/">Android事件分发机制</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/23/ANR-and-FC/">ANR与FC</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/23/Android-performance-optimization/">Android性能优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/23/how_to_use_locate_image_file_in_hexo/">如何在hexo中使用本地图片</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/23/reinstall-hexo-after-reinstall-OS/">重装系统后，修复hexo</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/22/Android_memory_leak/">Android内存泄漏</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/18/Android1_1/">Android基础知识</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/05/build_shadowsocks/">配置shadowsocks</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/24/change-hexo-theme-to-maupassant/">对我的Blog做了点改动</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/19/make_blog_with_hexo/">使用hexo搭建blog</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/08/rsync/">拷貝代碼利器rsync</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/31/add_jar_into_android_mk_file/">給Android系統應用加jar包</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/16/port22_Connection_refused/">port 22: Connection refused</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/01/SEAndroid/">SEAndroid in Android5.x</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/06/11/access_ssl_with_okhttp/">使用OkHttp访问ssl（https）网络</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/04/20/build_java_jar_based_on_android_code/">如何使用android源码来制作java的jar包</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/02/04/save_discarding_commits/">找回差點丟失的commit</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/01/16/build_new_project_in_work_zone/">如何爲辦公區新建一個項目</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/01/06/add_new_function_in_local_service/">爲android添加一個新的service函數</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/03/21/deny_connect_with_usb/">源碼中實現禁止手機鏈接usb</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/02/14/add_tomoyo_to_android_system/">移植TOMOYO的步驟</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/06/09/make_deamon_thead_in_android/">爲android編寫一個deamon進程</a></li></ul>
-
-
-
-
-    <script>
-        
-    </script>
-</div>
-      <footer id="footer">
-    <div class="outer">
-        <div id="footer-info">
-            <div class="footer-left">
-                <i class="fa fa-copyright"></i> 
-                2016-2019 Chris King
-            </div>
-            <div class="footer-right">
-                <a href="http://hexo.io/" target="_blank" title="快速、簡單且強大的網誌框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="簡而不減 Hexo 雙欄網誌主題  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
-            </div>
         </div>
         
-            <div class="visit">
-                
-                    <span id="busuanzi_container_site_pv" style="display:none">
-                        <span id="site-visit" title="本站到訪數"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
-                        </span>
-                    </span>
-                
-                
-                    <span>| </span>
-                
-                
-                    <span id="busuanzi_container_page_pv" style="display:none">
-                        <span id="page-visit" title="本頁閱讀量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
-                        </span>
-                    </span>
-                
-            </div>
-        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
     </div>
-</footer>
-    </div>
-    
-<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
-
-    <script>
-        $(document).ready(function() {
-            var iPad = window.navigator.userAgent.indexOf('iPad');
-            if (iPad > -1 || $(".left-col").css("display") === "none") {
-                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
-                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
-                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
-            }
-            else {
-                var backgroundnum = 5;
-                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
-                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
-            }
-        })
-    </script>
-
-
-
-
-
-<div class="scroll" id="scroll">
-    <a href="#" title="返回頂部"><i class="fa fa-arrow-up"></i></a>
-    <a href="#comments" onclick="load$hide();" title="查看評論"><i class="fa fa-comments-o"></i></a>
-    <a href="#footer" title="轉到底部"><i class="fa fa-arrow-down"></i></a>
-</div>
-<script>
-    // Open in New Window
-    
-        var oOpenInNew = {
-            
-            
-            
-            
-             categories: ".article-category a, a.tag-list-link", 
-            
-             archives: ".archive-article-title", 
-             miniArchives: "a.post-list-link", 
-            
-             friends: "#js-friends a", 
-             socail: ".social a" 
-        }
-        for (var x in oOpenInNew) {
-            $(oOpenInNew[x]).attr("target", "_blank");
-        }
-    
-</script>
-
-<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
-</script>
   </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Chris King</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">73</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">23</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">27</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#关于iptables"><span class="nav-number">1.</span> <span class="nav-text">关于iptables</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#简介"><span class="nav-number">1.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#规则表（table）与规则链（chains）"><span class="nav-number">1.2.</span> <span class="nav-text">规则表（table）与规则链（chains）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#规则链"><span class="nav-number">1.2.1.</span> <span class="nav-text">规则链</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#规则表tables"><span class="nav-number">1.2.2.</span> <span class="nav-text">规则表tables</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#规则表："><span class="nav-number">1.2.2.1.</span> <span class="nav-text">规则表：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基本规则语法"><span class="nav-number">1.3.</span> <span class="nav-text">基本规则语法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自定义规则链"><span class="nav-number">1.4.</span> <span class="nav-text">自定义规则链</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cjdns项目中的应用"><span class="nav-number">2.</span> <span class="nav-text">cjdns项目中的应用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#rule-flush方法中的使用"><span class="nav-number">2.1.</span> <span class="nav-text">rule_flush方法中的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#源码"><span class="nav-number">2.1.1.</span> <span class="nav-text">源码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#命令分析"><span class="nav-number">2.1.2.</span> <span class="nav-text">命令分析</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rule-apply方法中的使用"><span class="nav-number">2.2.</span> <span class="nav-text">rule_apply方法中的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Remove-all-old-rules"><span class="nav-number">2.2.1.</span> <span class="nav-text">Remove all old rules</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#根据规则，拼接iptables命令"><span class="nav-number">2.2.2.</span> <span class="nav-text">根据规则，拼接iptables命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#firewall-header"><span class="nav-number">2.2.3.</span> <span class="nav-text">firewall header</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#firewall-footer"><span class="nav-number">2.2.4.</span> <span class="nav-text">firewall footer</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chris King</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.0.1</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=7.0.1"></script>
+
+  <script src="/js/src/motion.js?v=7.0.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/schemes/muse.js?v=7.0.1"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=7.0.1"></script>
+<script src="/js/src/post-details.js?v=7.0.1"></script>
+
+
+
+  
+
+
+  <script src="/js/src/next-boot.js?v=7.0.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
 </body>
 </html>

@@ -1,21 +1,102 @@
 <!DOCTYPE html>
-<html lang="zh-Hant-TW">
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hant-TW">
 <head><meta name="generator" content="Hexo 3.8.0">
-
-    <!--[if lt IE 9]>
-        <style>body {display: none; background: none !important} </style>
-        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
-    <![endif]-->
-
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<meta name="format-detection" content="telephone=no">
-<meta name="author" content="Chris King">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
 
 
 
-<meta name="description" content="利用android現有的service，向其中添加新的函數來實現自己的需求。本文記錄的從上到下的一系列修改過程">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.0.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.0.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.0.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.0.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="利用android現有的service，向其中添加新的函數來實現自己的需求。本文記錄的從上到下的一系列修改過程">
 <meta name="keywords" content="Android,Anrom">
 <meta property="og:type" content="article">
 <meta property="og:title" content="爲android添加一個新的service函數">
@@ -28,489 +109,801 @@
 <meta name="twitter:title" content="爲android添加一個新的service函數">
 <meta name="twitter:description" content="利用android現有的service，向其中添加新的函數來實現自己的需求。本文記錄的從上到下的一系列修改過程">
 
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
-
-
-    <link rel="alternate" href="/atom.xml" title="IChrisKing" type="application/atom+xml">
 
 
 
-    <link rel="shortcut icon" href="/favicon.png">
+
+
+  <link rel="canonical" href="http://yoursite.com/2015/01/06/add_new_function_in_local_service/">
 
 
 
-    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
-
-
-
-    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
-
-
-
-    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
-    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
-
-
-<link rel="stylesheet" href="/css/style.css">
-
-
-
-<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
-
-
-<title>爲android添加一個新的service函數 | IChrisKing</title>
-
-<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
-<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
-
-<script>
-    var yiliaConfig = {
-        fancybox: true,
-        animate: true,
-        isHome: false,
-        isPost: true,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
-        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
-        search: undefined
-    }
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
 </script>
 
-
-    <script> yiliaConfig.jquery_ui = [false]; </script>
-
-
-
-    <script> yiliaConfig.rootUrl = "\/";</script>
+  <title>爲android添加一個新的service函數 | IChrisKing</title>
+  
 
 
 
 
 
 
-</head></html>
-<body>
-  <div id="container">
-    <div class="left-col">
-    <div class="overlay"></div>
-<div class="intrude-less">
-    <header id="header" class="inner">
-        <a href="/" class="profilepic">
-            <img src="/img/avatar.png" class="animated zoomIn">
-        </a>
-        <hgroup>
-          <h1 class="header-author"><a href="/">Chris King</a></h1>
-        </hgroup>
-
-        
-        <p class="header-subtitle">#IMNOTCHRISLEE</p>
-        
-
-        
 
 
-        
-            <div id="switch-btn" class="switch-btn">
-                <div class="icon">
-                    <div class="icon-ctn">
-                        <div class="icon-wrap icon-house" data-idx="0">
-                            <div class="birdhouse"></div>
-                            <div class="birdhouse_holes"></div>
-                        </div>
-                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
-                            <div class="ribbon"></div>
-                        </div>
-                        
-                        <div class="icon-wrap icon-link hide" data-idx="2">
-                            <div class="loopback_l"></div>
-                            <div class="loopback_r"></div>
-                        </div>
-                        
-                        
-                        <div class="icon-wrap icon-me hide" data-idx="3">
-                            <div class="user"></div>
-                            <div class="shoulder"></div>
-                        </div>
-                        
-                    </div>
-                    
-                </div>
-                <div class="tips-box hide">
-                    <div class="tips-arrow"></div>
-                    <ul class="tips-inner">
-                        <li>菜單</li>
-                        <li>標籤</li>
-                        
-                        <li>友情鏈接</li>
-                        
-                        
-                        <li>關於我</li>
-                        
-                    </ul>
-                </div>
-            </div>
-        
 
-        <div id="switch-area" class="switch-area">
-            <div class="switch-wrap">
-                <section class="switch-part switch-part1">
-                    <nav class="header-menu">
-                        <ul>
-                        
-                            <li><a href="/">主頁</a></li>
-                        
-                            <li><a href="/archives/">所有文章</a></li>
-                        
-                            <li><a href="/tags/">標籤雲</a></li>
-                        
-                            <li><a href="/about/">關於我</a></li>
-                        
-                        </ul>
-                    </nav>
-                    <nav class="header-nav">
-                        <ul class="social">
-                            
-                                <a class="fa Email" href="https://chrisking310@gmail.com" title="Email"></a>
-                            
-                                <a class="fa GitHub" href="https://github.com/IChrisKing" title="GitHub"></a>
-                            
-                                <a class="fa 新浪博客" href="http://blog.sina.com.cn/u/1733434252" title="新浪博客"></a>
-                            
-                        </ul>
-                    </nav>
-                </section>
-                
-                
-                <section class="switch-part switch-part2">
-                    <div class="widget tagcloud" id="js-tagcloud">
-                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-everyday/">Android_everyday</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android开发工程师/">Android开发工程师</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Anrom/">Anrom</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C-C/">C/C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SEAndroid/">SEAndroid</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SELinux/">SELinux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cjdns/">cjdns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cjdns源码分析/">cjdns源码分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iptables/">iptables</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/music/">music</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/raspberry配置/">raspberry配置</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rom/">rom</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shadowsocks-vps/">shadowsocks/vps</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tool/">tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/填坑/">填坑</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/排序算法/">排序算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/查找算法/">查找算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/树莓派raspberry/">树莓派raspberry</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
-                    </div>
-                </section>
-                
-                
-                
-                <section class="switch-part switch-part3">
-                    <div id="js-friends">
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://anromos.github.io/">Anrom OS</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://github.com/AnromOS">Team GitHub</a>
-                    
-                    </div>
-                </section>
-                
 
-                
-                
-                <section class="switch-part switch-part4">
-                
-                    <div id="js-aboutme">Android ROM 开发</div>
-                </section>
-                
-            </div>
-        </div>
-    </header>                
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hant-TW">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">IChrisKing</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">#IMNOTCHRISLEE</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
 </div>
-    </div>
-    <div class="mid-col">
-      <nav id="mobile-nav">
-      <div class="overlay">
-          <div class="slider-trigger"></div>
-          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Chris King</a></h1>
-      </div>
-    <div class="intrude-less">
-        <header id="header" class="inner">
-            <a href="/" class="profilepic">
-                <img src="/img/avatar.png" class="animated zoomIn">
-            </a>
-            <hgroup>
-              <h1 class="header-author"><a href="/" title="回到主页">Chris King</a></h1>
-            </hgroup>
-            
-            <p class="header-subtitle">#IMNOTCHRISLEE</p>
-            
-            <nav class="header-menu">
-                <ul>
-                
-                    <li><a href="/">主頁</a></li>
-                
-                    <li><a href="/archives/">所有文章</a></li>
-                
-                    <li><a href="/tags/">標籤雲</a></li>
-                
-                    <li><a href="/about/">關於我</a></li>
-                
-                <div class="clearfix"></div>
-                </ul>
-            </nav>
-            <nav class="header-nav">
-                        <ul class="social">
-                            
-                                <a class="fa Email" target="_blank" href="https://chrisking310@gmail.com" title="Email"></a>
-                            
-                                <a class="fa GitHub" target="_blank" href="https://github.com/IChrisKing" title="GitHub"></a>
-                            
-                                <a class="fa 新浪博客" target="_blank" href="http://blog.sina.com.cn/u/1733434252" title="新浪博客"></a>
-                            
-                        </ul>
-            </nav>
-        </header>                
-    </div>
-    <link class="menu-list" tags="標籤" friends="友情鏈接" about="關於我">
-</nav>
-      <div class="body-wrap"><article id="post-add_new_function_in_local_service" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/01/06/add_new_function_in_local_service/" class="article-date">
-      <time datetime="2015-01-06T07:07:56.000Z" itemprop="datePublished">2015-01-06</time>
-</a>
 
 
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 class="article-title" itemprop="name">
-      爲android添加一個新的service函數
-    </h1>
-  
 
-      </header>
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
       
-      <div class="article-info article-info-post">
         
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/Anrom/">Anrom</a>
-    </div>
-
-
         
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Anrom/">Anrom</a></li></ul>
-    </div>
-
-        <div class="clearfix"></div>
-      </div>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
+        
           
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2015/01/06/add_new_function_in_local_service/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chris King">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="IChrisKing">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">爲android添加一個新的service函數
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2015-01-06 15:07:56" itemprop="dateCreated datePublished" datetime="2015-01-06T15:07:56+08:00">2015-01-06</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-03-22 11:33:24" itemprop="dateModified" datetime="2019-03-22T11:33:24+08:00">2019-03-22</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Anrom/" itemprop="url" rel="index"><span itemprop="name">Anrom</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+            <div class="post-description">利用android現有的service，向其中添加新的函數來實現自己的需求。本文記錄的從上到下的一系列修改過程</div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
         <h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><p>frameworks層的keyguard需要探測一個/data/system/user/10/下的文件gesture.key的存在性。<br>對於frameworks層的應用也好，package/apps下的應用也好，都是沒有su權限的。系統也不允許申請su權限。<br>這時需要使用service來調用底層那些有su權限的進程來幫忙探測了。<br>因爲前期已經有些其他的類似需求，前人使用了IMountService來添加新的函數，那現在也添加到這條線路好了。</p>
-<h2 id="keguard的KeyguardViewMediator-java"><a href="#keguard的KeyguardViewMediator-java" class="headerlink" title="keguard的KeyguardViewMediator.java"></a>keguard的KeyguardViewMediator.java</h2><h3 id="1-獲取名爲“mount”的service"><a href="#1-獲取名爲“mount”的service" class="headerlink" title="1. 獲取名爲“mount”的service"></a>1. 獲取名爲“mount”的service</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">private IMountService getMountService() &#123;</div><div class="line">        final IBinder service = ServiceManager.getService(&quot;mount&quot;);</div><div class="line">        if (service != null) &#123;</div><div class="line">            return IMountService.Stub.asInterface(service);</div><div class="line">        &#125;</div><div class="line">        return null;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
-<p>當然，爲了讓這個函數能用，文件頭部需要包含<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">import android.os.storage.IMountService;</div><div class="line">import android.os.ServiceManager;</div></pre></td></tr></table></figure></p>
-<h3 id="2-探測底層的gesture-key的存在性"><a href="#2-探測底層的gesture-key的存在性" class="headerlink" title="2. 探測底層的gesture.key的存在性"></a>2. 探測底層的gesture.key的存在性</h3><p>下面的函數用來探測底層的gesture.key的存在性。這裏也是這次添加過程的最高一層。他調用了mountservice的isGestureKeyExist( )函數，這個函數返回一個int值，爲0說明文件存在，-1說明不存在。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">private void doKeyguardLocked(Bundle options) &#123;</div><div class="line">       </div><div class="line">        //by chris</div><div class="line">       try &#123;</div><div class="line">            IMountService service = getMountService();//條用函數，獲取MountService</div><div class="line">            boolean isGestureKeyExist = (service.isGestureKeyExist() == 0)? true:false;//這個isGestureKeyExist就是我們後面要添加到IMountService.java的函數</div><div class="line">            Log.d(&quot;chris&quot;, &quot;isGestureKeyExist &quot; + service.isGestureKeyExist());</div><div class="line">            if (ActivityManagerNative.getDefault().getCurrentUser().getUserHandle().getIdentifier() == UserHandle.USER_WORK &amp;&amp; !isGestureKeyExist) &#123;</div><div class="line">                if (DEBUG)</div><div class="line">                    Log.d(TAG, &quot;doKeyguard: not showing because user work&quot;);</div><div class="line">                Log.d(&quot;chris&quot;, &quot;startAnromLock&quot;);</div><div class="line">                startAnromLock();</div><div class="line">                return;</div><div class="line">            &#125;</div><div class="line">        &#125; catch (RemoteException e) &#123;</div><div class="line">            // TODO Auto-generated catch block</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div></pre></td></tr></table></figure></p>
+<h2 id="keguard的KeyguardViewMediator-java"><a href="#keguard的KeyguardViewMediator-java" class="headerlink" title="keguard的KeyguardViewMediator.java"></a>keguard的KeyguardViewMediator.java</h2><h3 id="1-獲取名爲“mount”的service"><a href="#1-獲取名爲“mount”的service" class="headerlink" title="1. 獲取名爲“mount”的service"></a>1. 獲取名爲“mount”的service</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">private IMountService getMountService() &#123;</span><br><span class="line">        final IBinder service = ServiceManager.getService(&quot;mount&quot;);</span><br><span class="line">        if (service != null) &#123;</span><br><span class="line">            return IMountService.Stub.asInterface(service);</span><br><span class="line">        &#125;</span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>當然，爲了讓這個函數能用，文件頭部需要包含<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">import android.os.storage.IMountService;</span><br><span class="line">import android.os.ServiceManager;</span><br></pre></td></tr></table></figure></p>
+<h3 id="2-探測底層的gesture-key的存在性"><a href="#2-探測底層的gesture-key的存在性" class="headerlink" title="2. 探測底層的gesture.key的存在性"></a>2. 探測底層的gesture.key的存在性</h3><p>下面的函數用來探測底層的gesture.key的存在性。這裏也是這次添加過程的最高一層。他調用了mountservice的isGestureKeyExist( )函數，這個函數返回一個int值，爲0說明文件存在，-1說明不存在。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">private void doKeyguardLocked(Bundle options) &#123;</span><br><span class="line">       </span><br><span class="line">        //by chris</span><br><span class="line">       try &#123;</span><br><span class="line">            IMountService service = getMountService();//條用函數，獲取MountService</span><br><span class="line">            boolean isGestureKeyExist = (service.isGestureKeyExist() == 0)? true:false;//這個isGestureKeyExist就是我們後面要添加到IMountService.java的函數</span><br><span class="line">            Log.d(&quot;chris&quot;, &quot;isGestureKeyExist &quot; + service.isGestureKeyExist());</span><br><span class="line">            if (ActivityManagerNative.getDefault().getCurrentUser().getUserHandle().getIdentifier() == UserHandle.USER_WORK &amp;&amp; !isGestureKeyExist) &#123;</span><br><span class="line">                if (DEBUG)</span><br><span class="line">                    Log.d(TAG, &quot;doKeyguard: not showing because user work&quot;);</span><br><span class="line">                Log.d(&quot;chris&quot;, &quot;startAnromLock&quot;);</span><br><span class="line">                startAnromLock();</span><br><span class="line">                return;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; catch (RemoteException e) &#123;</span><br><span class="line">            // TODO Auto-generated catch block</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure></p>
 <h2 id="frameworks-base-core-java-android-os-storage-IMountService-java"><a href="#frameworks-base-core-java-android-os-storage-IMountService-java" class="headerlink" title="/frameworks/base/core/java/android/os/storage/IMountService.java"></a>/frameworks/base/core/java/android/os/storage/IMountService.java</h2><p>現在進入添加過程的第二層，一共4個添加點。</p>
-<h3 id="1-聲明這個函數"><a href="#1-聲明這個函數" class="headerlink" title="1.聲明這個函數"></a>1.聲明這個函數</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">public int isGestureKeyExist() throws RemoteException;</div></pre></td></tr></table></figure>
-<h3 id="2-這個函數的實現"><a href="#2-這個函數的實現" class="headerlink" title="2.這個函數的實現"></a>2.這個函數的實現</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">public int isGestureKeyExist() throws RemoteException &#123;</div><div class="line">                Slog.d(&quot;chris&quot;,&quot;isGestureKeyExist imountservice&quot;);</div><div class="line">                Parcel _data = Parcel.obtain();</div><div class="line">                Parcel _reply = Parcel.obtain();</div><div class="line">                int _result;</div><div class="line">                try &#123;</div><div class="line">                    _data.writeInterfaceToken(DESCRIPTOR);</div><div class="line">                    //_data.writeString(password);</div><div class="line">                    mRemote.transact(Stub.TRANSACTION_isGestureKeyExist, _data, _reply, 0);</div><div class="line">                    _reply.readException();</div><div class="line">                    _result = _reply.readInt();</div><div class="line">                &#125; finally &#123;</div><div class="line">                    _reply.recycle();</div><div class="line">                    _data.recycle();</div><div class="line">                &#125;</div><div class="line">                return _result;</div><div class="line">            &#125;</div></pre></td></tr></table></figure>
-<h3 id="3-針對2中的mRemote-transact-Stub-TRANSACTION-isGestureKeyExist-data-reply-0-函數，添加一個static的值對應。"><a href="#3-針對2中的mRemote-transact-Stub-TRANSACTION-isGestureKeyExist-data-reply-0-函數，添加一個static的值對應。" class="headerlink" title="3.針對2中的mRemote.transact(Stub.TRANSACTION_isGestureKeyExist, _data, _reply, 0)函數，添加一個static的值對應。"></a>3.針對2中的mRemote.transact(Stub.TRANSACTION_isGestureKeyExist, _data, _reply, 0)函數，添加一個static的值對應。</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">static final int TRANSACTION_isGestureKeyExist = IBinder.FIRST_CALL_TRANSACTION + 41;</div></pre></td></tr></table></figure>
-<h3 id="4-添加實現函數"><a href="#4-添加實現函數" class="headerlink" title="4.添加實現函數"></a>4.添加實現函數</h3><p>onTransact函數是對應着mRemote.transact(Stub.TRANSACTION_isGestureKeyExist, _data, _reply, 0)的實現方法，所以需要在onTransact函數中添加對應的實現方法。可以看到添加代碼的核心是 isGestureKeyExist()函數，這個 isGestureKeyExist()和本文件中的 isGestureKeyExist()可不是一回事了，這個 isGestureKeyExist()是MountService.java中的 isGestureKeyExist()函數。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">public boolean onTransact(int code, Parcel data, Parcel reply,</div><div class="line">                int flags) throws RemoteException &#123;</div><div class="line">            switch (code) &#123;</div><div class="line">                 //這裏省略很多本來就有的case</div><div class="line">                 case TRANSACTION_isGestureKeyExist: &#123;</div><div class="line">                    data.enforceInterface(DESCRIPTOR);</div><div class="line">                    //String password = data.readString();</div><div class="line">                    int result = isGestureKeyExist();</div><div class="line">                    reply.writeNoException();</div><div class="line">                    reply.writeInt(result);</div><div class="line">                    return true;</div><div class="line">                &#125;</div><div class="line">            //這裏省略一些無關代碼</div><div class="line">         &#125;</div></pre></td></tr></table></figure></p>
-<h2 id="frameworks-base-services-java-com-android-server-MountService-java"><a href="#frameworks-base-services-java-com-android-server-MountService-java" class="headerlink" title="/frameworks/base/services/java/com/android/server/MountService.java"></a>/frameworks/base/services/java/com/android/server/MountService.java</h2><p>進入第三層了，這裏已經開始直接調命令了，mConnector.execute(“cryptfs”, “isgesturekeyexist”)，這個調用將會被CommandListener.cpp接收到並響應。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">public int isGestureKeyExist()throws RemoteException&#123;</div><div class="line">    Slog.d(&quot;chris&quot;,&quot;isGestureKeyExist mountservice&quot;);</div><div class="line">    final NativeDaemonEvent event;</div><div class="line">    try&#123;</div><div class="line">        event = mConnector.execute(&quot;cryptfs&quot;, &quot;isgesturekeyexist&quot;);</div><div class="line">        Slog.d(&quot;chris&quot;,&quot;isGestureKeyExist mountservice. result is &quot; + Integer.parseInt(event.getMessage()));</div><div class="line">        return Integer.parseInt(event.getMessage());</div><div class="line">    &#125;catch(NativeDaemonConnectorException e)&#123;</div><div class="line">        return e.getCode();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="system-vold-CommandListener-cpp"><a href="#system-vold-CommandListener-cpp" class="headerlink" title="/system/vold/CommandListener.cpp"></a>/system/vold/CommandListener.cpp</h2><p>前面的調用：mConnector.execute(“cryptfs”, “isgesturekeyexist”)，這裏包含兩個部分：cryptfs 和 isgesturekeyexist。這就對應着兩次參數的判斷，首先第一個參數爲cryptfs，找到針對他的處理函數：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">CommandListener::CryptfsCmd::CryptfsCmd() :</div><div class="line">                 VoldCommand(&quot;cryptfs&quot;) &#123;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>在他下面，是所有與他相關的命令的處理方式，在其中添加關於isgesturekeyexist的處理方法，調用函數cryptfs_is_gesturekey_exist()，這已經是一個c級別的函數了。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">if (!strcmp(argv[1], &quot;isgesturekeyexist&quot;)) &#123;</div><div class="line">        if (argc != 2) &#123;</div><div class="line">            cli-&gt;sendMsg(ResponseCode::CommandSyntaxError, &quot;Usage: cryptfs isgesturekeyexist&quot;, false);</div><div class="line">            return 0;</div><div class="line">        &#125;</div><div class="line">        dumpArgs(argc, argv, -1);</div><div class="line">        rc = cryptfs_is_gesturekey_exist();</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
-<h2 id="system-vold-cryptfs-h-amp-amp-system-vold-cryptfs-c"><a href="#system-vold-cryptfs-h-amp-amp-system-vold-cryptfs-c" class="headerlink" title="/system/vold/cryptfs.h   &amp;&amp;   /system/vold/cryptfs.c"></a>/system/vold/cryptfs.h   &amp;&amp;   /system/vold/cryptfs.c</h2><p>對於這兩個文件的修改，已經完全進入到C的層面了.首先在cryptfs.h裏面添加函數聲明<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">int cryptfs_is_gesturekey_exist(void);</div></pre></td></tr></table></figure></p>
+<h3 id="1-聲明這個函數"><a href="#1-聲明這個函數" class="headerlink" title="1.聲明這個函數"></a>1.聲明這個函數</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public int isGestureKeyExist() throws RemoteException;</span><br></pre></td></tr></table></figure>
+<h3 id="2-這個函數的實現"><a href="#2-這個函數的實現" class="headerlink" title="2.這個函數的實現"></a>2.這個函數的實現</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">public int isGestureKeyExist() throws RemoteException &#123;</span><br><span class="line">                Slog.d(&quot;chris&quot;,&quot;isGestureKeyExist imountservice&quot;);</span><br><span class="line">                Parcel _data = Parcel.obtain();</span><br><span class="line">                Parcel _reply = Parcel.obtain();</span><br><span class="line">                int _result;</span><br><span class="line">                try &#123;</span><br><span class="line">                    _data.writeInterfaceToken(DESCRIPTOR);</span><br><span class="line">                    //_data.writeString(password);</span><br><span class="line">                    mRemote.transact(Stub.TRANSACTION_isGestureKeyExist, _data, _reply, 0);</span><br><span class="line">                    _reply.readException();</span><br><span class="line">                    _result = _reply.readInt();</span><br><span class="line">                &#125; finally &#123;</span><br><span class="line">                    _reply.recycle();</span><br><span class="line">                    _data.recycle();</span><br><span class="line">                &#125;</span><br><span class="line">                return _result;</span><br><span class="line">            &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="3-針對2中的mRemote-transact-Stub-TRANSACTION-isGestureKeyExist-data-reply-0-函數，添加一個static的值對應。"><a href="#3-針對2中的mRemote-transact-Stub-TRANSACTION-isGestureKeyExist-data-reply-0-函數，添加一個static的值對應。" class="headerlink" title="3.針對2中的mRemote.transact(Stub.TRANSACTION_isGestureKeyExist, _data, _reply, 0)函數，添加一個static的值對應。"></a>3.針對2中的mRemote.transact(Stub.TRANSACTION_isGestureKeyExist, _data, _reply, 0)函數，添加一個static的值對應。</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">static final int TRANSACTION_isGestureKeyExist = IBinder.FIRST_CALL_TRANSACTION + 41;</span><br></pre></td></tr></table></figure>
+<h3 id="4-添加實現函數"><a href="#4-添加實現函數" class="headerlink" title="4.添加實現函數"></a>4.添加實現函數</h3><p>onTransact函數是對應着mRemote.transact(Stub.TRANSACTION_isGestureKeyExist, _data, _reply, 0)的實現方法，所以需要在onTransact函數中添加對應的實現方法。可以看到添加代碼的核心是 isGestureKeyExist()函數，這個 isGestureKeyExist()和本文件中的 isGestureKeyExist()可不是一回事了，這個 isGestureKeyExist()是MountService.java中的 isGestureKeyExist()函數。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public boolean onTransact(int code, Parcel data, Parcel reply,</span><br><span class="line">                int flags) throws RemoteException &#123;</span><br><span class="line">            switch (code) &#123;</span><br><span class="line">                 //這裏省略很多本來就有的case</span><br><span class="line">                 case TRANSACTION_isGestureKeyExist: &#123;</span><br><span class="line">                    data.enforceInterface(DESCRIPTOR);</span><br><span class="line">                    //String password = data.readString();</span><br><span class="line">                    int result = isGestureKeyExist();</span><br><span class="line">                    reply.writeNoException();</span><br><span class="line">                    reply.writeInt(result);</span><br><span class="line">                    return true;</span><br><span class="line">                &#125;</span><br><span class="line">            //這裏省略一些無關代碼</span><br><span class="line">         &#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="frameworks-base-services-java-com-android-server-MountService-java"><a href="#frameworks-base-services-java-com-android-server-MountService-java" class="headerlink" title="/frameworks/base/services/java/com/android/server/MountService.java"></a>/frameworks/base/services/java/com/android/server/MountService.java</h2><p>進入第三層了，這裏已經開始直接調命令了，mConnector.execute(“cryptfs”, “isgesturekeyexist”)，這個調用將會被CommandListener.cpp接收到並響應。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public int isGestureKeyExist()throws RemoteException&#123;</span><br><span class="line">    Slog.d(&quot;chris&quot;,&quot;isGestureKeyExist mountservice&quot;);</span><br><span class="line">    final NativeDaemonEvent event;</span><br><span class="line">    try&#123;</span><br><span class="line">        event = mConnector.execute(&quot;cryptfs&quot;, &quot;isgesturekeyexist&quot;);</span><br><span class="line">        Slog.d(&quot;chris&quot;,&quot;isGestureKeyExist mountservice. result is &quot; + Integer.parseInt(event.getMessage()));</span><br><span class="line">        return Integer.parseInt(event.getMessage());</span><br><span class="line">    &#125;catch(NativeDaemonConnectorException e)&#123;</span><br><span class="line">        return e.getCode();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="system-vold-CommandListener-cpp"><a href="#system-vold-CommandListener-cpp" class="headerlink" title="/system/vold/CommandListener.cpp"></a>/system/vold/CommandListener.cpp</h2><p>前面的調用：mConnector.execute(“cryptfs”, “isgesturekeyexist”)，這裏包含兩個部分：cryptfs 和 isgesturekeyexist。這就對應着兩次參數的判斷，首先第一個參數爲cryptfs，找到針對他的處理函數：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">CommandListener::CryptfsCmd::CryptfsCmd() :</span><br><span class="line">                 VoldCommand(&quot;cryptfs&quot;) &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在他下面，是所有與他相關的命令的處理方式，在其中添加關於isgesturekeyexist的處理方法，調用函數cryptfs_is_gesturekey_exist()，這已經是一個c級別的函數了。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">if (!strcmp(argv[1], &quot;isgesturekeyexist&quot;)) &#123;</span><br><span class="line">        if (argc != 2) &#123;</span><br><span class="line">            cli-&gt;sendMsg(ResponseCode::CommandSyntaxError, &quot;Usage: cryptfs isgesturekeyexist&quot;, false);</span><br><span class="line">            return 0;</span><br><span class="line">        &#125;</span><br><span class="line">        dumpArgs(argc, argv, -1);</span><br><span class="line">        rc = cryptfs_is_gesturekey_exist();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="system-vold-cryptfs-h-amp-amp-system-vold-cryptfs-c"><a href="#system-vold-cryptfs-h-amp-amp-system-vold-cryptfs-c" class="headerlink" title="/system/vold/cryptfs.h   &amp;&amp;   /system/vold/cryptfs.c"></a>/system/vold/cryptfs.h   &amp;&amp;   /system/vold/cryptfs.c</h2><p>對於這兩個文件的修改，已經完全進入到C的層面了.首先在cryptfs.h裏面添加函數聲明<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int cryptfs_is_gesturekey_exist(void);</span><br></pre></td></tr></table></figure></p>
 <p>順便爲我們要判斷的文件gesture.key 定義一個靜態的對應，以方便以後調用：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">#define GESTUREKEYFILE &quot;/data/system/users/10/gesture.key&quot;</div></pre></td></tr></table></figure>
-<p>最後的最後的，真正的實現是在cryptfs.c文件當中，在這裏才真正的去探測gesture.key文件的存在性。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">int cryptfs_is_gesturekey_exist(void)</div><div class="line">&#123;</div><div class="line">    int rc = -1;  </div><div class="line">    rc = access(GESTUREKEYFILE, 0 ); //access函數用來測試一些與文件相關的權限。函數的第一個參數爲文件名，第二個參數爲0時，代表測試文件存在與否。返回值爲0時，代表文件存在。爲-1時代表文件不存在。  </div><div class="line">    return rc;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#define GESTUREKEYFILE &quot;/data/system/users/10/gesture.key&quot;</span><br></pre></td></tr></table></figure>
+<p>最後的最後的，真正的實現是在cryptfs.c文件當中，在這裏才真正的去探測gesture.key文件的存在性。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">int cryptfs_is_gesturekey_exist(void)</span><br><span class="line">&#123;</span><br><span class="line">    int rc = -1;  </span><br><span class="line">    rc = access(GESTUREKEYFILE, 0 ); //access函數用來測試一些與文件相關的權限。函數的第一個參數爲文件名，第二個參數爲0時，代表測試文件存在與否。返回值爲0時，代表文件存在。爲-1時代表文件不存在。  </span><br><span class="line">    return rc;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>走完這一套流程，添加過程就完成了，回頭看下，其實是最底層提供了接口，然後經過一層一層的包裝，最後被應用層所調用.</p>
 
       
     </div>
+
     
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"># Android</a>
+          
+            <a href="/tags/Anrom/" rel="tag"># Anrom</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2014/03/21/deny_connect_with_usb/" rel="next" title="源碼中實現禁止手機鏈接usb">
+                <i class="fa fa-chevron-left"></i> 源碼中實現禁止手機鏈接usb
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/01/16/build_new_project_in_work_zone/" rel="prev" title="如何爲辦公區新建一個項目">
+                如何爲辦公區新建一個項目 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
-    
+  
+  
+  </article>
 
 
-    <nav id="article-nav">
-        
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2015/01/16/build_new_project_in_work_zone/">
-                    如何爲辦公區新建一個項目
-                </a>
-            </div>
-        
-        
-            <div id="article-nav-older" class="article-nav-title">
-                <a href="/2014/03/21/deny_connect_with_usb/">
-                    源碼中實現禁止手機鏈接usb
-                </a>
-            </div>
-        
-    </nav>
+  </div>
+
+
+          </div>
+          
 
   
-</article>
-
-    <div id="toc" class="toc-article">
-        <strong class="toc-title">文章目錄</strong>
-        
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#需求"><span class="toc-number">1.</span> <span class="toc-text">需求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#keguard的KeyguardViewMediator-java"><span class="toc-number">2.</span> <span class="toc-text">keguard的KeyguardViewMediator.java</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-獲取名爲“mount”的service"><span class="toc-number">2.1.</span> <span class="toc-text">1. 獲取名爲“mount”的service</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-探測底層的gesture-key的存在性"><span class="toc-number">2.2.</span> <span class="toc-text">2. 探測底層的gesture.key的存在性</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#frameworks-base-core-java-android-os-storage-IMountService-java"><span class="toc-number">3.</span> <span class="toc-text">/frameworks/base/core/java/android/os/storage/IMountService.java</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-聲明這個函數"><span class="toc-number">3.1.</span> <span class="toc-text">1.聲明這個函數</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-這個函數的實現"><span class="toc-number">3.2.</span> <span class="toc-text">2.這個函數的實現</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-針對2中的mRemote-transact-Stub-TRANSACTION-isGestureKeyExist-data-reply-0-函數，添加一個static的值對應。"><span class="toc-number">3.3.</span> <span class="toc-text">3.針對2中的mRemote.transact(Stub.TRANSACTION_isGestureKeyExist, _data, _reply, 0)函數，添加一個static的值對應。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-添加實現函數"><span class="toc-number">3.4.</span> <span class="toc-text">4.添加實現函數</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#frameworks-base-services-java-com-android-server-MountService-java"><span class="toc-number">4.</span> <span class="toc-text">/frameworks/base/services/java/com/android/server/MountService.java</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#system-vold-CommandListener-cpp"><span class="toc-number">5.</span> <span class="toc-text">/system/vold/CommandListener.cpp</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#system-vold-cryptfs-h-amp-amp-system-vold-cryptfs-c"><span class="toc-number">6.</span> <span class="toc-text">/system/vold/cryptfs.h   &amp;&amp;   /system/vold/cryptfs.c</span></a></li></ol>
-        
-    </div>
-    <style>
-        .left-col .switch-btn,
-        .left-col .switch-area {
-            display: none;
-        }
-        .toc-level-3 i,
-        .toc-level-3 ol {
-            display: none !important;
-        }
-    </style>
-
-    <input type="button" id="tocButton" value="隱藏目錄" title="點擊按鈕隱藏或者顯示文章目錄">
-
-    <script>
-        yiliaConfig.toc = ["隱藏目錄", "顯示目錄", !!"false"];
-    </script>
 
 
 
-
-
-    
-      <div class="duoshuo" id="comments">
-    <div id="comment-box"></div>
-    <div class="ds-thread" id="ds-thread" data-thread-key="2015/01/06/add_new_function_in_local_service/" data-title="爲android添加一個新的service函數" data-url="http://yoursite.com/2015/01/06/add_new_function_in_local_service/"></div>
-    <script>
-        var duoshuoQuery = {short_name:"ichrisking"};
-        var loadComment = function(){
-            var d = document, s = d.createElement('script');
-            s.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-            s.async = true; s.charset = 'UTF-8';
-            (d.head || d.body).appendChild(s);
-        }
-
-        
-    </script>
-    
-    <script> loadComment(); </script>
-
-</div>
-    
-
-
-
-
-    <div class="scroll" id="post-nav-button">
-        
-            <a href="/2015/01/16/build_new_project_in_work_zone/" title="上一篇: 如何爲辦公區新建一個項目">
-                <i class="fa fa-angle-left"></i>
-            </a>
-        
-
-        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
-
-        
-            <a href="/2014/03/21/deny_connect_with_usb/" title="下一篇: 源碼中實現禁止手機鏈接usb">
-                <i class="fa fa-angle-right"></i>
-            </a>
-        
-    </div>
-
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/03/08/FlameGraph/">使用火焰图（FlameGraph）来分析程序性能</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/29/cjnds-asymmetric-cryptography/">cjdns源码分析--握手过程中，非对称密钥的应用</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/04/how-to-fix-rebase-still-in-progress/">如何解决报错“prior sync failed; rebase still in progress”</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/11/22/cjdns-3steps-lladdrsession/">cjdns源码分析--使用SocketAddress来维护的EndpointsBySockaddr map机制中EndpointsBySockaddr session的建立过程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/05/cjdns-cryptoauth/">cjdns源码分析--CryptoAuth</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/04/how-to-read-staff/">如何看懂五线谱</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/30/rom7-0-phone/">rom7.0-phone 电话相关</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/28/cjdns-SuperNodeHunter/">cjdns源码分析--初探Supernode</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/25/rom7.0-build/">Android7.0Rom编译相关</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/02/cjdns_RouteGen-d/">cjdns源码分析--RouteGen</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/25/cjdns_IpTunnel/">cjdns源码分析--IpTunnel</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/27/about-iptables/">cjdns源码分析--iptables在cjdns项目中的运用</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/21/how-to-build-git-on-raspberry/">在树莓派上搭建私有git</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/15/raspberry-add-camera-dev/">树莓派摄像头没有/dev/video0设备节点的问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/12/ping-pong/">cjdns源码分析--SwitchPing的发送，接收与回复</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/04/contentprovider/">Android中的ContentProvider,ContentResolver,ContentObserver</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/21/pattern-proxy/">Android中的设计模式之代理模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/20/pattern-decorator/">Android中的设计模式之装饰者模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/13/activity-launch-mode/">activity启动模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/12/bin-tree/">二叉搜索树</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/29/pattern-builder/">Android中的设计模式之建造模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/23/pattern-strategy/">Android中的设计模式之策略模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/22/pattern-prototype/">Android中的设计模式之原型模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/Search/">各种查找算法</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/pattern-adapter/">Android中的设计模式之适配器模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/17/pattern-factory/">Android中的设计模式之工厂模式系列</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/10/pattern-flyweight/">Android中的设计模式之享元模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/pattern-memento/">Android中的设计模式之备忘录模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/08/pattern-template-method/">Android中的设计模式之模板方法模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/07/pattern-observer/">Android中的设计模式之观察者模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/04/pattern-composite/">Android中的设计模式之组合模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/02/Sort/">各种排序算法</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/01/oneday-ShardPreferences/">ShardPreferences</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/31/oneday-AsyncTask/">AsyncTask</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/26/pattern-singleton/">Android中的设计模式之单例模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/10/oneday-listview/">如何优化listView</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/08/oneday-context/">Android中的context详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/27/android-parcelable/">activity之间传递数据的方法</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/26/oneday-handler/">android的Handler机制详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/22/oneday-activity-lifecycle/">Activity生命周期</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/22/pass-by-value-or-reference/">Java中的值传递和引用传递</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/22/oneday_BroadcastReceiver/">BroadcastReceiver</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/21/oneday_service/">Android中的Service</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/21/sunjdk/">如何安装sunjdk，并用它替代openjdk</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/19/mvp_in_android/">MVP in Android</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/19/java_synchronized/">Java并发</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/18/java_list_hashmap/">Java集合框架</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/09/java_basic/">Java基础知识</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/08/pattern-design/">设计模式概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/31/Binder/">Binder</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/24/Fragment/">Fragment</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/24/Android-TouchEvent/">Android事件分发机制</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/23/ANR-and-FC/">ANR与FC</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/23/Android-performance-optimization/">Android性能优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/23/how_to_use_locate_image_file_in_hexo/">如何在hexo中使用本地图片</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/23/reinstall-hexo-after-reinstall-OS/">重装系统后，修复hexo</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/22/Android_memory_leak/">Android内存泄漏</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/18/Android1_1/">Android基础知识</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/05/build_shadowsocks/">配置shadowsocks</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/24/change-hexo-theme-to-maupassant/">对我的Blog做了点改动</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/19/make_blog_with_hexo/">使用hexo搭建blog</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/08/rsync/">拷貝代碼利器rsync</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/31/add_jar_into_android_mk_file/">給Android系統應用加jar包</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/16/port22_Connection_refused/">port 22: Connection refused</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/01/SEAndroid/">SEAndroid in Android5.x</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/06/11/access_ssl_with_okhttp/">使用OkHttp访问ssl（https）网络</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/04/20/build_java_jar_based_on_android_code/">如何使用android源码来制作java的jar包</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/02/04/save_discarding_commits/">找回差點丟失的commit</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/01/16/build_new_project_in_work_zone/">如何爲辦公區新建一個項目</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/01/06/add_new_function_in_local_service/">爲android添加一個新的service函數</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/03/21/deny_connect_with_usb/">源碼中實現禁止手機鏈接usb</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/02/14/add_tomoyo_to_android_system/">移植TOMOYO的步驟</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/06/09/make_deamon_thead_in_android/">爲android編寫一個deamon進程</a></li></ul>
-
-
-
-
-    <script>
-        
-    </script>
-</div>
-      <footer id="footer">
-    <div class="outer">
-        <div id="footer-info">
-            <div class="footer-left">
-                <i class="fa fa-copyright"></i> 
-                2016-2019 Chris King
-            </div>
-            <div class="footer-right">
-                <a href="http://hexo.io/" target="_blank" title="快速、簡單且強大的網誌框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="簡而不減 Hexo 雙欄網誌主題  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
-            </div>
         </div>
         
-            <div class="visit">
-                
-                    <span id="busuanzi_container_site_pv" style="display:none">
-                        <span id="site-visit" title="本站到訪數"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
-                        </span>
-                    </span>
-                
-                
-                    <span>| </span>
-                
-                
-                    <span id="busuanzi_container_page_pv" style="display:none">
-                        <span id="page-visit" title="本頁閱讀量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
-                        </span>
-                    </span>
-                
-            </div>
-        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
     </div>
-</footer>
-    </div>
-    
-<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
-
-    <script>
-        $(document).ready(function() {
-            var iPad = window.navigator.userAgent.indexOf('iPad');
-            if (iPad > -1 || $(".left-col").css("display") === "none") {
-                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
-                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
-                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
-            }
-            else {
-                var backgroundnum = 5;
-                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
-                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
-            }
-        })
-    </script>
-
-
-
-
-
-<div class="scroll" id="scroll">
-    <a href="#" title="返回頂部"><i class="fa fa-arrow-up"></i></a>
-    <a href="#comments" onclick="load$hide();" title="查看評論"><i class="fa fa-comments-o"></i></a>
-    <a href="#footer" title="轉到底部"><i class="fa fa-arrow-down"></i></a>
-</div>
-<script>
-    // Open in New Window
-    
-        var oOpenInNew = {
-            
-            
-            
-            
-             categories: ".article-category a, a.tag-list-link", 
-            
-             archives: ".archive-article-title", 
-             miniArchives: "a.post-list-link", 
-            
-             friends: "#js-friends a", 
-             socail: ".social a" 
-        }
-        for (var x in oOpenInNew) {
-            $(oOpenInNew[x]).attr("target", "_blank");
-        }
-    
-</script>
-
-<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
-</script>
   </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Chris King</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">73</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">23</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">27</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#需求"><span class="nav-number">1.</span> <span class="nav-text">需求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#keguard的KeyguardViewMediator-java"><span class="nav-number">2.</span> <span class="nav-text">keguard的KeyguardViewMediator.java</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-獲取名爲“mount”的service"><span class="nav-number">2.1.</span> <span class="nav-text">1. 獲取名爲“mount”的service</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-探測底層的gesture-key的存在性"><span class="nav-number">2.2.</span> <span class="nav-text">2. 探測底層的gesture.key的存在性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#frameworks-base-core-java-android-os-storage-IMountService-java"><span class="nav-number">3.</span> <span class="nav-text">/frameworks/base/core/java/android/os/storage/IMountService.java</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-聲明這個函數"><span class="nav-number">3.1.</span> <span class="nav-text">1.聲明這個函數</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-這個函數的實現"><span class="nav-number">3.2.</span> <span class="nav-text">2.這個函數的實現</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-針對2中的mRemote-transact-Stub-TRANSACTION-isGestureKeyExist-data-reply-0-函數，添加一個static的值對應。"><span class="nav-number">3.3.</span> <span class="nav-text">3.針對2中的mRemote.transact(Stub.TRANSACTION_isGestureKeyExist, _data, _reply, 0)函數，添加一個static的值對應。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-添加實現函數"><span class="nav-number">3.4.</span> <span class="nav-text">4.添加實現函數</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#frameworks-base-services-java-com-android-server-MountService-java"><span class="nav-number">4.</span> <span class="nav-text">/frameworks/base/services/java/com/android/server/MountService.java</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#system-vold-CommandListener-cpp"><span class="nav-number">5.</span> <span class="nav-text">/system/vold/CommandListener.cpp</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#system-vold-cryptfs-h-amp-amp-system-vold-cryptfs-c"><span class="nav-number">6.</span> <span class="nav-text">/system/vold/cryptfs.h   &amp;&amp;   /system/vold/cryptfs.c</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chris King</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.0.1</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=7.0.1"></script>
+
+  <script src="/js/src/motion.js?v=7.0.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/schemes/muse.js?v=7.0.1"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=7.0.1"></script>
+<script src="/js/src/post-details.js?v=7.0.1"></script>
+
+
+
+  
+
+
+  <script src="/js/src/next-boot.js?v=7.0.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
 </body>
 </html>

@@ -1,21 +1,102 @@
 <!DOCTYPE html>
-<html lang="zh-Hant-TW">
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hant-TW">
 <head><meta name="generator" content="Hexo 3.8.0">
-
-    <!--[if lt IE 9]>
-        <style>body {display: none; background: none !important} </style>
-        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
-    <![endif]-->
-
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<meta name="format-detection" content="telephone=no">
-<meta name="author" content="Chris King">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
 
 
 
-<meta name="description" content="介绍CryptoAuth相关源码。包括conf中的配置，相关API，建立CryptoAuth_Session时的ca验证">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.0.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.0.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.0.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.0.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="介绍CryptoAuth相关源码。包括conf中的配置，相关API，建立CryptoAuth_Session时的ca验证">
 <meta name="keywords" content="C&#x2F;C++,cjdns,cjdns源码分析">
 <meta property="og:type" content="article">
 <meta property="og:title" content="cjdns源码分析--CryptoAuth">
@@ -28,557 +109,878 @@
 <meta name="twitter:title" content="cjdns源码分析--CryptoAuth">
 <meta name="twitter:description" content="介绍CryptoAuth相关源码。包括conf中的配置，相关API，建立CryptoAuth_Session时的ca验证">
 
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
-
-
-    <link rel="alternate" href="/atom.xml" title="IChrisKing" type="application/atom+xml">
 
 
 
-    <link rel="shortcut icon" href="/favicon.png">
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/09/05/cjdns-cryptoauth/">
 
 
 
-    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
-
-
-
-    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
-
-
-
-    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
-    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
-
-
-<link rel="stylesheet" href="/css/style.css">
-
-
-
-<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
-
-
-<title>cjdns源码分析--CryptoAuth | IChrisKing</title>
-
-<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
-<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
-
-<script>
-    var yiliaConfig = {
-        fancybox: true,
-        animate: true,
-        isHome: false,
-        isPost: true,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
-        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
-        search: undefined
-    }
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
 </script>
 
-
-    <script> yiliaConfig.jquery_ui = [false]; </script>
-
-
-
-    <script> yiliaConfig.rootUrl = "\/";</script>
+  <title>cjdns源码分析--CryptoAuth | IChrisKing</title>
+  
 
 
 
 
 
 
-</head></html>
-<body>
-  <div id="container">
-    <div class="left-col">
-    <div class="overlay"></div>
-<div class="intrude-less">
-    <header id="header" class="inner">
-        <a href="/" class="profilepic">
-            <img src="/img/avatar.png" class="animated zoomIn">
-        </a>
-        <hgroup>
-          <h1 class="header-author"><a href="/">Chris King</a></h1>
-        </hgroup>
-
-        
-        <p class="header-subtitle">#IMNOTCHRISLEE</p>
-        
-
-        
 
 
-        
-            <div id="switch-btn" class="switch-btn">
-                <div class="icon">
-                    <div class="icon-ctn">
-                        <div class="icon-wrap icon-house" data-idx="0">
-                            <div class="birdhouse"></div>
-                            <div class="birdhouse_holes"></div>
-                        </div>
-                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
-                            <div class="ribbon"></div>
-                        </div>
-                        
-                        <div class="icon-wrap icon-link hide" data-idx="2">
-                            <div class="loopback_l"></div>
-                            <div class="loopback_r"></div>
-                        </div>
-                        
-                        
-                        <div class="icon-wrap icon-me hide" data-idx="3">
-                            <div class="user"></div>
-                            <div class="shoulder"></div>
-                        </div>
-                        
-                    </div>
-                    
-                </div>
-                <div class="tips-box hide">
-                    <div class="tips-arrow"></div>
-                    <ul class="tips-inner">
-                        <li>菜單</li>
-                        <li>標籤</li>
-                        
-                        <li>友情鏈接</li>
-                        
-                        
-                        <li>關於我</li>
-                        
-                    </ul>
-                </div>
-            </div>
-        
 
-        <div id="switch-area" class="switch-area">
-            <div class="switch-wrap">
-                <section class="switch-part switch-part1">
-                    <nav class="header-menu">
-                        <ul>
-                        
-                            <li><a href="/">主頁</a></li>
-                        
-                            <li><a href="/archives/">所有文章</a></li>
-                        
-                            <li><a href="/tags/">標籤雲</a></li>
-                        
-                            <li><a href="/about/">關於我</a></li>
-                        
-                        </ul>
-                    </nav>
-                    <nav class="header-nav">
-                        <ul class="social">
-                            
-                                <a class="fa Email" href="https://chrisking310@gmail.com" title="Email"></a>
-                            
-                                <a class="fa GitHub" href="https://github.com/IChrisKing" title="GitHub"></a>
-                            
-                                <a class="fa 新浪博客" href="http://blog.sina.com.cn/u/1733434252" title="新浪博客"></a>
-                            
-                        </ul>
-                    </nav>
-                </section>
-                
-                
-                <section class="switch-part switch-part2">
-                    <div class="widget tagcloud" id="js-tagcloud">
-                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-everyday/">Android_everyday</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android开发工程师/">Android开发工程师</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Anrom/">Anrom</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C-C/">C/C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SEAndroid/">SEAndroid</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SELinux/">SELinux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cjdns/">cjdns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cjdns源码分析/">cjdns源码分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iptables/">iptables</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/music/">music</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/raspberry配置/">raspberry配置</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rom/">rom</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shadowsocks-vps/">shadowsocks/vps</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tool/">tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/填坑/">填坑</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/排序算法/">排序算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/查找算法/">查找算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/树莓派raspberry/">树莓派raspberry</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
-                    </div>
-                </section>
-                
-                
-                
-                <section class="switch-part switch-part3">
-                    <div id="js-friends">
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://anromos.github.io/">Anrom OS</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://github.com/AnromOS">Team GitHub</a>
-                    
-                    </div>
-                </section>
-                
 
-                
-                
-                <section class="switch-part switch-part4">
-                
-                    <div id="js-aboutme">Android ROM 开发</div>
-                </section>
-                
-            </div>
-        </div>
-    </header>                
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hant-TW">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">IChrisKing</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">#IMNOTCHRISLEE</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
 </div>
-    </div>
-    <div class="mid-col">
-      <nav id="mobile-nav">
-      <div class="overlay">
-          <div class="slider-trigger"></div>
-          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Chris King</a></h1>
-      </div>
-    <div class="intrude-less">
-        <header id="header" class="inner">
-            <a href="/" class="profilepic">
-                <img src="/img/avatar.png" class="animated zoomIn">
-            </a>
-            <hgroup>
-              <h1 class="header-author"><a href="/" title="回到主页">Chris King</a></h1>
-            </hgroup>
-            
-            <p class="header-subtitle">#IMNOTCHRISLEE</p>
-            
-            <nav class="header-menu">
-                <ul>
-                
-                    <li><a href="/">主頁</a></li>
-                
-                    <li><a href="/archives/">所有文章</a></li>
-                
-                    <li><a href="/tags/">標籤雲</a></li>
-                
-                    <li><a href="/about/">關於我</a></li>
-                
-                <div class="clearfix"></div>
-                </ul>
-            </nav>
-            <nav class="header-nav">
-                        <ul class="social">
-                            
-                                <a class="fa Email" target="_blank" href="https://chrisking310@gmail.com" title="Email"></a>
-                            
-                                <a class="fa GitHub" target="_blank" href="https://github.com/IChrisKing" title="GitHub"></a>
-                            
-                                <a class="fa 新浪博客" target="_blank" href="http://blog.sina.com.cn/u/1733434252" title="新浪博客"></a>
-                            
-                        </ul>
-            </nav>
-        </header>                
-    </div>
-    <link class="menu-list" tags="標籤" friends="友情鏈接" about="關於我">
-</nav>
-      <div class="body-wrap"><article id="post-cjdns-cryptoauth" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/09/05/cjdns-cryptoauth/" class="article-date">
-      <time datetime="2017-09-05T04:48:21.000Z" itemprop="datePublished">2017-09-05</time>
-</a>
 
 
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 class="article-title" itemprop="name">
-      cjdns源码分析--CryptoAuth
-    </h1>
-  
 
-      </header>
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
       
-      <div class="article-info article-info-post">
         
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/cjdns/">cjdns</a><a class="article-category-link" href="/categories/cjdns/cjdns源码分析/">cjdns源码分析</a>
-    </div>
-
-
         
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C-C/">C/C++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cjdns/">cjdns</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cjdns源码分析/">cjdns源码分析</a></li></ul>
-    </div>
-
-        <div class="clearfix"></div>
-      </div>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
+        
           
-        <h2 id="接入点conf分析"><a href="#接入点conf分析" class="headerlink" title="接入点conf分析"></a>接入点conf分析</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">&quot;authorizedPasswords&quot;:[</div><div class="line">	&#123;</div><div class="line">		&quot;user&quot;:&quot;a&quot;,</div><div class="line">		&quot;password&quot;:&quot;R9q7eEn3i9YTOB0zITKLMBpwEghxPH6&quot;,</div><div class="line">           &quot;ipv6&quot;:&quot;fbdb:b56d:fdcf:c2ae:5f0b:0cdd:67b4:8f8b&quot;</div><div class="line">	&#125;,</div><div class="line">	&#123;</div><div class="line">		&quot;user&quot;:&quot;a&quot;,</div><div class="line">		&quot;password&quot;:&quot;R9q7eEn3i9YTOB0zITKLMBpwEghxPH7&quot;</div><div class="line">	&#125;,</div><div class="line">	&#123;</div><div class="line">		&quot;user&quot;:&quot;b&quot;,</div><div class="line">		&quot;password&quot;:&quot;R9q7eEn3i9YTOB0zITKLMBpwEghxPH7&quot;</div><div class="line">	&#125;,</div><div class="line">	&#123;</div><div class="line">		&quot;user&quot;:&quot;c&quot;,</div><div class="line">		&quot;password&quot;:&quot;R9q7eEn3i9YTOB0zITKLMBpwEghxPH8&quot;</div><div class="line">	&#125;,</div><div class="line">	&#123;</div><div class="line">		&quot;password&quot;:&quot;R9q7eEn3i9YTOB0zITKLMBpwEghxPH9&quot;</div><div class="line">	&#125;,</div><div class="line">	&#123;</div><div class="line">		&quot;user&quot;:&quot;a&quot;,</div><div class="line">		&quot;password&quot;:&quot;R9q7eEn3i9YTOB0zITKLMBpwEghxPHa&quot;</div><div class="line">	&#125;,</div><div class="line">],</div></pre></td></tr></table></figure>
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/05/cjdns-cryptoauth/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chris King">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="IChrisKing">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">cjdns源码分析--CryptoAuth
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2017-09-05 12:48:21" itemprop="dateCreated datePublished" datetime="2017-09-05T12:48:21+08:00">2017-09-05</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2018-02-28 13:58:55" itemprop="dateModified" datetime="2018-02-28T13:58:55+08:00">2018-02-28</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/cjdns/" itemprop="url" rel="index"><span itemprop="name">cjdns</span></a></span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/cjdns/cjdns源码分析/" itemprop="url" rel="index"><span itemprop="name">cjdns源码分析</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+            <div class="post-description">介绍CryptoAuth相关源码。包括conf中的配置，相关API，建立CryptoAuth_Session时的ca验证</div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="接入点conf分析"><a href="#接入点conf分析" class="headerlink" title="接入点conf分析"></a>接入点conf分析</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">&quot;authorizedPasswords&quot;:[</span><br><span class="line">	&#123;</span><br><span class="line">		&quot;user&quot;:&quot;a&quot;,</span><br><span class="line">		&quot;password&quot;:&quot;R9q7eEn3i9YTOB0zITKLMBpwEghxPH6&quot;,</span><br><span class="line">           &quot;ipv6&quot;:&quot;fbdb:b56d:fdcf:c2ae:5f0b:0cdd:67b4:8f8b&quot;</span><br><span class="line">	&#125;,</span><br><span class="line">	&#123;</span><br><span class="line">		&quot;user&quot;:&quot;a&quot;,</span><br><span class="line">		&quot;password&quot;:&quot;R9q7eEn3i9YTOB0zITKLMBpwEghxPH7&quot;</span><br><span class="line">	&#125;,</span><br><span class="line">	&#123;</span><br><span class="line">		&quot;user&quot;:&quot;b&quot;,</span><br><span class="line">		&quot;password&quot;:&quot;R9q7eEn3i9YTOB0zITKLMBpwEghxPH7&quot;</span><br><span class="line">	&#125;,</span><br><span class="line">	&#123;</span><br><span class="line">		&quot;user&quot;:&quot;c&quot;,</span><br><span class="line">		&quot;password&quot;:&quot;R9q7eEn3i9YTOB0zITKLMBpwEghxPH8&quot;</span><br><span class="line">	&#125;,</span><br><span class="line">	&#123;</span><br><span class="line">		&quot;password&quot;:&quot;R9q7eEn3i9YTOB0zITKLMBpwEghxPH9&quot;</span><br><span class="line">	&#125;,</span><br><span class="line">	&#123;</span><br><span class="line">		&quot;user&quot;:&quot;a&quot;,</span><br><span class="line">		&quot;password&quot;:&quot;R9q7eEn3i9YTOB0zITKLMBpwEghxPHa&quot;</span><br><span class="line">	&#125;,</span><br><span class="line">],</span><br></pre></td></tr></table></figure>
 <p>接入点的conf中可以多个authorizedPasswords，每个authorizedPasswords必须有password,可以有user和ipv6.其中，password和user都是其他点连接过来时，用来验证身份的。ipv6是允许来连接我的点的ipv6.<br>从这个conf中可以看出，user，password，ipv6都是可以重复的。</p>
-<h2 id="对conf的解析"><a href="#对conf的解析" class="headerlink" title="对conf的解析"></a>对conf的解析</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line">static void authorizedPasswords(List* list, struct Context* ctx)</div><div class="line">&#123;</div><div class="line">    uint32_t count = List_size(list);</div><div class="line">    for (uint32_t i = 0; i &lt; count; i++) &#123;</div><div class="line">        Dict* d = List_getDict(list, i);</div><div class="line">        Log_info(ctx-&gt;logger, &quot;Checking authorized password %d.&quot;, i);</div><div class="line">        if (!d) &#123;</div><div class="line">            Log_critical(ctx-&gt;logger, &quot;Not a dictionary type %d.&quot;, i);</div><div class="line">            exit(-1);</div><div class="line">        &#125;</div><div class="line">        String* passwd = Dict_getStringC(d, &quot;password&quot;);</div><div class="line">        if (!passwd) &#123;</div><div class="line">            Log_critical(ctx-&gt;logger, &quot;Must specify a password %d.&quot;, i);</div><div class="line">            exit(-1);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    for (uint32_t i = 0; i &lt; count; i++) &#123;</div><div class="line">        struct Allocator* child = Allocator_child(ctx-&gt;alloc);</div><div class="line">        Dict* d = List_getDict(list, i);</div><div class="line">        String* passwd = Dict_getStringC(d, &quot;password&quot;);</div><div class="line">        String* user = Dict_getStringC(d, &quot;user&quot;);</div><div class="line">        String* displayName = user;</div><div class="line">        if (!displayName) &#123;</div><div class="line">            displayName = String_printf(child, &quot;password [%d]&quot;, i);</div><div class="line">        &#125;</div><div class="line">        //String* publicKey = Dict_getStringC(d, &quot;publicKey&quot;);</div><div class="line">        String* ipv6 = Dict_getStringC(d, &quot;ipv6&quot;);</div><div class="line">        Log_info(ctx-&gt;logger, &quot;Adding authorized password #[%d] for user [%s].&quot;,</div><div class="line">            i, displayName-&gt;bytes);</div><div class="line">        Dict *args = Dict_new(child);</div><div class="line">        uint32_t i = 1;</div><div class="line">        Dict_putIntC(args, &quot;authType&quot;, i, child);</div><div class="line">        Dict_putStringC(args, &quot;password&quot;, passwd, child);</div><div class="line">        if (user) &#123;</div><div class="line">            Dict_putStringC(args, &quot;user&quot;, user, child);</div><div class="line">        &#125;</div><div class="line">        Dict_putStringC(args, &quot;displayName&quot;, displayName, child);</div><div class="line">        if (ipv6) &#123;</div><div class="line">            Log_info(ctx-&gt;logger,</div><div class="line">                &quot;  This connection password restricted to [%s] only.&quot;, ipv6-&gt;bytes);</div><div class="line">            Dict_putStringC(args, &quot;ipv6&quot;, ipv6, child);</div><div class="line">        &#125;</div><div class="line">        rpcCall(String_CONST(&quot;add_pass&quot;), args, ctx, child);</div><div class="line">        Allocator_free(child);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="对conf的解析"><a href="#对conf的解析" class="headerlink" title="对conf的解析"></a>对conf的解析</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">static void authorizedPasswords(List* list, struct Context* ctx)</span><br><span class="line">&#123;</span><br><span class="line">    uint32_t count = List_size(list);</span><br><span class="line">    for (uint32_t i = 0; i &lt; count; i++) &#123;</span><br><span class="line">        Dict* d = List_getDict(list, i);</span><br><span class="line">        Log_info(ctx-&gt;logger, &quot;Checking authorized password %d.&quot;, i);</span><br><span class="line">        if (!d) &#123;</span><br><span class="line">            Log_critical(ctx-&gt;logger, &quot;Not a dictionary type %d.&quot;, i);</span><br><span class="line">            exit(-1);</span><br><span class="line">        &#125;</span><br><span class="line">        String* passwd = Dict_getStringC(d, &quot;password&quot;);</span><br><span class="line">        if (!passwd) &#123;</span><br><span class="line">            Log_critical(ctx-&gt;logger, &quot;Must specify a password %d.&quot;, i);</span><br><span class="line">            exit(-1);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    for (uint32_t i = 0; i &lt; count; i++) &#123;</span><br><span class="line">        struct Allocator* child = Allocator_child(ctx-&gt;alloc);</span><br><span class="line">        Dict* d = List_getDict(list, i);</span><br><span class="line">        String* passwd = Dict_getStringC(d, &quot;password&quot;);</span><br><span class="line">        String* user = Dict_getStringC(d, &quot;user&quot;);</span><br><span class="line">        String* displayName = user;</span><br><span class="line">        if (!displayName) &#123;</span><br><span class="line">            displayName = String_printf(child, &quot;password [%d]&quot;, i);</span><br><span class="line">        &#125;</span><br><span class="line">        //String* publicKey = Dict_getStringC(d, &quot;publicKey&quot;);</span><br><span class="line">        String* ipv6 = Dict_getStringC(d, &quot;ipv6&quot;);</span><br><span class="line">        Log_info(ctx-&gt;logger, &quot;Adding authorized password #[%d] for user [%s].&quot;,</span><br><span class="line">            i, displayName-&gt;bytes);</span><br><span class="line">        Dict *args = Dict_new(child);</span><br><span class="line">        uint32_t i = 1;</span><br><span class="line">        Dict_putIntC(args, &quot;authType&quot;, i, child);</span><br><span class="line">        Dict_putStringC(args, &quot;password&quot;, passwd, child);</span><br><span class="line">        if (user) &#123;</span><br><span class="line">            Dict_putStringC(args, &quot;user&quot;, user, child);</span><br><span class="line">        &#125;</span><br><span class="line">        Dict_putStringC(args, &quot;displayName&quot;, displayName, child);</span><br><span class="line">        if (ipv6) &#123;</span><br><span class="line">            Log_info(ctx-&gt;logger,</span><br><span class="line">                &quot;  This connection password restricted to [%s] only.&quot;, ipv6-&gt;bytes);</span><br><span class="line">            Dict_putStringC(args, &quot;ipv6&quot;, ipv6, child);</span><br><span class="line">        &#125;</span><br><span class="line">        rpcCall(String_CONST(&quot;add_pass&quot;), args, ctx, child);</span><br><span class="line">        Allocator_free(child);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <ul>
 <li>第一个for循环中，检查了一下格式，以及必须有password。</li>
 <li>第二个for循环中，获取各项参数，然后put到Dict中，并通过rpcCall调用add_pass。<br>  可以看到，put的参数除了从conf中取到的password,user,ipv6之外，还有authType,displayName,不过没什么用，因为add_pass中并没有处理这些值。</li>
 </ul>
-<h2 id="add-pass方法的分析"><a href="#add-pass方法的分析" class="headerlink" title="add_pass方法的分析"></a>add_pass方法的分析</h2><p>admin/AuthorizedPasswords.c<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">void AuthorizedPasswords_init(struct Admin* admin,</div><div class="line">                              struct CryptoAuth* ca,</div><div class="line">                              struct Allocator* allocator)</div><div class="line">&#123;</div><div class="line">...</div><div class="line">    Admin_registerFunction(&quot;add_pass&quot;, add, context, true,</div><div class="line">        ((struct Admin_FunctionArg[])&#123;</div><div class="line">            &#123; .name = &quot;password&quot;, .required = 1, .type = &quot;String&quot; &#125;,</div><div class="line">            &#123; .name = &quot;ipv6&quot;, .required = 0, .type = &quot;String&quot; &#125;,</div><div class="line">            &#123; .name = &quot;user&quot;, .required = 0, .type = &quot;String&quot; &#125;</div><div class="line">        &#125;), admin);</div><div class="line">...</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>从requited的值可以看出，只有password是必须的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">static void add(Dict* args, void* vcontext, String* txid, struct Allocator* alloc)</div><div class="line">&#123;</div><div class="line">    struct Context* context = Identity_check((struct Context*) vcontext);</div><div class="line"></div><div class="line">    String* passwd = Dict_getStringC(args, &quot;password&quot;);</div><div class="line">    String* user = Dict_getStringC(args, &quot;user&quot;);</div><div class="line">    String* ipv6 = Dict_getStringC(args, &quot;ipv6&quot;);</div><div class="line"></div><div class="line">    uint8_t ipv6Bytes[16];</div><div class="line">    uint8_t* ipv6Arg;</div><div class="line">    if (!ipv6) &#123;</div><div class="line">        ipv6Arg = NULL;</div><div class="line">    &#125; else if (AddrTools_parseIp(ipv6Bytes, ipv6-&gt;bytes)) &#123;</div><div class="line">        sendResponse(String_CONST(&quot;Invalid IPv6 Address&quot;), context-&gt;admin, txid, alloc);</div><div class="line">        return;</div><div class="line">    &#125; else &#123;</div><div class="line">        ipv6Arg = ipv6Bytes;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    int32_t ret = CryptoAuth_addUser_ipv6(passwd, user, ipv6Arg, context-&gt;ca);</div><div class="line"></div><div class="line">    switch (ret) &#123;</div><div class="line">        case 0:</div><div class="line">            sendResponse(String_CONST(&quot;none&quot;), context-&gt;admin, txid, alloc);</div><div class="line">            break;</div><div class="line">        case CryptoAuth_addUser_DUPLICATE:</div><div class="line">            sendResponse(String_CONST(&quot;Password already added.&quot;), context-&gt;admin, txid, alloc);</div><div class="line">            break;</div><div class="line">        default:</div><div class="line">            sendResponse(String_CONST(&quot;Unknown error.&quot;), context-&gt;admin, txid, alloc);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>调用CryptoAuth_addUser_ipv6,在CryptoAuth.c中<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line">int CryptoAuth_addUser_ipv6(String* password,</div><div class="line">                            String* login,</div><div class="line">                            uint8_t ipv6[16],</div><div class="line">                            struct CryptoAuth* cryptoAuth)</div><div class="line">&#123;</div><div class="line">    struct CryptoAuth_pvt* ca = Identity_check((struct CryptoAuth_pvt*) cryptoAuth);</div><div class="line"></div><div class="line">    struct Allocator* alloc = Allocator_child(ca-&gt;allocator);</div><div class="line">    struct CryptoAuth_User* user = Allocator_calloc(alloc, sizeof(struct CryptoAuth_User), 1);</div><div class="line">    user-&gt;alloc = alloc;</div><div class="line">    Identity_set(user);</div><div class="line"></div><div class="line">    if (!login) &#123;</div><div class="line">        int i = 0;</div><div class="line">        for (struct CryptoAuth_User* u = ca-&gt;users; u; u = u-&gt;next) &#123; i++; &#125;</div><div class="line">        user-&gt;login = login = String_printf(alloc, &quot;Anon #%d&quot;, i);</div><div class="line">    &#125; else &#123;</div><div class="line">        user-&gt;login = String_clone(login, alloc);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    struct CryptoHeader_Challenge ac;</div><div class="line">    // Users specified with a login field might want to use authType 1 still.</div><div class="line">    hashPassword(user-&gt;secret, &amp;ac, login, password, 2);</div><div class="line">    Bits_memcpy(user-&gt;userNameHash, &amp;ac, CryptoHeader_Challenge_KEYSIZE);</div><div class="line">    hashPassword(user-&gt;secret, &amp;ac, NULL, password, 1);</div><div class="line">    Bits_memcpy(user-&gt;passwordHash, &amp;ac, CryptoHeader_Challenge_KEYSIZE);</div><div class="line"></div><div class="line">    for (struct CryptoAuth_User* u = ca-&gt;users; u; u = u-&gt;next) &#123;</div><div class="line">        if (Bits_memcmp(user-&gt;secret, u-&gt;secret, 32)) &#123;</div><div class="line">        &#125; else if (!login) &#123;</div><div class="line">        &#125; else if (String_equals(login, u-&gt;login)) &#123;</div><div class="line">            Allocator_free(alloc);</div><div class="line">            return CryptoAuth_addUser_DUPLICATE;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    if (ipv6) &#123;</div><div class="line">        Bits_memcpy(user-&gt;restrictedToip6, ipv6, 16);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    // Add the user to the *end* of the list</div><div class="line">    for (struct CryptoAuth_User** up = &amp;ca-&gt;users; ; up = &amp;(*up)-&gt;next) &#123;</div><div class="line">        if (!*up) &#123;</div><div class="line">            *up = user;</div><div class="line">            break;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="add-pass方法的分析"><a href="#add-pass方法的分析" class="headerlink" title="add_pass方法的分析"></a>add_pass方法的分析</h2><p>admin/AuthorizedPasswords.c<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">void AuthorizedPasswords_init(struct Admin* admin,</span><br><span class="line">                              struct CryptoAuth* ca,</span><br><span class="line">                              struct Allocator* allocator)</span><br><span class="line">&#123;</span><br><span class="line">...</span><br><span class="line">    Admin_registerFunction(&quot;add_pass&quot;, add, context, true,</span><br><span class="line">        ((struct Admin_FunctionArg[])&#123;</span><br><span class="line">            &#123; .name = &quot;password&quot;, .required = 1, .type = &quot;String&quot; &#125;,</span><br><span class="line">            &#123; .name = &quot;ipv6&quot;, .required = 0, .type = &quot;String&quot; &#125;,</span><br><span class="line">            &#123; .name = &quot;user&quot;, .required = 0, .type = &quot;String&quot; &#125;</span><br><span class="line">        &#125;), admin);</span><br><span class="line">...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>从requited的值可以看出，只有password是必须的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">static void add(Dict* args, void* vcontext, String* txid, struct Allocator* alloc)</span><br><span class="line">&#123;</span><br><span class="line">    struct Context* context = Identity_check((struct Context*) vcontext);</span><br><span class="line"></span><br><span class="line">    String* passwd = Dict_getStringC(args, &quot;password&quot;);</span><br><span class="line">    String* user = Dict_getStringC(args, &quot;user&quot;);</span><br><span class="line">    String* ipv6 = Dict_getStringC(args, &quot;ipv6&quot;);</span><br><span class="line"></span><br><span class="line">    uint8_t ipv6Bytes[16];</span><br><span class="line">    uint8_t* ipv6Arg;</span><br><span class="line">    if (!ipv6) &#123;</span><br><span class="line">        ipv6Arg = NULL;</span><br><span class="line">    &#125; else if (AddrTools_parseIp(ipv6Bytes, ipv6-&gt;bytes)) &#123;</span><br><span class="line">        sendResponse(String_CONST(&quot;Invalid IPv6 Address&quot;), context-&gt;admin, txid, alloc);</span><br><span class="line">        return;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        ipv6Arg = ipv6Bytes;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    int32_t ret = CryptoAuth_addUser_ipv6(passwd, user, ipv6Arg, context-&gt;ca);</span><br><span class="line"></span><br><span class="line">    switch (ret) &#123;</span><br><span class="line">        case 0:</span><br><span class="line">            sendResponse(String_CONST(&quot;none&quot;), context-&gt;admin, txid, alloc);</span><br><span class="line">            break;</span><br><span class="line">        case CryptoAuth_addUser_DUPLICATE:</span><br><span class="line">            sendResponse(String_CONST(&quot;Password already added.&quot;), context-&gt;admin, txid, alloc);</span><br><span class="line">            break;</span><br><span class="line">        default:</span><br><span class="line">            sendResponse(String_CONST(&quot;Unknown error.&quot;), context-&gt;admin, txid, alloc);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>调用CryptoAuth_addUser_ipv6,在CryptoAuth.c中<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">int CryptoAuth_addUser_ipv6(String* password,</span><br><span class="line">                            String* login,</span><br><span class="line">                            uint8_t ipv6[16],</span><br><span class="line">                            struct CryptoAuth* cryptoAuth)</span><br><span class="line">&#123;</span><br><span class="line">    struct CryptoAuth_pvt* ca = Identity_check((struct CryptoAuth_pvt*) cryptoAuth);</span><br><span class="line"></span><br><span class="line">    struct Allocator* alloc = Allocator_child(ca-&gt;allocator);</span><br><span class="line">    struct CryptoAuth_User* user = Allocator_calloc(alloc, sizeof(struct CryptoAuth_User), 1);</span><br><span class="line">    user-&gt;alloc = alloc;</span><br><span class="line">    Identity_set(user);</span><br><span class="line"></span><br><span class="line">    if (!login) &#123;</span><br><span class="line">        int i = 0;</span><br><span class="line">        for (struct CryptoAuth_User* u = ca-&gt;users; u; u = u-&gt;next) &#123; i++; &#125;</span><br><span class="line">        user-&gt;login = login = String_printf(alloc, &quot;Anon #%d&quot;, i);</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        user-&gt;login = String_clone(login, alloc);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    struct CryptoHeader_Challenge ac;</span><br><span class="line">    // Users specified with a login field might want to use authType 1 still.</span><br><span class="line">    hashPassword(user-&gt;secret, &amp;ac, login, password, 2);</span><br><span class="line">    Bits_memcpy(user-&gt;userNameHash, &amp;ac, CryptoHeader_Challenge_KEYSIZE);</span><br><span class="line">    hashPassword(user-&gt;secret, &amp;ac, NULL, password, 1);</span><br><span class="line">    Bits_memcpy(user-&gt;passwordHash, &amp;ac, CryptoHeader_Challenge_KEYSIZE);</span><br><span class="line"></span><br><span class="line">    for (struct CryptoAuth_User* u = ca-&gt;users; u; u = u-&gt;next) &#123;</span><br><span class="line">        if (Bits_memcmp(user-&gt;secret, u-&gt;secret, 32)) &#123;</span><br><span class="line">        &#125; else if (!login) &#123;</span><br><span class="line">        &#125; else if (String_equals(login, u-&gt;login)) &#123;</span><br><span class="line">            Allocator_free(alloc);</span><br><span class="line">            return CryptoAuth_addUser_DUPLICATE;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (ipv6) &#123;</span><br><span class="line">        Bits_memcpy(user-&gt;restrictedToip6, ipv6, 16);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // Add the user to the *end* of the list</span><br><span class="line">    for (struct CryptoAuth_User** up = &amp;ca-&gt;users; ; up = &amp;(*up)-&gt;next) &#123;</span><br><span class="line">        if (!*up) &#123;</span><br><span class="line">            *up = user;</span><br><span class="line">            break;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>按照空行分成六块，逐块分析：</p>
 <ol>
 <li><p>结构体CryptoAuth_User的初始化</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">struct CryptoAuth_pvt* ca = Identity_check((struct CryptoAuth_pvt*) cryptoAuth);</div><div class="line"></div><div class="line">struct Allocator* alloc = Allocator_child(ca-&gt;allocator);</div><div class="line">struct CryptoAuth_User* user = Allocator_calloc(alloc, sizeof(struct CryptoAuth_User), 1);</div><div class="line">user-&gt;alloc = alloc;</div><div class="line">Identity_set(user);</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">struct CryptoAuth_pvt* ca = Identity_check((struct CryptoAuth_pvt*) cryptoAuth);</span><br><span class="line"></span><br><span class="line">struct Allocator* alloc = Allocator_child(ca-&gt;allocator);</span><br><span class="line">struct CryptoAuth_User* user = Allocator_calloc(alloc, sizeof(struct CryptoAuth_User), 1);</span><br><span class="line">user-&gt;alloc = alloc;</span><br><span class="line">Identity_set(user);</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>设置login</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">if (!login) &#123;</div><div class="line">    int i = 0;</div><div class="line">    for (struct CryptoAuth_User* u = ca-&gt;users; u; u = u-&gt;next) &#123; i++; &#125;</div><div class="line">    user-&gt;login = login = String_printf(alloc, &quot;Anon #%d&quot;, i);</div><div class="line">&#125; else &#123;</div><div class="line">    user-&gt;login = String_clone(login, alloc);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">if (!login) &#123;</span><br><span class="line">    int i = 0;</span><br><span class="line">    for (struct CryptoAuth_User* u = ca-&gt;users; u; u = u-&gt;next) &#123; i++; &#125;</span><br><span class="line">    user-&gt;login = login = String_printf(alloc, &quot;Anon #%d&quot;, i);</span><br><span class="line">&#125; else &#123;</span><br><span class="line">    user-&gt;login = String_clone(login, alloc);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
 <p>如果conf中有user，使用它当作login，否则自动生成一个“Anon”开头的login</p>
-<ol>
+<ol start="3">
 <li><p>计算secret,userNameHash,passwordHash,并赋值</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">struct CryptoHeader_Challenge ac;</div><div class="line">// Users specified with a login field might want to use authType 1 still.</div><div class="line">hashPassword(user-&gt;secret, &amp;ac, login, password, 2);</div><div class="line">Bits_memcpy(user-&gt;userNameHash, &amp;ac, CryptoHeader_Challenge_KEYSIZE);</div><div class="line">hashPassword(user-&gt;secret, &amp;ac, NULL, password, 1);</div><div class="line">Bits_memcpy(user-&gt;passwordHash, &amp;ac, CryptoHeader_Challenge_KEYSIZE);</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">struct CryptoHeader_Challenge ac;</span><br><span class="line">// Users specified with a login field might want to use authType 1 still.</span><br><span class="line">hashPassword(user-&gt;secret, &amp;ac, login, password, 2);</span><br><span class="line">Bits_memcpy(user-&gt;userNameHash, &amp;ac, CryptoHeader_Challenge_KEYSIZE);</span><br><span class="line">hashPassword(user-&gt;secret, &amp;ac, NULL, password, 1);</span><br><span class="line">Bits_memcpy(user-&gt;passwordHash, &amp;ac, CryptoHeader_Challenge_KEYSIZE);</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>检查合法性</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">for (struct CryptoAuth_User* u = ca-&gt;users; u; u = u-&gt;next) &#123;</div><div class="line">       if (Bits_memcmp(user-&gt;secret, u-&gt;secret, 32)) &#123;</div><div class="line">       &#125; else if (!login) &#123;</div><div class="line">       &#125; else if (String_equals(login, u-&gt;login)) &#123;</div><div class="line">           Allocator_free(alloc);</div><div class="line">           return CryptoAuth_addUser_DUPLICATE;</div><div class="line">       &#125;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">for (struct CryptoAuth_User* u = ca-&gt;users; u; u = u-&gt;next) &#123;</span><br><span class="line">       if (Bits_memcmp(user-&gt;secret, u-&gt;secret, 32)) &#123;</span><br><span class="line">       &#125; else if (!login) &#123;</span><br><span class="line">       &#125; else if (String_equals(login, u-&gt;login)) &#123;</span><br><span class="line">           Allocator_free(alloc);</span><br><span class="line">           return CryptoAuth_addUser_DUPLICATE;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
 <p>当user和password同时与已有的某个user相同时，会报错：CryptoAuth_addUser_DUPLICATE</p>
-<ol>
-<li>如果有ipv6，设置到restrictedToip6中<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">if (ipv6) &#123;</div><div class="line">    Bits_memcpy(user-&gt;restrictedToip6, ipv6, 16);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ol start="5">
+<li>如果有ipv6，设置到restrictedToip6中<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">if (ipv6) &#123;</span><br><span class="line">    Bits_memcpy(user-&gt;restrictedToip6, ipv6, 16);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
 <p>这个设置可以限制只有某个ipv6才能使用这个user进行验证。也就是说，这个ipv6是连接过来的普通点的ipv6。</p>
-<ol>
-<li>把这个CryptoAuth_User加到列表的最后<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">// Add the user to the *end* of the list</div><div class="line">for (struct CryptoAuth_User** up = &amp;ca-&gt;users; ; up = &amp;(*up)-&gt;next) &#123;</div><div class="line">    if (!*up) &#123;</div><div class="line">        *up = user;</div><div class="line">        break;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ol start="6">
+<li>把这个CryptoAuth_User加到列表的最后<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// Add the user to the *end* of the list</span><br><span class="line">for (struct CryptoAuth_User** up = &amp;ca-&gt;users; ; up = &amp;(*up)-&gt;next) &#123;</span><br><span class="line">    if (!*up) &#123;</span><br><span class="line">        *up = user;</span><br><span class="line">        break;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
-<h2 id="普通点conf分析"><a href="#普通点conf分析" class="headerlink" title="普通点conf分析"></a>普通点conf分析</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&quot;connectTo&quot;:&#123;</div><div class="line">	&quot;192.168.2.43:26808&quot;:&#123;</div><div class="line">    	&quot;login&quot;:&quot;c&quot;,</div><div class="line">        &quot;password&quot;:&quot;R9q7eEn3i9YTOB0zITKLMBpwEghxPH6&quot;,</div><div class="line">        &quot;publicKey&quot;:&quot;cy4cmzzry3yykwblnh402vmyt328pu9nm58rx4cbgnqllv6hvv70.k&quot;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="普通点conf分析"><a href="#普通点conf分析" class="headerlink" title="普通点conf分析"></a>普通点conf分析</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&quot;connectTo&quot;:&#123;</span><br><span class="line">	&quot;192.168.2.43:26808&quot;:&#123;</span><br><span class="line">    	&quot;login&quot;:&quot;c&quot;,</span><br><span class="line">        &quot;password&quot;:&quot;R9q7eEn3i9YTOB0zITKLMBpwEghxPH6&quot;,</span><br><span class="line">        &quot;publicKey&quot;:&quot;cy4cmzzry3yykwblnh402vmyt328pu9nm58rx4cbgnqllv6hvv70.k&quot;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <ul>
 <li>“192.168.2.43:26808”:要连接的点的ipv4地址和端口</li>
 <li>“publicKey”:要连接的点的publickey</li>
 <li>“password”:要连接的点配置的password</li>
 <li>“login”：要连接的点配置的login，在连接点的conf中，是user字段</li>
 </ul>
-<h2 id="普通点配置连接点的分析"><a href="#普通点配置连接点的分析" class="headerlink" title="普通点配置连接点的分析"></a>普通点配置连接点的分析</h2><p>从Configurator.c中通过rpcCall调用udp_conn。<br>直接从udp_conn开始分析<br>interface/UDPInterface_admin.c中<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">Admin_registerFunction(&quot;udp_conn&quot;, beginConnection, ctx, true,</div><div class="line">    ((struct Admin_FunctionArg[]) &#123;</div><div class="line">        &#123; .name = &quot;interfaceNumber&quot;, .required = 0, .type = &quot;Int&quot; &#125;,</div><div class="line">        &#123; .name = &quot;password&quot;, .required = 0, .type = &quot;String&quot; &#125;,</div><div class="line">        &#123; .name = &quot;publicKey&quot;, .required = 1, .type = &quot;String&quot; &#125;,</div><div class="line">        &#123; .name = &quot;address&quot;, .required = 1, .type = &quot;String&quot; &#125;,</div><div class="line">        &#123; .name = &quot;login&quot;, .required = 0, .type = &quot;String&quot; &#125;</div><div class="line">    &#125;), admin);</div></pre></td></tr></table></figure></p>
-<p>interfaceNumber并未在conf中出现<br>password是conf中的password<br>publicKey是conf中的publicKey<br>address是conf中的”192.168.2.43:26808”<br>login是conf中的login<br>可以看出，只有publicKey和address是必须的。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div></pre></td><td class="code"><pre><div class="line">static void beginConnection(Dict* args,</div><div class="line">                            void* vcontext,</div><div class="line">                            String* txid,</div><div class="line">                            struct Allocator* requestAlloc)</div><div class="line">&#123;</div><div class="line">    struct Context* ctx = vcontext;</div><div class="line"></div><div class="line">    String* password = Dict_getStringC(args, &quot;password&quot;);</div><div class="line">    String* login = Dict_getStringC(args, &quot;login&quot;);</div><div class="line">    String* publicKey = Dict_getStringC(args, &quot;publicKey&quot;);</div><div class="line">    String* address = Dict_getStringC(args, &quot;address&quot;);</div><div class="line">    int64_t* interfaceNumber = Dict_getIntC(args, &quot;interfaceNumber&quot;);</div><div class="line">    uint32_t ifNum = (interfaceNumber) ? ((uint32_t) *interfaceNumber) : 0;</div><div class="line">    String* peerName = Dict_getStringC(args, &quot;peerName&quot;);</div><div class="line">    String* error = NULL;</div><div class="line"></div><div class="line">    Log_debug(ctx-&gt;logger, &quot;Peering with [%s]&quot;, publicKey-&gt;bytes);</div><div class="line"></div><div class="line">    struct Sockaddr_storage ss;</div><div class="line">    uint8_t pkBytes[32];</div><div class="line">    int ret;</div><div class="line">    if (interfaceNumber &amp;&amp; *interfaceNumber &lt; 0) &#123;</div><div class="line">        error = String_CONST(&quot;negative interfaceNumber&quot;);</div><div class="line"></div><div class="line">    &#125; else if ((ret = Key_parse(publicKey, pkBytes, NULL))) &#123;</div><div class="line">        error = String_CONST(Key_parse_strerror(ret));</div><div class="line"></div><div class="line">    &#125; else if (Sockaddr_parse(address-&gt;bytes, &amp;ss)) &#123;</div><div class="line">        error = String_CONST(&quot;unable to parse ip address and port.&quot;);</div><div class="line"></div><div class="line">    &#125; else if (Sockaddr_getFamily(&amp;ss.addr) != Sockaddr_getFamily(ctx-&gt;udpIf-&gt;addr)) &#123;</div><div class="line">        error = String_CONST(&quot;different address type than this socket is bound to.&quot;);</div><div class="line"></div><div class="line">    &#125; else &#123;</div><div class="line"></div><div class="line">        struct Sockaddr* addr = &amp;ss.addr;</div><div class="line">        char* addrPtr = NULL;</div><div class="line">        int addrLen = Sockaddr_getAddress(&amp;ss.addr, &amp;addrPtr);</div><div class="line">        Assert_true(addrLen &gt; 0);</div><div class="line">        struct Allocator* tempAlloc = Allocator_child(ctx-&gt;alloc);</div><div class="line">        if (Bits_isZero(addrPtr, addrLen)) &#123;</div><div class="line">            // unspec&apos;d address, convert to loopback</div><div class="line">            if (Sockaddr_getFamily(addr) == Sockaddr_AF_INET) &#123;</div><div class="line">                addr = Sockaddr_clone(Sockaddr_LOOPBACK, tempAlloc);</div><div class="line">            &#125; else if (Sockaddr_getFamily(addr) == Sockaddr_AF_INET6) &#123;</div><div class="line">                addr = Sockaddr_clone(Sockaddr_LOOPBACK6, tempAlloc);</div><div class="line">            &#125; else &#123;</div><div class="line">                Assert_failure(&quot;Sockaddr which is not AF_INET nor AF_INET6&quot;);</div><div class="line">            &#125;</div><div class="line">            Sockaddr_setPort(addr, Sockaddr_getPort(&amp;ss.addr));</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        int ret = InterfaceController_bootstrapPeer(</div><div class="line">            ctx-&gt;ic, ifNum, pkBytes, addr, password, login, peerName, ctx-&gt;alloc);</div><div class="line"></div><div class="line">        Allocator_free(tempAlloc);</div><div class="line"></div><div class="line">        if (ret) &#123;</div><div class="line">            switch(ret) &#123;</div><div class="line">                case InterfaceController_bootstrapPeer_BAD_IFNUM:</div><div class="line">                    error = String_CONST(&quot;no such interface for interfaceNumber&quot;);</div><div class="line">                    break;</div><div class="line"></div><div class="line">                case InterfaceController_bootstrapPeer_BAD_KEY:</div><div class="line">                    error = String_CONST(&quot;invalid public key.&quot;);</div><div class="line">                    break;</div><div class="line"></div><div class="line">                case InterfaceController_bootstrapPeer_OUT_OF_SPACE:</div><div class="line">                    error = String_CONST(&quot;no more space to register with the switch.&quot;);</div><div class="line">                    break;</div><div class="line"></div><div class="line">                default:</div><div class="line">                    error = String_CONST(&quot;unknown error&quot;);</div><div class="line">                    break;</div><div class="line">            &#125;</div><div class="line">        &#125; else &#123;</div><div class="line">            error = String_CONST(&quot;none&quot;);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    Dict out = Dict_CONST(String_CONST(&quot;error&quot;), String_OBJ(error), NULL);</div><div class="line">    Admin_sendMessage(&amp;out, txid, ctx-&gt;admin);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>首先看从dict中取出的值：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">String* password = Dict_getStringC(args, &quot;password&quot;);</div><div class="line">String* login = Dict_getStringC(args, &quot;login&quot;);</div><div class="line">String* publicKey = Dict_getStringC(args, &quot;publicKey&quot;);</div><div class="line">String* address = Dict_getStringC(args, &quot;address&quot;);</div><div class="line">int64_t* interfaceNumber = Dict_getIntC(args, &quot;interfaceNumber&quot;);</div><div class="line">uint32_t ifNum = (interfaceNumber) ? ((uint32_t) *interfaceNumber) : 0;</div><div class="line">String* peerName = Dict_getStringC(args, &quot;peerName&quot;);</div></pre></td></tr></table></figure></p>
+<h2 id="普通点配置连接点的分析"><a href="#普通点配置连接点的分析" class="headerlink" title="普通点配置连接点的分析"></a>普通点配置连接点的分析</h2><p>从Configurator.c中通过rpcCall调用udp_conn。<br>直接从udp_conn开始分析<br>interface/UDPInterface_admin.c中<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Admin_registerFunction(&quot;udp_conn&quot;, beginConnection, ctx, true,</span><br><span class="line">    ((struct Admin_FunctionArg[]) &#123;</span><br><span class="line">        &#123; .name = &quot;interfaceNumber&quot;, .required = 0, .type = &quot;Int&quot; &#125;,</span><br><span class="line">        &#123; .name = &quot;password&quot;, .required = 0, .type = &quot;String&quot; &#125;,</span><br><span class="line">        &#123; .name = &quot;publicKey&quot;, .required = 1, .type = &quot;String&quot; &#125;,</span><br><span class="line">        &#123; .name = &quot;address&quot;, .required = 1, .type = &quot;String&quot; &#125;,</span><br><span class="line">        &#123; .name = &quot;login&quot;, .required = 0, .type = &quot;String&quot; &#125;</span><br><span class="line">    &#125;), admin);</span><br></pre></td></tr></table></figure></p>
+<p>interfaceNumber并未在conf中出现<br>password是conf中的password<br>publicKey是conf中的publicKey<br>address是conf中的”192.168.2.43:26808”<br>login是conf中的login<br>可以看出，只有publicKey和address是必须的。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line">static void beginConnection(Dict* args,</span><br><span class="line">                            void* vcontext,</span><br><span class="line">                            String* txid,</span><br><span class="line">                            struct Allocator* requestAlloc)</span><br><span class="line">&#123;</span><br><span class="line">    struct Context* ctx = vcontext;</span><br><span class="line"></span><br><span class="line">    String* password = Dict_getStringC(args, &quot;password&quot;);</span><br><span class="line">    String* login = Dict_getStringC(args, &quot;login&quot;);</span><br><span class="line">    String* publicKey = Dict_getStringC(args, &quot;publicKey&quot;);</span><br><span class="line">    String* address = Dict_getStringC(args, &quot;address&quot;);</span><br><span class="line">    int64_t* interfaceNumber = Dict_getIntC(args, &quot;interfaceNumber&quot;);</span><br><span class="line">    uint32_t ifNum = (interfaceNumber) ? ((uint32_t) *interfaceNumber) : 0;</span><br><span class="line">    String* peerName = Dict_getStringC(args, &quot;peerName&quot;);</span><br><span class="line">    String* error = NULL;</span><br><span class="line"></span><br><span class="line">    Log_debug(ctx-&gt;logger, &quot;Peering with [%s]&quot;, publicKey-&gt;bytes);</span><br><span class="line"></span><br><span class="line">    struct Sockaddr_storage ss;</span><br><span class="line">    uint8_t pkBytes[32];</span><br><span class="line">    int ret;</span><br><span class="line">    if (interfaceNumber &amp;&amp; *interfaceNumber &lt; 0) &#123;</span><br><span class="line">        error = String_CONST(&quot;negative interfaceNumber&quot;);</span><br><span class="line"></span><br><span class="line">    &#125; else if ((ret = Key_parse(publicKey, pkBytes, NULL))) &#123;</span><br><span class="line">        error = String_CONST(Key_parse_strerror(ret));</span><br><span class="line"></span><br><span class="line">    &#125; else if (Sockaddr_parse(address-&gt;bytes, &amp;ss)) &#123;</span><br><span class="line">        error = String_CONST(&quot;unable to parse ip address and port.&quot;);</span><br><span class="line"></span><br><span class="line">    &#125; else if (Sockaddr_getFamily(&amp;ss.addr) != Sockaddr_getFamily(ctx-&gt;udpIf-&gt;addr)) &#123;</span><br><span class="line">        error = String_CONST(&quot;different address type than this socket is bound to.&quot;);</span><br><span class="line"></span><br><span class="line">    &#125; else &#123;</span><br><span class="line"></span><br><span class="line">        struct Sockaddr* addr = &amp;ss.addr;</span><br><span class="line">        char* addrPtr = NULL;</span><br><span class="line">        int addrLen = Sockaddr_getAddress(&amp;ss.addr, &amp;addrPtr);</span><br><span class="line">        Assert_true(addrLen &gt; 0);</span><br><span class="line">        struct Allocator* tempAlloc = Allocator_child(ctx-&gt;alloc);</span><br><span class="line">        if (Bits_isZero(addrPtr, addrLen)) &#123;</span><br><span class="line">            // unspec&apos;d address, convert to loopback</span><br><span class="line">            if (Sockaddr_getFamily(addr) == Sockaddr_AF_INET) &#123;</span><br><span class="line">                addr = Sockaddr_clone(Sockaddr_LOOPBACK, tempAlloc);</span><br><span class="line">            &#125; else if (Sockaddr_getFamily(addr) == Sockaddr_AF_INET6) &#123;</span><br><span class="line">                addr = Sockaddr_clone(Sockaddr_LOOPBACK6, tempAlloc);</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                Assert_failure(&quot;Sockaddr which is not AF_INET nor AF_INET6&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">            Sockaddr_setPort(addr, Sockaddr_getPort(&amp;ss.addr));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        int ret = InterfaceController_bootstrapPeer(</span><br><span class="line">            ctx-&gt;ic, ifNum, pkBytes, addr, password, login, peerName, ctx-&gt;alloc);</span><br><span class="line"></span><br><span class="line">        Allocator_free(tempAlloc);</span><br><span class="line"></span><br><span class="line">        if (ret) &#123;</span><br><span class="line">            switch(ret) &#123;</span><br><span class="line">                case InterfaceController_bootstrapPeer_BAD_IFNUM:</span><br><span class="line">                    error = String_CONST(&quot;no such interface for interfaceNumber&quot;);</span><br><span class="line">                    break;</span><br><span class="line"></span><br><span class="line">                case InterfaceController_bootstrapPeer_BAD_KEY:</span><br><span class="line">                    error = String_CONST(&quot;invalid public key.&quot;);</span><br><span class="line">                    break;</span><br><span class="line"></span><br><span class="line">                case InterfaceController_bootstrapPeer_OUT_OF_SPACE:</span><br><span class="line">                    error = String_CONST(&quot;no more space to register with the switch.&quot;);</span><br><span class="line">                    break;</span><br><span class="line"></span><br><span class="line">                default:</span><br><span class="line">                    error = String_CONST(&quot;unknown error&quot;);</span><br><span class="line">                    break;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            error = String_CONST(&quot;none&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Dict out = Dict_CONST(String_CONST(&quot;error&quot;), String_OBJ(error), NULL);</span><br><span class="line">    Admin_sendMessage(&amp;out, txid, ctx-&gt;admin);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>首先看从dict中取出的值：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">String* password = Dict_getStringC(args, &quot;password&quot;);</span><br><span class="line">String* login = Dict_getStringC(args, &quot;login&quot;);</span><br><span class="line">String* publicKey = Dict_getStringC(args, &quot;publicKey&quot;);</span><br><span class="line">String* address = Dict_getStringC(args, &quot;address&quot;);</span><br><span class="line">int64_t* interfaceNumber = Dict_getIntC(args, &quot;interfaceNumber&quot;);</span><br><span class="line">uint32_t ifNum = (interfaceNumber) ? ((uint32_t) *interfaceNumber) : 0;</span><br><span class="line">String* peerName = Dict_getStringC(args, &quot;peerName&quot;);</span><br></pre></td></tr></table></figure></p>
 <p>password,login,publicKey,address是conf里面写了的<br>interfaceNumber,peerName根本没有，也就是为空。</p>
-<p>之后用if else做了一些参数合法性检查。<br>最有一个else开始配置连接点的操作。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line">    struct Sockaddr* addr = &amp;ss.addr;</div><div class="line">    char* addrPtr = NULL;</div><div class="line">    int addrLen = Sockaddr_getAddress(&amp;ss.addr, &amp;addrPtr);</div><div class="line">    Assert_true(addrLen &gt; 0);</div><div class="line">    struct Allocator* tempAlloc = Allocator_child(ctx-&gt;alloc);</div><div class="line">    if (Bits_isZero(addrPtr, addrLen)) &#123;</div><div class="line">        // unspec&apos;d address, convert to loopback</div><div class="line">        if (Sockaddr_getFamily(addr) == Sockaddr_AF_INET) &#123;</div><div class="line">            addr = Sockaddr_clone(Sockaddr_LOOPBACK, tempAlloc);</div><div class="line">        &#125; else if (Sockaddr_getFamily(addr) == Sockaddr_AF_INET6) &#123;</div><div class="line">            addr = Sockaddr_clone(Sockaddr_LOOPBACK6, tempAlloc);</div><div class="line">        &#125; else &#123;</div><div class="line">            Assert_failure(&quot;Sockaddr which is not AF_INET nor AF_INET6&quot;);</div><div class="line">        &#125;</div><div class="line">        Sockaddr_setPort(addr, Sockaddr_getPort(&amp;ss.addr));</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    int ret = InterfaceController_bootstrapPeer(</div><div class="line">        ctx-&gt;ic, ifNum, pkBytes, addr, password, login, peerName, ctx-&gt;alloc);</div><div class="line"></div><div class="line">    Allocator_free(tempAlloc);</div><div class="line"></div><div class="line">    if (ret) &#123;</div><div class="line">        switch(ret) &#123;</div><div class="line">            case InterfaceController_bootstrapPeer_BAD_IFNUM:</div><div class="line">                error = String_CONST(&quot;no such interface for interfaceNumber&quot;);</div><div class="line">                break;</div><div class="line"></div><div class="line">            case InterfaceController_bootstrapPeer_BAD_KEY:</div><div class="line">                error = String_CONST(&quot;invalid public key.&quot;);</div><div class="line">                break;</div><div class="line"></div><div class="line">            case InterfaceController_bootstrapPeer_OUT_OF_SPACE:</div><div class="line">                error = String_CONST(&quot;no more space to register with the switch.&quot;);</div><div class="line">                break;</div><div class="line"></div><div class="line">            default:</div><div class="line">                error = String_CONST(&quot;unknown error&quot;);</div><div class="line">                break;</div><div class="line">        &#125;</div><div class="line">    &#125; else &#123;</div><div class="line">        error = String_CONST(&quot;none&quot;);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>核心代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">int ret = InterfaceController_bootstrapPeer(</div><div class="line">    ctx-&gt;ic, ifNum, pkBytes, addr, password, login, peerName, ctx-&gt;alloc);</div></pre></td></tr></table></figure></p>
-<p>查看这个方法,在net/InterfaceController.c,只看和CryptoAuth相关的部分：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">int InterfaceController_bootstrapPeer(struct InterfaceController* ifc,</div><div class="line">                                      int interfaceNumber,</div><div class="line">                                      uint8_t* herPublicKey,</div><div class="line">                                      const struct Sockaddr* lladdrParm,</div><div class="line">                                      String* password,</div><div class="line">                                      String* login,</div><div class="line">                                      String* user,</div><div class="line">                                      struct Allocator* alloc)</div><div class="line">&#123;</div><div class="line">......</div><div class="line">    ep-&gt;caSession = CryptoAuth_newSession(ic-&gt;ca, epAlloc, herPublicKey, false, &quot;outer&quot;);</div><div class="line">    CryptoAuth_setAuth(password, login, ep-&gt;caSession);</div><div class="line">    if (user) &#123;</div><div class="line">        ep-&gt;caSession-&gt;displayName = String_clone(user, epAlloc);</div><div class="line">    &#125;</div><div class="line">......</div><div class="line"></div><div class="line">    // We can&apos;t just add the node directly to the routing table because we do not know</div><div class="line">    // the version. We&apos;ll send it a switch ping and when it responds, we will know it&apos;s</div><div class="line">    // key (if we don&apos;t already) and version number.</div><div class="line">    sendPing(ep);</div><div class="line"></div><div class="line">    return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>之后用if else做了一些参数合法性检查。<br>最有一个else开始配置连接点的操作。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">    struct Sockaddr* addr = &amp;ss.addr;</span><br><span class="line">    char* addrPtr = NULL;</span><br><span class="line">    int addrLen = Sockaddr_getAddress(&amp;ss.addr, &amp;addrPtr);</span><br><span class="line">    Assert_true(addrLen &gt; 0);</span><br><span class="line">    struct Allocator* tempAlloc = Allocator_child(ctx-&gt;alloc);</span><br><span class="line">    if (Bits_isZero(addrPtr, addrLen)) &#123;</span><br><span class="line">        // unspec&apos;d address, convert to loopback</span><br><span class="line">        if (Sockaddr_getFamily(addr) == Sockaddr_AF_INET) &#123;</span><br><span class="line">            addr = Sockaddr_clone(Sockaddr_LOOPBACK, tempAlloc);</span><br><span class="line">        &#125; else if (Sockaddr_getFamily(addr) == Sockaddr_AF_INET6) &#123;</span><br><span class="line">            addr = Sockaddr_clone(Sockaddr_LOOPBACK6, tempAlloc);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            Assert_failure(&quot;Sockaddr which is not AF_INET nor AF_INET6&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        Sockaddr_setPort(addr, Sockaddr_getPort(&amp;ss.addr));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    int ret = InterfaceController_bootstrapPeer(</span><br><span class="line">        ctx-&gt;ic, ifNum, pkBytes, addr, password, login, peerName, ctx-&gt;alloc);</span><br><span class="line"></span><br><span class="line">    Allocator_free(tempAlloc);</span><br><span class="line"></span><br><span class="line">    if (ret) &#123;</span><br><span class="line">        switch(ret) &#123;</span><br><span class="line">            case InterfaceController_bootstrapPeer_BAD_IFNUM:</span><br><span class="line">                error = String_CONST(&quot;no such interface for interfaceNumber&quot;);</span><br><span class="line">                break;</span><br><span class="line"></span><br><span class="line">            case InterfaceController_bootstrapPeer_BAD_KEY:</span><br><span class="line">                error = String_CONST(&quot;invalid public key.&quot;);</span><br><span class="line">                break;</span><br><span class="line"></span><br><span class="line">            case InterfaceController_bootstrapPeer_OUT_OF_SPACE:</span><br><span class="line">                error = String_CONST(&quot;no more space to register with the switch.&quot;);</span><br><span class="line">                break;</span><br><span class="line"></span><br><span class="line">            default:</span><br><span class="line">                error = String_CONST(&quot;unknown error&quot;);</span><br><span class="line">                break;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        error = String_CONST(&quot;none&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>核心代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">int ret = InterfaceController_bootstrapPeer(</span><br><span class="line">    ctx-&gt;ic, ifNum, pkBytes, addr, password, login, peerName, ctx-&gt;alloc);</span><br></pre></td></tr></table></figure></p>
+<p>查看这个方法,在net/InterfaceController.c,只看和CryptoAuth相关的部分：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">int InterfaceController_bootstrapPeer(struct InterfaceController* ifc,</span><br><span class="line">                                      int interfaceNumber,</span><br><span class="line">                                      uint8_t* herPublicKey,</span><br><span class="line">                                      const struct Sockaddr* lladdrParm,</span><br><span class="line">                                      String* password,</span><br><span class="line">                                      String* login,</span><br><span class="line">                                      String* user,</span><br><span class="line">                                      struct Allocator* alloc)</span><br><span class="line">&#123;</span><br><span class="line">......</span><br><span class="line">    ep-&gt;caSession = CryptoAuth_newSession(ic-&gt;ca, epAlloc, herPublicKey, false, &quot;outer&quot;);</span><br><span class="line">    CryptoAuth_setAuth(password, login, ep-&gt;caSession);</span><br><span class="line">    if (user) &#123;</span><br><span class="line">        ep-&gt;caSession-&gt;displayName = String_clone(user, epAlloc);</span><br><span class="line">    &#125;</span><br><span class="line">......</span><br><span class="line"></span><br><span class="line">    // We can&apos;t just add the node directly to the routing table because we do not know</span><br><span class="line">    // the version. We&apos;ll send it a switch ping and when it responds, we will know it&apos;s</span><br><span class="line">    // key (if we don&apos;t already) and version number.</span><br><span class="line">    sendPing(ep);</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <ol>
 <li>CryptoAuth_newSession并没有设置password</li>
 <li>调用了CryptoAuth_setAuth</li>
 <li>user为空，所以没有设置ep-&gt;caSession-&gt;displayName</li>
-<li>最后sendPing连接点。<br>主要看一下CryptoAuth_setAuth,在crypto/CryptoAuth.c<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">void CryptoAuth_setAuth(const String* password,</div><div class="line">                        const String* login,</div><div class="line">                        struct CryptoAuth_Session* caSession)</div><div class="line">&#123;</div><div class="line">    struct CryptoAuth_Session_pvt* session =</div><div class="line">        Identity_check((struct CryptoAuth_Session_pvt*)caSession);</div><div class="line"></div><div class="line">    if (!password &amp;&amp; (session-&gt;password || session-&gt;authType)) &#123;</div><div class="line">        session-&gt;password = NULL;</div><div class="line">        session-&gt;authType = 0;</div><div class="line">    &#125; else if (!session-&gt;password || !String_equals(session-&gt;password, password)) &#123;</div><div class="line">        session-&gt;password = String_clone(password, session-&gt;alloc);</div><div class="line">        session-&gt;authType = 1;</div><div class="line">        if (login) &#123;</div><div class="line">            session-&gt;authType = 2;</div><div class="line">            session-&gt;login = String_clone(login, session-&gt;alloc);</div><div class="line">        &#125;</div><div class="line">    &#125; else &#123;</div><div class="line">        return;</div><div class="line">    &#125;</div><div class="line">    reset(session);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<li>最后sendPing连接点。<br>主要看一下CryptoAuth_setAuth,在crypto/CryptoAuth.c<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">void CryptoAuth_setAuth(const String* password,</span><br><span class="line">                        const String* login,</span><br><span class="line">                        struct CryptoAuth_Session* caSession)</span><br><span class="line">&#123;</span><br><span class="line">    struct CryptoAuth_Session_pvt* session =</span><br><span class="line">        Identity_check((struct CryptoAuth_Session_pvt*)caSession);</span><br><span class="line"></span><br><span class="line">    if (!password &amp;&amp; (session-&gt;password || session-&gt;authType)) &#123;</span><br><span class="line">        session-&gt;password = NULL;</span><br><span class="line">        session-&gt;authType = 0;</span><br><span class="line">    &#125; else if (!session-&gt;password || !String_equals(session-&gt;password, password)) &#123;</span><br><span class="line">        session-&gt;password = String_clone(password, session-&gt;alloc);</span><br><span class="line">        session-&gt;authType = 1;</span><br><span class="line">        if (login) &#123;</span><br><span class="line">            session-&gt;authType = 2;</span><br><span class="line">            session-&gt;login = String_clone(login, session-&gt;alloc);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    reset(session);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
-<p>会进入到<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">else if (!session-&gt;password || !String_equals(session-&gt;password, password)) &#123;</div><div class="line">       session-&gt;password = String_clone(password, session-&gt;alloc);</div><div class="line">       session-&gt;authType = 1;</div><div class="line">       if (login) &#123;</div><div class="line">           session-&gt;authType = 2;</div><div class="line">           session-&gt;login = String_clone(login, session-&gt;alloc);</div><div class="line">       &#125;</div><div class="line">   &#125;</div></pre></td></tr></table></figure></p>
+<p>会进入到<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">else if (!session-&gt;password || !String_equals(session-&gt;password, password)) &#123;</span><br><span class="line">       session-&gt;password = String_clone(password, session-&gt;alloc);</span><br><span class="line">       session-&gt;authType = 1;</span><br><span class="line">       if (login) &#123;</span><br><span class="line">           session-&gt;authType = 2;</span><br><span class="line">           session-&gt;login = String_clone(login, session-&gt;alloc);</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
 <ol>
 <li>将password设置到session-&gt;password</li>
 <li>如果有login，authType为2，否则为1.也就是说，如果conf中有login（对应着连接点conf中的user字段），使用验证login的方法，否则使用验证password的方法。这个区分，在后面会具体分析。</li>
 <li>如果有login，login设置到session-&gt;login</li>
 </ol>
-<h2 id="连接点验证一个新来的点的身份是否合格"><a href="#连接点验证一个新来的点的身份是否合格" class="headerlink" title="连接点验证一个新来的点的身份是否合格"></a>连接点验证一个新来的点的身份是否合格</h2><p>验证的核心方法是crypto/AryptoAuth.c中的一个内部方法getAuth.<br>调用链为：net/InterfaceController.c的handleUnexpectedIncoming<br>–&gt; net/InterfaceController.c的CADecryptAndNotify<br>–&gt; crypto/AryptoAuth.c的CryptoAuth_getAuth<br>–&gt; crypto/AryptoAuth.c的getAuth<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">static inline struct CryptoAuth_User* getAuth(struct CryptoHeader_Challenge* auth,</div><div class="line">                                              struct CryptoAuth_pvt* ca)</div><div class="line">&#123;</div><div class="line">    if (auth-&gt;type == 0) &#123;</div><div class="line">        return NULL;</div><div class="line">    &#125;</div><div class="line">    int count = 0;</div><div class="line"></div><div class="line">    for (struct CryptoAuth_User* u = ca-&gt;users; u; u = u-&gt;next) &#123;</div><div class="line">        count++;</div><div class="line">        if (auth-&gt;type == 1 &amp;&amp;</div><div class="line">            !Bits_memcmp(auth, u-&gt;passwordHash, CryptoHeader_Challenge_KEYSIZE))</div><div class="line">        &#123;</div><div class="line">            return u;</div><div class="line">        &#125; else if (auth-&gt;type == 2 &amp;&amp;</div><div class="line">            !Bits_memcmp(auth, u-&gt;userNameHash, CryptoHeader_Challenge_KEYSIZE))</div><div class="line">        &#123;</div><div class="line">            return u;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    Log_debug(ca-&gt;logger, &quot;Got unrecognized auth, password count = [%d]&quot;, count);</div><div class="line">    return NULL;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="连接点验证一个新来的点的身份是否合格"><a href="#连接点验证一个新来的点的身份是否合格" class="headerlink" title="连接点验证一个新来的点的身份是否合格"></a>连接点验证一个新来的点的身份是否合格</h2><p>验证的核心方法是crypto/AryptoAuth.c中的一个内部方法getAuth.<br>调用链为：net/InterfaceController.c的handleUnexpectedIncoming<br>–&gt; net/InterfaceController.c的CADecryptAndNotify<br>–&gt; crypto/AryptoAuth.c的CryptoAuth_getAuth<br>–&gt; crypto/AryptoAuth.c的getAuth<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">static inline struct CryptoAuth_User* getAuth(struct CryptoHeader_Challenge* auth,</span><br><span class="line">                                              struct CryptoAuth_pvt* ca)</span><br><span class="line">&#123;</span><br><span class="line">    if (auth-&gt;type == 0) &#123;</span><br><span class="line">        return NULL;</span><br><span class="line">    &#125;</span><br><span class="line">    int count = 0;</span><br><span class="line"></span><br><span class="line">    for (struct CryptoAuth_User* u = ca-&gt;users; u; u = u-&gt;next) &#123;</span><br><span class="line">        count++;</span><br><span class="line">        if (auth-&gt;type == 1 &amp;&amp;</span><br><span class="line">            !Bits_memcmp(auth, u-&gt;passwordHash, CryptoHeader_Challenge_KEYSIZE))</span><br><span class="line">        &#123;</span><br><span class="line">            return u;</span><br><span class="line">        &#125; else if (auth-&gt;type == 2 &amp;&amp;</span><br><span class="line">            !Bits_memcmp(auth, u-&gt;userNameHash, CryptoHeader_Challenge_KEYSIZE))</span><br><span class="line">        &#123;</span><br><span class="line">            return u;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    Log_debug(ca-&gt;logger, &quot;Got unrecognized auth, password count = [%d]&quot;, count);</span><br><span class="line">    return NULL;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>根据auth-&gt;type来决定验证username（login）还是验证password</p>
 <h2 id="API分析"><a href="#API分析" class="headerlink" title="API分析"></a>API分析</h2><p>admin/AuthorizedPasswords.c，四个API，因branch不同，API名称可能有不同。</p>
 <h3 id="AuthorizedPasswords-add-或-add-pass"><a href="#AuthorizedPasswords-add-或-add-pass" class="headerlink" title="AuthorizedPasswords_add 或 add_pass"></a>AuthorizedPasswords_add 或 add_pass</h3><p>已经在上面分析过</p>
-<h3 id="AuthorizedPasswords-remove-或-rm-pass"><a href="#AuthorizedPasswords-remove-或-rm-pass" class="headerlink" title="AuthorizedPasswords_remove 或 rm_pass"></a>AuthorizedPasswords_remove 或 rm_pass</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Admin_registerFunction(&quot;AuthorizedPasswords_remove&quot;, remove, context, true,</div><div class="line">    ((struct Admin_FunctionArg[])&#123;</div><div class="line">        &#123; .name = &quot;user&quot;, .required = 1, .type = &quot;String&quot; &#125;</div><div class="line">    &#125;), admin);</div></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">static void remove(Dict* args, void* vcontext, String* txid, struct Allocator* requestAlloc)</div><div class="line">&#123;</div><div class="line">    struct Context* context = Identity_check((struct Context*) vcontext);</div><div class="line">    String* user = Dict_getStringC(args, &quot;user&quot;);</div><div class="line"></div><div class="line">    int32_t ret = CryptoAuth_removeUsers(context-&gt;ca, user);</div><div class="line">    if (ret) &#123;</div><div class="line">        sendResponse(String_CONST(&quot;none&quot;), context-&gt;admin, txid, requestAlloc);</div><div class="line">    &#125; else &#123;</div><div class="line">        sendResponse(String_CONST(&quot;Unknown error.&quot;), context-&gt;admin, txid, requestAlloc);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>CryptoAuth.c<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">int CryptoAuth_removeUsers(struct CryptoAuth* context, String* login)</div><div class="line">&#123;</div><div class="line">    struct CryptoAuth_pvt* ca = Identity_check((struct CryptoAuth_pvt*) context);</div><div class="line"></div><div class="line">    int count = 0;</div><div class="line">    struct CryptoAuth_User** up = &amp;ca-&gt;users;</div><div class="line">    struct CryptoAuth_User* u = *up;</div><div class="line">    while ((u = *up)) &#123;</div><div class="line">        if (!login || String_equals(login, u-&gt;login)) &#123;</div><div class="line">            *up = u-&gt;next;</div><div class="line">            Allocator_free(u-&gt;alloc);</div><div class="line">            count++;</div><div class="line">        &#125; else &#123;</div><div class="line">            up = &amp;u-&gt;next;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    if (!login) &#123;</div><div class="line">        Log_debug(ca-&gt;logger, &quot;Flushing [%d] users&quot;, count);</div><div class="line">    &#125; else &#123;</div><div class="line">        Log_debug(ca-&gt;logger, &quot;Removing [%d] user(s) identified by [%s]&quot;, count, login-&gt;bytes);</div><div class="line">    &#125;</div><div class="line">    return count;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="AuthorizedPasswords-remove-或-rm-pass"><a href="#AuthorizedPasswords-remove-或-rm-pass" class="headerlink" title="AuthorizedPasswords_remove 或 rm_pass"></a>AuthorizedPasswords_remove 或 rm_pass</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Admin_registerFunction(&quot;AuthorizedPasswords_remove&quot;, remove, context, true,</span><br><span class="line">    ((struct Admin_FunctionArg[])&#123;</span><br><span class="line">        &#123; .name = &quot;user&quot;, .required = 1, .type = &quot;String&quot; &#125;</span><br><span class="line">    &#125;), admin);</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">static void remove(Dict* args, void* vcontext, String* txid, struct Allocator* requestAlloc)</span><br><span class="line">&#123;</span><br><span class="line">    struct Context* context = Identity_check((struct Context*) vcontext);</span><br><span class="line">    String* user = Dict_getStringC(args, &quot;user&quot;);</span><br><span class="line"></span><br><span class="line">    int32_t ret = CryptoAuth_removeUsers(context-&gt;ca, user);</span><br><span class="line">    if (ret) &#123;</span><br><span class="line">        sendResponse(String_CONST(&quot;none&quot;), context-&gt;admin, txid, requestAlloc);</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        sendResponse(String_CONST(&quot;Unknown error.&quot;), context-&gt;admin, txid, requestAlloc);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>CryptoAuth.c<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">int CryptoAuth_removeUsers(struct CryptoAuth* context, String* login)</span><br><span class="line">&#123;</span><br><span class="line">    struct CryptoAuth_pvt* ca = Identity_check((struct CryptoAuth_pvt*) context);</span><br><span class="line"></span><br><span class="line">    int count = 0;</span><br><span class="line">    struct CryptoAuth_User** up = &amp;ca-&gt;users;</span><br><span class="line">    struct CryptoAuth_User* u = *up;</span><br><span class="line">    while ((u = *up)) &#123;</span><br><span class="line">        if (!login || String_equals(login, u-&gt;login)) &#123;</span><br><span class="line">            *up = u-&gt;next;</span><br><span class="line">            Allocator_free(u-&gt;alloc);</span><br><span class="line">            count++;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            up = &amp;u-&gt;next;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (!login) &#123;</span><br><span class="line">        Log_debug(ca-&gt;logger, &quot;Flushing [%d] users&quot;, count);</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        Log_debug(ca-&gt;logger, &quot;Removing [%d] user(s) identified by [%s]&quot;, count, login-&gt;bytes);</span><br><span class="line">    &#125;</span><br><span class="line">    return count;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>注意两点：</p>
 <ol>
 <li>while循环很好的在删除的同时维护好了list链表的结构</li>
 <li>当login为空时，也就意味着将所有user都删除了</li>
 </ol>
-<h3 id="AuthorizedPasswords-remove-或-rm-pass-1"><a href="#AuthorizedPasswords-remove-或-rm-pass-1" class="headerlink" title="AuthorizedPasswords_remove 或 rm_pass"></a>AuthorizedPasswords_remove 或 rm_pass</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Admin_registerFunction(&quot;AuthorizedPasswords_remove_by_pwd&quot;, removeByPwd, context, true,</div><div class="line">    ((struct Admin_FunctionArg[])&#123;</div><div class="line">        &#123; .name = &quot;password&quot;, .required = 1, .type = &quot;String&quot; &#125;</div><div class="line">    &#125;), admin);</div></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">static void removeByPwd(Dict* args, void* vcontext, String* txid, struct Allocator* requestAlloc)</div><div class="line">&#123;</div><div class="line">    struct Context* context = Identity_check((struct Context*) vcontext);</div><div class="line">    String* password = Dict_getStringC(args, &quot;password&quot;);</div><div class="line"></div><div class="line">    int32_t ret = CryptoAuth_removeUsers_pwd(context-&gt;ca, password);</div><div class="line">    if (ret) &#123;</div><div class="line">        sendResponse(String_CONST(&quot;none&quot;), context-&gt;admin, txid, requestAlloc);</div><div class="line">    &#125; else &#123;</div><div class="line">        sendResponse(String_CONST(&quot;Unknown error.&quot;), context-&gt;admin, txid, requestAlloc);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>CryptoAuth.c<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">static bool secretEquals(String* password, uint8_t userSecret[32])</div><div class="line">&#123;</div><div class="line">    uint8_t pwdSecret[32];</div><div class="line">    crypto_hash_sha256(pwdSecret, (uint8_t*) password-&gt;bytes, password-&gt;len);</div><div class="line">    return !(Bits_memcmp(pwdSecret, userSecret, 32));</div><div class="line">&#125;</div><div class="line"></div><div class="line">int CryptoAuth_removeUsers_pwd(struct CryptoAuth* context, String* password)</div><div class="line">&#123;</div><div class="line">    struct CryptoAuth_pvt* ca = Identity_check((struct CryptoAuth_pvt*) context);</div><div class="line"></div><div class="line">    int count = 0;</div><div class="line">    struct CryptoAuth_User** up = &amp;ca-&gt;users;</div><div class="line">    struct CryptoAuth_User* u = *up;</div><div class="line">    while ((u = *up)) &#123;</div><div class="line">        if (!password || secretEquals(password, u-&gt;secret)) &#123;</div><div class="line">            *up = u-&gt;next;</div><div class="line">            Allocator_free(u-&gt;alloc);</div><div class="line">            count++;</div><div class="line">        &#125; else &#123;</div><div class="line">            up = &amp;u-&gt;next;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    if (!password) &#123;</div><div class="line">        Log_debug(ca-&gt;logger, &quot;Flushing [%d] users&quot;, count);</div><div class="line">    &#125; else &#123;</div><div class="line">        Log_debug(ca-&gt;logger, &quot;Removing [%d] user(s) identified by [%s]&quot;, count, password-&gt;bytes);</div><div class="line">    &#125;</div><div class="line">    return count;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="AuthorizedPasswords-remove-或-rm-pass-1"><a href="#AuthorizedPasswords-remove-或-rm-pass-1" class="headerlink" title="AuthorizedPasswords_remove 或 rm_pass"></a>AuthorizedPasswords_remove 或 rm_pass</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Admin_registerFunction(&quot;AuthorizedPasswords_remove_by_pwd&quot;, removeByPwd, context, true,</span><br><span class="line">    ((struct Admin_FunctionArg[])&#123;</span><br><span class="line">        &#123; .name = &quot;password&quot;, .required = 1, .type = &quot;String&quot; &#125;</span><br><span class="line">    &#125;), admin);</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">static void removeByPwd(Dict* args, void* vcontext, String* txid, struct Allocator* requestAlloc)</span><br><span class="line">&#123;</span><br><span class="line">    struct Context* context = Identity_check((struct Context*) vcontext);</span><br><span class="line">    String* password = Dict_getStringC(args, &quot;password&quot;);</span><br><span class="line"></span><br><span class="line">    int32_t ret = CryptoAuth_removeUsers_pwd(context-&gt;ca, password);</span><br><span class="line">    if (ret) &#123;</span><br><span class="line">        sendResponse(String_CONST(&quot;none&quot;), context-&gt;admin, txid, requestAlloc);</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        sendResponse(String_CONST(&quot;Unknown error.&quot;), context-&gt;admin, txid, requestAlloc);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>CryptoAuth.c<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">static bool secretEquals(String* password, uint8_t userSecret[32])</span><br><span class="line">&#123;</span><br><span class="line">    uint8_t pwdSecret[32];</span><br><span class="line">    crypto_hash_sha256(pwdSecret, (uint8_t*) password-&gt;bytes, password-&gt;len);</span><br><span class="line">    return !(Bits_memcmp(pwdSecret, userSecret, 32));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int CryptoAuth_removeUsers_pwd(struct CryptoAuth* context, String* password)</span><br><span class="line">&#123;</span><br><span class="line">    struct CryptoAuth_pvt* ca = Identity_check((struct CryptoAuth_pvt*) context);</span><br><span class="line"></span><br><span class="line">    int count = 0;</span><br><span class="line">    struct CryptoAuth_User** up = &amp;ca-&gt;users;</span><br><span class="line">    struct CryptoAuth_User* u = *up;</span><br><span class="line">    while ((u = *up)) &#123;</span><br><span class="line">        if (!password || secretEquals(password, u-&gt;secret)) &#123;</span><br><span class="line">            *up = u-&gt;next;</span><br><span class="line">            Allocator_free(u-&gt;alloc);</span><br><span class="line">            count++;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            up = &amp;u-&gt;next;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (!password) &#123;</span><br><span class="line">        Log_debug(ca-&gt;logger, &quot;Flushing [%d] users&quot;, count);</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        Log_debug(ca-&gt;logger, &quot;Removing [%d] user(s) identified by [%s]&quot;, count, password-&gt;bytes);</span><br><span class="line">    &#125;</span><br><span class="line">    return count;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>比上一个多了一个根据password计算secret的过程，其他并无差别。</p>
-<h2 id="AuthorizedPasswords-list-或-ls-pass"><a href="#AuthorizedPasswords-list-或-ls-pass" class="headerlink" title="AuthorizedPasswords_list 或 ls_pass"></a>AuthorizedPasswords_list 或 ls_pass</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Admin_registerFunction(&quot;AuthorizedPasswords_list&quot;, list, context, true, NULL, admin);</div></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">static void list(Dict* args, void* vcontext, String* txid, struct Allocator* requestAlloc)</div><div class="line">&#123;</div><div class="line">    struct Context* context = Identity_check((struct Context*) vcontext);</div><div class="line">    struct Allocator* child = Allocator_child(context-&gt;allocator);</div><div class="line"></div><div class="line">    List* users = CryptoAuth_getUsers(context-&gt;ca, child);</div><div class="line">    uint32_t count = List_size(users);</div><div class="line"></div><div class="line">    Dict response = Dict_CONST(</div><div class="line">        String_CONST(&quot;total&quot;), Int_OBJ(count), Dict_CONST(</div><div class="line">        String_CONST(&quot;users&quot;), List_OBJ(users), NULL</div><div class="line">    ));</div><div class="line"></div><div class="line">    Admin_sendMessage(&amp;response, txid, context-&gt;admin);</div><div class="line"></div><div class="line">    Allocator_free(child);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>CryptoAuth.c<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">List* CryptoAuth_getUsers(struct CryptoAuth* context, struct Allocator* alloc)</div><div class="line">&#123;</div><div class="line">    struct CryptoAuth_pvt* ca = Identity_check((struct CryptoAuth_pvt*) context);</div><div class="line"></div><div class="line">    List* users = List_new(alloc);</div><div class="line">    for (struct CryptoAuth_User* u = ca-&gt;users; u; u = u-&gt;next) &#123;</div><div class="line">        List_addString(users, String_clone(u-&gt;login, alloc), alloc);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return users;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>返回结果仅列出users的name和users的数量，下面是一个执行结果示例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  &quot;total&quot;: &quot;5&quot;,</div><div class="line">  &quot;txid&quot;: &quot;3333180639&quot;,</div><div class="line">  &quot;users&quot;: [</div><div class="line">    &quot;a&quot;,</div><div class="line">    &quot;d&quot;,</div><div class="line">    &quot;c&quot;,</div><div class="line">    &quot;a&quot;,</div><div class="line">    &quot;Local Peers&quot;</div><div class="line">  ]</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="AuthorizedPasswords-list-或-ls-pass"><a href="#AuthorizedPasswords-list-或-ls-pass" class="headerlink" title="AuthorizedPasswords_list 或 ls_pass"></a>AuthorizedPasswords_list 或 ls_pass</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Admin_registerFunction(&quot;AuthorizedPasswords_list&quot;, list, context, true, NULL, admin);</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">static void list(Dict* args, void* vcontext, String* txid, struct Allocator* requestAlloc)</span><br><span class="line">&#123;</span><br><span class="line">    struct Context* context = Identity_check((struct Context*) vcontext);</span><br><span class="line">    struct Allocator* child = Allocator_child(context-&gt;allocator);</span><br><span class="line"></span><br><span class="line">    List* users = CryptoAuth_getUsers(context-&gt;ca, child);</span><br><span class="line">    uint32_t count = List_size(users);</span><br><span class="line"></span><br><span class="line">    Dict response = Dict_CONST(</span><br><span class="line">        String_CONST(&quot;total&quot;), Int_OBJ(count), Dict_CONST(</span><br><span class="line">        String_CONST(&quot;users&quot;), List_OBJ(users), NULL</span><br><span class="line">    ));</span><br><span class="line"></span><br><span class="line">    Admin_sendMessage(&amp;response, txid, context-&gt;admin);</span><br><span class="line"></span><br><span class="line">    Allocator_free(child);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>CryptoAuth.c<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">List* CryptoAuth_getUsers(struct CryptoAuth* context, struct Allocator* alloc)</span><br><span class="line">&#123;</span><br><span class="line">    struct CryptoAuth_pvt* ca = Identity_check((struct CryptoAuth_pvt*) context);</span><br><span class="line"></span><br><span class="line">    List* users = List_new(alloc);</span><br><span class="line">    for (struct CryptoAuth_User* u = ca-&gt;users; u; u = u-&gt;next) &#123;</span><br><span class="line">        List_addString(users, String_clone(u-&gt;login, alloc), alloc);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return users;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>返回结果仅列出users的name和users的数量，下面是一个执行结果示例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;total&quot;: &quot;5&quot;,</span><br><span class="line">  &quot;txid&quot;: &quot;3333180639&quot;,</span><br><span class="line">  &quot;users&quot;: [</span><br><span class="line">    &quot;a&quot;,</span><br><span class="line">    &quot;d&quot;,</span><br><span class="line">    &quot;c&quot;,</span><br><span class="line">    &quot;a&quot;,</span><br><span class="line">    &quot;Local Peers&quot;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 
       
     </div>
+
     
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/C-C/" rel="tag"># C/C++</a>
+          
+            <a href="/tags/cjdns/" rel="tag"># cjdns</a>
+          
+            <a href="/tags/cjdns源码分析/" rel="tag"># cjdns源码分析</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/09/04/how-to-read-staff/" rel="next" title="如何看懂五线谱">
+                <i class="fa fa-chevron-left"></i> 如何看懂五线谱
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/11/22/cjdns-3steps-lladdrsession/" rel="prev" title="cjdns源码分析--使用SocketAddress来维护的EndpointsBySockaddr map机制中EndpointsBySockaddr session的建立过程">
+                cjdns源码分析--使用SocketAddress来维护的EndpointsBySockaddr map机制中EndpointsBySockaddr session的建立过程 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
-    
+  
+  
+  </article>
 
 
-    <nav id="article-nav">
-        
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2017/11/22/cjdns-3steps-lladdrsession/">
-                    cjdns源码分析--使用SocketAddress来维护的EndpointsBySockaddr map机制中EndpointsBySockaddr session的建立过程
-                </a>
-            </div>
-        
-        
-            <div id="article-nav-older" class="article-nav-title">
-                <a href="/2017/09/04/how-to-read-staff/">
-                    如何看懂五线谱
-                </a>
-            </div>
-        
-    </nav>
+  </div>
+
+
+          </div>
+          
 
   
-</article>
-
-    <div id="toc" class="toc-article">
-        <strong class="toc-title">文章目錄</strong>
-        
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#接入点conf分析"><span class="toc-number">1.</span> <span class="toc-text">接入点conf分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#对conf的解析"><span class="toc-number">2.</span> <span class="toc-text">对conf的解析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#add-pass方法的分析"><span class="toc-number">3.</span> <span class="toc-text">add_pass方法的分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#普通点conf分析"><span class="toc-number">4.</span> <span class="toc-text">普通点conf分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#普通点配置连接点的分析"><span class="toc-number">5.</span> <span class="toc-text">普通点配置连接点的分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#连接点验证一个新来的点的身份是否合格"><span class="toc-number">6.</span> <span class="toc-text">连接点验证一个新来的点的身份是否合格</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#API分析"><span class="toc-number">7.</span> <span class="toc-text">API分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#AuthorizedPasswords-add-或-add-pass"><span class="toc-number">7.1.</span> <span class="toc-text">AuthorizedPasswords_add 或 add_pass</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AuthorizedPasswords-remove-或-rm-pass"><span class="toc-number">7.2.</span> <span class="toc-text">AuthorizedPasswords_remove 或 rm_pass</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AuthorizedPasswords-remove-或-rm-pass-1"><span class="toc-number">7.3.</span> <span class="toc-text">AuthorizedPasswords_remove 或 rm_pass</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AuthorizedPasswords-list-或-ls-pass"><span class="toc-number">8.</span> <span class="toc-text">AuthorizedPasswords_list 或 ls_pass</span></a></li></ol>
-        
-    </div>
-    <style>
-        .left-col .switch-btn,
-        .left-col .switch-area {
-            display: none;
-        }
-        .toc-level-3 i,
-        .toc-level-3 ol {
-            display: none !important;
-        }
-    </style>
-
-    <input type="button" id="tocButton" value="隱藏目錄" title="點擊按鈕隱藏或者顯示文章目錄">
-
-    <script>
-        yiliaConfig.toc = ["隱藏目錄", "顯示目錄", !!"false"];
-    </script>
 
 
 
-
-
-    
-      <div class="duoshuo" id="comments">
-    <div id="comment-box"></div>
-    <div class="ds-thread" id="ds-thread" data-thread-key="2017/09/05/cjdns-cryptoauth/" data-title="cjdns源码分析--CryptoAuth" data-url="http://yoursite.com/2017/09/05/cjdns-cryptoauth/"></div>
-    <script>
-        var duoshuoQuery = {short_name:"ichrisking"};
-        var loadComment = function(){
-            var d = document, s = d.createElement('script');
-            s.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-            s.async = true; s.charset = 'UTF-8';
-            (d.head || d.body).appendChild(s);
-        }
-
-        
-    </script>
-    
-    <script> loadComment(); </script>
-
-</div>
-    
-
-
-
-
-    <div class="scroll" id="post-nav-button">
-        
-            <a href="/2017/11/22/cjdns-3steps-lladdrsession/" title="上一篇: cjdns源码分析--使用SocketAddress来维护的EndpointsBySockaddr map机制中EndpointsBySockaddr session的建立过程">
-                <i class="fa fa-angle-left"></i>
-            </a>
-        
-
-        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
-
-        
-            <a href="/2017/09/04/how-to-read-staff/" title="下一篇: 如何看懂五线谱">
-                <i class="fa fa-angle-right"></i>
-            </a>
-        
-    </div>
-
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/03/08/FlameGraph/">使用火焰图（FlameGraph）来分析程序性能</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/29/cjnds-asymmetric-cryptography/">cjdns源码分析--握手过程中，非对称密钥的应用</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/04/how-to-fix-rebase-still-in-progress/">如何解决报错“prior sync failed; rebase still in progress”</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/11/22/cjdns-3steps-lladdrsession/">cjdns源码分析--使用SocketAddress来维护的EndpointsBySockaddr map机制中EndpointsBySockaddr session的建立过程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/05/cjdns-cryptoauth/">cjdns源码分析--CryptoAuth</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/04/how-to-read-staff/">如何看懂五线谱</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/30/rom7-0-phone/">rom7.0-phone 电话相关</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/28/cjdns-SuperNodeHunter/">cjdns源码分析--初探Supernode</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/25/rom7.0-build/">Android7.0Rom编译相关</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/02/cjdns_RouteGen-d/">cjdns源码分析--RouteGen</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/25/cjdns_IpTunnel/">cjdns源码分析--IpTunnel</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/27/about-iptables/">cjdns源码分析--iptables在cjdns项目中的运用</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/21/how-to-build-git-on-raspberry/">在树莓派上搭建私有git</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/15/raspberry-add-camera-dev/">树莓派摄像头没有/dev/video0设备节点的问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/12/ping-pong/">cjdns源码分析--SwitchPing的发送，接收与回复</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/04/contentprovider/">Android中的ContentProvider,ContentResolver,ContentObserver</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/21/pattern-proxy/">Android中的设计模式之代理模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/20/pattern-decorator/">Android中的设计模式之装饰者模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/13/activity-launch-mode/">activity启动模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/12/bin-tree/">二叉搜索树</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/29/pattern-builder/">Android中的设计模式之建造模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/23/pattern-strategy/">Android中的设计模式之策略模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/22/pattern-prototype/">Android中的设计模式之原型模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/Search/">各种查找算法</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/pattern-adapter/">Android中的设计模式之适配器模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/17/pattern-factory/">Android中的设计模式之工厂模式系列</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/10/pattern-flyweight/">Android中的设计模式之享元模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/pattern-memento/">Android中的设计模式之备忘录模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/08/pattern-template-method/">Android中的设计模式之模板方法模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/07/pattern-observer/">Android中的设计模式之观察者模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/04/pattern-composite/">Android中的设计模式之组合模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/02/Sort/">各种排序算法</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/01/oneday-ShardPreferences/">ShardPreferences</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/31/oneday-AsyncTask/">AsyncTask</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/26/pattern-singleton/">Android中的设计模式之单例模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/10/oneday-listview/">如何优化listView</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/08/oneday-context/">Android中的context详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/27/android-parcelable/">activity之间传递数据的方法</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/26/oneday-handler/">android的Handler机制详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/22/oneday-activity-lifecycle/">Activity生命周期</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/22/pass-by-value-or-reference/">Java中的值传递和引用传递</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/22/oneday_BroadcastReceiver/">BroadcastReceiver</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/21/oneday_service/">Android中的Service</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/21/sunjdk/">如何安装sunjdk，并用它替代openjdk</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/19/mvp_in_android/">MVP in Android</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/19/java_synchronized/">Java并发</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/18/java_list_hashmap/">Java集合框架</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/09/java_basic/">Java基础知识</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/08/pattern-design/">设计模式概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/31/Binder/">Binder</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/24/Fragment/">Fragment</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/24/Android-TouchEvent/">Android事件分发机制</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/23/ANR-and-FC/">ANR与FC</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/23/Android-performance-optimization/">Android性能优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/23/how_to_use_locate_image_file_in_hexo/">如何在hexo中使用本地图片</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/23/reinstall-hexo-after-reinstall-OS/">重装系统后，修复hexo</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/22/Android_memory_leak/">Android内存泄漏</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/18/Android1_1/">Android基础知识</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/05/build_shadowsocks/">配置shadowsocks</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/24/change-hexo-theme-to-maupassant/">对我的Blog做了点改动</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/19/make_blog_with_hexo/">使用hexo搭建blog</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/08/rsync/">拷貝代碼利器rsync</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/31/add_jar_into_android_mk_file/">給Android系統應用加jar包</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/16/port22_Connection_refused/">port 22: Connection refused</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/01/SEAndroid/">SEAndroid in Android5.x</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/06/11/access_ssl_with_okhttp/">使用OkHttp访问ssl（https）网络</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/04/20/build_java_jar_based_on_android_code/">如何使用android源码来制作java的jar包</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/02/04/save_discarding_commits/">找回差點丟失的commit</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/01/16/build_new_project_in_work_zone/">如何爲辦公區新建一個項目</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/01/06/add_new_function_in_local_service/">爲android添加一個新的service函數</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/03/21/deny_connect_with_usb/">源碼中實現禁止手機鏈接usb</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/02/14/add_tomoyo_to_android_system/">移植TOMOYO的步驟</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/06/09/make_deamon_thead_in_android/">爲android編寫一個deamon進程</a></li></ul>
-
-
-
-
-    <script>
-        
-    </script>
-</div>
-      <footer id="footer">
-    <div class="outer">
-        <div id="footer-info">
-            <div class="footer-left">
-                <i class="fa fa-copyright"></i> 
-                2016-2019 Chris King
-            </div>
-            <div class="footer-right">
-                <a href="http://hexo.io/" target="_blank" title="快速、簡單且強大的網誌框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="簡而不減 Hexo 雙欄網誌主題  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
-            </div>
         </div>
         
-            <div class="visit">
-                
-                    <span id="busuanzi_container_site_pv" style="display:none">
-                        <span id="site-visit" title="本站到訪數"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
-                        </span>
-                    </span>
-                
-                
-                    <span>| </span>
-                
-                
-                    <span id="busuanzi_container_page_pv" style="display:none">
-                        <span id="page-visit" title="本頁閱讀量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
-                        </span>
-                    </span>
-                
-            </div>
-        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
     </div>
-</footer>
-    </div>
-    
-<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
-
-    <script>
-        $(document).ready(function() {
-            var iPad = window.navigator.userAgent.indexOf('iPad');
-            if (iPad > -1 || $(".left-col").css("display") === "none") {
-                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
-                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
-                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
-            }
-            else {
-                var backgroundnum = 5;
-                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
-                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
-            }
-        })
-    </script>
-
-
-
-
-
-<div class="scroll" id="scroll">
-    <a href="#" title="返回頂部"><i class="fa fa-arrow-up"></i></a>
-    <a href="#comments" onclick="load$hide();" title="查看評論"><i class="fa fa-comments-o"></i></a>
-    <a href="#footer" title="轉到底部"><i class="fa fa-arrow-down"></i></a>
-</div>
-<script>
-    // Open in New Window
-    
-        var oOpenInNew = {
-            
-            
-            
-            
-             categories: ".article-category a, a.tag-list-link", 
-            
-             archives: ".archive-article-title", 
-             miniArchives: "a.post-list-link", 
-            
-             friends: "#js-friends a", 
-             socail: ".social a" 
-        }
-        for (var x in oOpenInNew) {
-            $(oOpenInNew[x]).attr("target", "_blank");
-        }
-    
-</script>
-
-<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
-</script>
   </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Chris King</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">73</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">23</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">27</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#接入点conf分析"><span class="nav-number">1.</span> <span class="nav-text">接入点conf分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#对conf的解析"><span class="nav-number">2.</span> <span class="nav-text">对conf的解析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#add-pass方法的分析"><span class="nav-number">3.</span> <span class="nav-text">add_pass方法的分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#普通点conf分析"><span class="nav-number">4.</span> <span class="nav-text">普通点conf分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#普通点配置连接点的分析"><span class="nav-number">5.</span> <span class="nav-text">普通点配置连接点的分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#连接点验证一个新来的点的身份是否合格"><span class="nav-number">6.</span> <span class="nav-text">连接点验证一个新来的点的身份是否合格</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#API分析"><span class="nav-number">7.</span> <span class="nav-text">API分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#AuthorizedPasswords-add-或-add-pass"><span class="nav-number">7.1.</span> <span class="nav-text">AuthorizedPasswords_add 或 add_pass</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AuthorizedPasswords-remove-或-rm-pass"><span class="nav-number">7.2.</span> <span class="nav-text">AuthorizedPasswords_remove 或 rm_pass</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AuthorizedPasswords-remove-或-rm-pass-1"><span class="nav-number">7.3.</span> <span class="nav-text">AuthorizedPasswords_remove 或 rm_pass</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AuthorizedPasswords-list-或-ls-pass"><span class="nav-number">8.</span> <span class="nav-text">AuthorizedPasswords_list 或 ls_pass</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chris King</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.0.1</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=7.0.1"></script>
+
+  <script src="/js/src/motion.js?v=7.0.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/schemes/muse.js?v=7.0.1"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=7.0.1"></script>
+<script src="/js/src/post-details.js?v=7.0.1"></script>
+
+
+
+  
+
+
+  <script src="/js/src/next-boot.js?v=7.0.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
 </body>
 </html>
