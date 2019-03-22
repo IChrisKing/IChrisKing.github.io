@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-Hant-TW">
-<head>
+<head><meta name="generator" content="Hexo 3.8.0">
 
     <!--[if lt IE 9]>
         <style>body {display: none; background: none !important} </style>
@@ -8,10 +8,10 @@
     <![endif]-->
 
 <meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<meta name="format-detection" content="telephone=no" />
-<meta name="author" content="Chris King" />
+<meta name="format-detection" content="telephone=no">
+<meta name="author" content="Chris King">
 
 
 
@@ -31,7 +31,7 @@
 <meta name="twitter:description" content="java内存分配策略，内存管理方式，内存泄漏的情景和一些防止内存泄漏的方式">
 <meta name="twitter:image" content="https://camo.githubusercontent.com/dee4aecb8a80c4e73337b56ee01cbffa2a8049dd/687474703a2f2f696d672e626c6f672e6373646e2e6e65742f32303135313132333134343232363334393f73706d3d353137362e3130303233392e626c6f67636f6e742e392e437455316334">
 
-<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
 
     <link rel="alternate" href="/atom.xml" title="IChrisKing" type="application/atom+xml">
@@ -93,7 +93,7 @@
 
 
 
-</head>
+</head></html>
 <body>
   <div id="container">
     <div class="left-col">
@@ -261,7 +261,7 @@
             </nav>
         </header>                
     </div>
-    <link class="menu-list" tags="標籤" friends="友情鏈接" about="關於我"/>
+    <link class="menu-list" tags="標籤" friends="友情鏈接" about="關於我">
 </nav>
       <div class="body-wrap"><article id="post-Android_memory_leak" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -275,7 +275,7 @@
   
   <div class="article-inner">
     
-      <input type="hidden" class="isFancy" />
+      <input type="hidden" class="isFancy">
     
     
       <header class="article-header">
@@ -344,8 +344,8 @@
 <li><p>含有Finalize方法的object需要至少经过两轮GC才有可能被释放。</p>
 </li>
 </ol>
-<h4 id="使用context的正确姿势"><a href="#使用context的正确姿势" class="headerlink" title="使用context的正确姿势"></a>使用context的正确姿势</h4><p><img src="https://camo.githubusercontent.com/dee4aecb8a80c4e73337b56ee01cbffa2a8049dd/687474703a2f2f696d672e626c6f672e6373646e2e6e65742f32303135313132333134343232363334393f73706d3d353137362e3130303233392e626c6f67636f6e742e392e437455316334" alt=""><br>对 Activity 等组件的引用应该控制在 Activity 的生命周期之内； 如果不能就考虑使用 getApplicationContext 或者 getApplication，以避免 Activity 被外部长生命周期的对象引用而泄露。</p>
-<h4 id="java对象的几种引用类型"><a href="#java对象的几种引用类型" class="headerlink" title="java对象的几种引用类型"></a>java对象的几种引用类型</h4><p><img src="https://camo.githubusercontent.com/068950c506eddc68677d6a84b5d7ffe1c03c6cf9/68747470733a2f2f67772e616c6963646e2e636f6d2f7470732f5442315536544e4c565858585863685846585858585858585858582d3634342d3534362e6a7067" alt=""><br>如果只是想避免OutOfMemory异常的发生，则可以使用软引用。如果对于应用的性能更在意，想尽快回收一些占用内存比较大的对象，则可以使用弱引用。</p>
+<h4 id="使用context的正确姿势"><a href="#使用context的正确姿势" class="headerlink" title="使用context的正确姿势"></a>使用context的正确姿势</h4><p><img src="https://camo.githubusercontent.com/dee4aecb8a80c4e73337b56ee01cbffa2a8049dd/687474703a2f2f696d672e626c6f672e6373646e2e6e65742f32303135313132333134343232363334393f73706d3d353137362e3130303233392e626c6f67636f6e742e392e437455316334" alt><br>对 Activity 等组件的引用应该控制在 Activity 的生命周期之内； 如果不能就考虑使用 getApplicationContext 或者 getApplication，以避免 Activity 被外部长生命周期的对象引用而泄露。</p>
+<h4 id="java对象的几种引用类型"><a href="#java对象的几种引用类型" class="headerlink" title="java对象的几种引用类型"></a>java对象的几种引用类型</h4><p><img src="https://camo.githubusercontent.com/068950c506eddc68677d6a84b5d7ffe1c03c6cf9/68747470733a2f2f67772e616c6963646e2e636f6d2f7470732f5442315536544e4c565858585863685846585858585858585858582d3634342d3534362e6a7067" alt><br>如果只是想避免OutOfMemory异常的发生，则可以使用软引用。如果对于应用的性能更在意，想尽快回收一些占用内存比较大的对象，则可以使用弱引用。</p>
 <p>另外可以根据对象是否经常使用来判断选择软引用还是弱引用。如果该对象可能会经常使用的，就尽量用软引用。如果该对象不被使用的可能性更大些，就可以用弱引用。</p>
 
       
@@ -393,7 +393,7 @@
         }
     </style>
 
-    <input type="button" id="tocButton" value="隱藏目錄"  title="點擊按鈕隱藏或者顯示文章目錄">
+    <input type="button" id="tocButton" value="隱藏目錄" title="點擊按鈕隱藏或者顯示文章目錄">
 
     <script>
         yiliaConfig.toc = ["隱藏目錄", "顯示目錄", !!"false"];
@@ -405,7 +405,7 @@
 
     
       <div class="duoshuo" id="comments">
-    <div id="comment-box" ></div>
+    <div id="comment-box"></div>
     <div class="ds-thread" id="ds-thread" data-thread-key="2016/08/22/Android_memory_leak/" data-title="Android内存泄漏" data-url="http://yoursite.com/2016/08/22/Android_memory_leak/"></div>
     <script>
         var duoshuoQuery = {short_name:"ichrisking"};
@@ -466,7 +466,7 @@
         
             <div class="visit">
                 
-                    <span id="busuanzi_container_site_pv" style='display:none'>
+                    <span id="busuanzi_container_site_pv" style="display:none">
                         <span id="site-visit" title="本站到訪數"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
                         </span>
                     </span>
@@ -475,8 +475,8 @@
                     <span>| </span>
                 
                 
-                    <span id="busuanzi_container_page_pv" style='display:none'>
-                        <span id="page-visit"  title="本頁閱讀量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                    <span id="busuanzi_container_page_pv" style="display:none">
+                        <span id="page-visit" title="本頁閱讀量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
                         </span>
                     </span>
                 

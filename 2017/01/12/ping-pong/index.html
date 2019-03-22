@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-Hant-TW">
-<head>
+<head><meta name="generator" content="Hexo 3.8.0">
 
     <!--[if lt IE 9]>
         <style>body {display: none; background: none !important} </style>
@@ -8,10 +8,10 @@
     <![endif]-->
 
 <meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<meta name="format-detection" content="telephone=no" />
-<meta name="author" content="Chris King" />
+<meta name="format-detection" content="telephone=no">
+<meta name="author" content="Chris King">
 
 
 
@@ -31,7 +31,7 @@
 <meta name="twitter:description" content="“SwitchPing是peer之间保活的重要手段，分析这个过程，可以理解在cjdns中，peer之间是如何进行ping/pong操作，来保持联系的。ping是一个互相交互的动作，节点之间会互相发送ping，来保证连接的有效性。收到ping的节点会回复pong来回应对方的ping。”">
 <meta name="twitter:image" content="http://yoursite.com/assets/img/ping_pong/ping.png">
 
-<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
 
     <link rel="alternate" href="/atom.xml" title="IChrisKing" type="application/atom+xml">
@@ -93,7 +93,7 @@
 
 
 
-</head>
+</head></html>
 <body>
   <div id="container">
     <div class="left-col">
@@ -261,7 +261,7 @@
             </nav>
         </header>                
     </div>
-    <link class="menu-list" tags="標籤" friends="友情鏈接" about="關於我"/>
+    <link class="menu-list" tags="標籤" friends="友情鏈接" about="關於我">
 </nav>
       <div class="body-wrap"><article id="post-ping-pong" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -275,7 +275,7 @@
   
   <div class="article-inner">
     
-      <input type="hidden" class="isFancy" />
+      <input type="hidden" class="isFancy">
     
     
       <header class="article-header">
@@ -412,7 +412,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目錄</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#总体概述"><span class="toc-number">1.</span> <span class="toc-text">总体概述</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#源码位置"><span class="toc-number">1.1.</span> <span class="toc-text">源码位置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#调用过程"><span class="toc-number">1.2.</span> <span class="toc-text">调用过程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ping发送"><span class="toc-number">2.</span> <span class="toc-text">ping发送</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#sendPing"><span class="toc-number">2.1.</span> <span class="toc-text">sendPing</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SwitchPinger-newPing"><span class="toc-number">2.2.</span> <span class="toc-text">SwitchPinger_newPing</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SwitchPinger-newPing-1"><span class="toc-number">2.3.</span> <span class="toc-text">SwitchPinger_newPing</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Pinger-newPing"><span class="toc-number">2.3.1.</span> <span class="toc-text">Pinger_newPing</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#asyncSendPing"><span class="toc-number">2.4.</span> <span class="toc-text">asyncSendPing</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Allocator-clone-pp-gt-pingAlloc-amp-struct-Ping-…"><span class="toc-number">2.4.1.</span> <span class="toc-text">Allocator_clone(pp->pingAlloc, (&(struct Ping)…..</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SwitchPinger-c中的sendPing函数"><span class="toc-number">2.5.</span> <span class="toc-text">SwitchPinger.c中的sendPing函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#incomingFromSwitchPinger"><span class="toc-number">2.6.</span> <span class="toc-text">incomingFromSwitchPinger</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#收到ping-发回pong"><span class="toc-number">3.</span> <span class="toc-text">收到ping,发回pong</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#收到ping和pong"><span class="toc-number">3.1.</span> <span class="toc-text">收到ping和pong</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#handlePing"><span class="toc-number">3.2.</span> <span class="toc-text">handlePing</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#messageFromControlHandler"><span class="toc-number">3.3.</span> <span class="toc-text">messageFromControlHandler</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pinger-pongReceived"><span class="toc-number">3.4.</span> <span class="toc-text">Pinger_pongReceived</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#callback-data-p"><span class="toc-number">3.5.</span> <span class="toc-text">callback(data,p)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#onPingResponse"><span class="toc-number">3.6.</span> <span class="toc-text">onPingResponse</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#onPingResponse-1"><span class="toc-number">3.7.</span> <span class="toc-text">onPingResponse</span></a></li></ol></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#总体概述"><span class="toc-number">1.</span> <span class="toc-text">总体概述</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#源码位置"><span class="toc-number">1.1.</span> <span class="toc-text">源码位置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#调用过程"><span class="toc-number">1.2.</span> <span class="toc-text">调用过程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ping发送"><span class="toc-number">2.</span> <span class="toc-text">ping发送</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#sendPing"><span class="toc-number">2.1.</span> <span class="toc-text">sendPing</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SwitchPinger-newPing"><span class="toc-number">2.2.</span> <span class="toc-text">SwitchPinger_newPing</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SwitchPinger-newPing-1"><span class="toc-number">2.3.</span> <span class="toc-text">SwitchPinger_newPing</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Pinger-newPing"><span class="toc-number">2.3.1.</span> <span class="toc-text">Pinger_newPing</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#asyncSendPing"><span class="toc-number">2.4.</span> <span class="toc-text">asyncSendPing</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Allocator-clone-pp-gt-pingAlloc-amp-struct-Ping-…"><span class="toc-number">2.4.1.</span> <span class="toc-text">Allocator_clone(pp-&gt;pingAlloc, (&amp;(struct Ping)…..</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SwitchPinger-c中的sendPing函数"><span class="toc-number">2.5.</span> <span class="toc-text">SwitchPinger.c中的sendPing函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#incomingFromSwitchPinger"><span class="toc-number">2.6.</span> <span class="toc-text">incomingFromSwitchPinger</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#收到ping-发回pong"><span class="toc-number">3.</span> <span class="toc-text">收到ping,发回pong</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#收到ping和pong"><span class="toc-number">3.1.</span> <span class="toc-text">收到ping和pong</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#handlePing"><span class="toc-number">3.2.</span> <span class="toc-text">handlePing</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#messageFromControlHandler"><span class="toc-number">3.3.</span> <span class="toc-text">messageFromControlHandler</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pinger-pongReceived"><span class="toc-number">3.4.</span> <span class="toc-text">Pinger_pongReceived</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#callback-data-p"><span class="toc-number">3.5.</span> <span class="toc-text">callback(data,p)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#onPingResponse"><span class="toc-number">3.6.</span> <span class="toc-text">onPingResponse</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#onPingResponse-1"><span class="toc-number">3.7.</span> <span class="toc-text">onPingResponse</span></a></li></ol></li></ol>
         
     </div>
     <style>
@@ -426,7 +426,7 @@
         }
     </style>
 
-    <input type="button" id="tocButton" value="隱藏目錄"  title="點擊按鈕隱藏或者顯示文章目錄">
+    <input type="button" id="tocButton" value="隱藏目錄" title="點擊按鈕隱藏或者顯示文章目錄">
 
     <script>
         yiliaConfig.toc = ["隱藏目錄", "顯示目錄", !!"false"];
@@ -438,7 +438,7 @@
 
     
       <div class="duoshuo" id="comments">
-    <div id="comment-box" ></div>
+    <div id="comment-box"></div>
     <div class="ds-thread" id="ds-thread" data-thread-key="2017/01/12/ping-pong/" data-title="cjdns源码分析--SwitchPing的发送，接收与回复" data-url="http://yoursite.com/2017/01/12/ping-pong/"></div>
     <script>
         var duoshuoQuery = {short_name:"ichrisking"};
@@ -499,7 +499,7 @@
         
             <div class="visit">
                 
-                    <span id="busuanzi_container_site_pv" style='display:none'>
+                    <span id="busuanzi_container_site_pv" style="display:none">
                         <span id="site-visit" title="本站到訪數"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
                         </span>
                     </span>
@@ -508,8 +508,8 @@
                     <span>| </span>
                 
                 
-                    <span id="busuanzi_container_page_pv" style='display:none'>
-                        <span id="page-visit"  title="本頁閱讀量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                    <span id="busuanzi_container_page_pv" style="display:none">
+                        <span id="page-visit" title="本頁閱讀量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
                         </span>
                     </span>
                 
