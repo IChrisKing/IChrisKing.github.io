@@ -96,24 +96,25 @@
 
 
 
-  <meta name="description" content="title: 如何将一个git项目搬运到自己的git服务器上,并保持可以同步原有项目的更新category:  Linuxtags:  git  Linux date: 2020-08-05 10:48:56description: “如何将一个git项目搬运到自己的git服务器上,并保持可以同步原有项目的更新”   #   方案1：   从原始地址clone一份bare仓库   1git clo">
+  <meta name="description" content="使用树莓派来模拟红外发射器，远程控制空调。分成三个部分：1.如何使用树莓派模拟空调遥控器。2.如何使用nginx,将网页访问操作变成红外命令发送。3.如何通过端口映射，将访问路由地址的流量转到树莓派上。">
+<meta name="keywords" content="树莓派raspberry,lirc,红外控制">
 <meta property="og:type" content="article">
-<meta property="og:title" content="IChrisKing">
-<meta property="og:url" content="http://yoursite.com/2020/08/05/mergegit/index.html">
+<meta property="og:title" content="raspberry-lirc">
+<meta property="og:url" content="http://yoursite.com/2019/12/19/mergegit/index.html">
 <meta property="og:site_name" content="IChrisKing">
-<meta property="og:description" content="title: 如何将一个git项目搬运到自己的git服务器上,并保持可以同步原有项目的更新category:  Linuxtags:  git  Linux date: 2020-08-05 10:48:56description: “如何将一个git项目搬运到自己的git服务器上,并保持可以同步原有项目的更新”   #   方案1：   从原始地址clone一份bare仓库   1git clo">
+<meta property="og:description" content="使用树莓派来模拟红外发射器，远程控制空调。分成三个部分：1.如何使用树莓派模拟空调遥控器。2.如何使用nginx,将网页访问操作变成红外命令发送。3.如何通过端口映射，将访问路由地址的流量转到树莓派上。">
 <meta property="og:locale" content="zh-Hant-TW">
-<meta property="og:updated_time" content="2020-08-05T02:50:16.779Z">
+<meta property="og:updated_time" content="2020-08-05T02:57:53.593Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="IChrisKing">
-<meta name="twitter:description" content="title: 如何将一个git项目搬运到自己的git服务器上,并保持可以同步原有项目的更新category:  Linuxtags:  git  Linux date: 2020-08-05 10:48:56description: “如何将一个git项目搬运到自己的git服务器上,并保持可以同步原有项目的更新”   #   方案1：   从原始地址clone一份bare仓库   1git clo">
+<meta name="twitter:title" content="raspberry-lirc">
+<meta name="twitter:description" content="使用树莓派来模拟红外发射器，远程控制空调。分成三个部分：1.如何使用树莓派模拟空调遥控器。2.如何使用nginx,将网页访问操作变成红外命令发送。3.如何通过端口映射，将访问路由地址的流量转到树莓派上。">
 
 
 
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2020/08/05/mergegit/">
+  <link rel="canonical" href="http://yoursite.com/2019/12/19/mergegit/">
 
 
 
@@ -123,7 +124,7 @@
   };
 </script>
 
-  <title> | IChrisKing</title>
+  <title>raspberry-lirc | IChrisKing</title>
   
 
 
@@ -292,7 +293,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/05/mergegit/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/19/mergegit/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Chris King">
@@ -309,7 +310,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
+          <h1 class="post-title" itemprop="name headline">raspberry-lirc
 
               
             
@@ -335,13 +336,47 @@
                 
               
 
-              <time title="Created: 2020-08-05 10:50:16" itemprop="dateCreated datePublished" datetime="2020-08-05T10:50:16+08:00">2020-08-05</time>
+              <time title="Created: 2019-12-19 11:36:23" itemprop="dateCreated datePublished" datetime="2019-12-19T11:36:23+08:00">2019-12-19</time>
             
 
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2020-08-05 10:57:53" itemprop="dateModified" datetime="2020-08-05T10:57:53+08:00">2020-08-05</time>
+              
             
           </span>
 
           
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/树莓派/" itemprop="url" rel="index"><span itemprop="name">树莓派</span></a></span>
+
+                
+                
+              
+            </span>
+          
 
           
             
@@ -355,6 +390,8 @@
 
           
 
+          
+            <div class="post-description">使用树莓派来模拟红外发射器，远程控制空调。分成三个部分：1.如何使用树莓派模拟空调遥控器。2.如何使用nginx,将网页访问操作变成红外命令发送。3.如何通过端口映射，将访问路由地址的流量转到树莓派上。</div>
           
 
         </div>
@@ -370,18 +407,7 @@
       
 
       
-        <p>title: 如何将一个git项目搬运到自己的git服务器上,并保持可以同步原有项目的更新<br>category:</p>
-<ul>
-<li><p>Linux<br>tags:</p>
-</li>
-<li><p>git</p>
-</li>
-<li><p>Linux</p>
-<p>date: 2020-08-05 10:48:56<br>description: “如何将一个git项目搬运到自己的git服务器上,并保持可以同步原有项目的更新”</p>
-</li>
-</ul>
-<p># </p>
-<p> <strong>方案1：</strong> </p>
+        <p> <strong>方案1：</strong> </p>
 <ul>
 <li>从原始地址clone一份bare仓库 </li>
 </ul>
@@ -452,6 +478,16 @@
     
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/树莓派raspberry/" rel="tag"># 树莓派raspberry</a>
+          
+            <a href="/tags/lirc/" rel="tag"># lirc</a>
+          
+            <a href="/tags/红外控制/" rel="tag"># 红外控制</a>
+          
+        </div>
       
 
       
